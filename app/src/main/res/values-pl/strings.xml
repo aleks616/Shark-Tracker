@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tęczowy kalendarz</string>
+    <string name="welcome_text">Cześć! Witamy w tęczowym kalendarzu</string>
+    <string name="choose_language">Wybierz język aplikacji</string>
+    <string name="welcome_back">Witamy ponownie</string>
+    <string name="logo_desc">logo aplikacji</string>
+</resources>
