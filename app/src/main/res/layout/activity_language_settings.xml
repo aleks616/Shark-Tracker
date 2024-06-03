@@ -3,10 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LanguageSettingsActivity">
-
-
-    <Button
+    tools:context=".LanguageSettingsActivity"
+    android:orientation="vertical">
+    <!--<Button
         android:layout_width="100sp"
         android:minHeight="48dp"
         android:layout_marginStart="150sp"
@@ -27,10 +26,29 @@
         android:text="@string/english"
         android:minHeight="48dp"/>
 
-    <TextView
+        <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/welcome_text" />
+        -->
+
+    <TextView
+        android:layout_marginTop="25sp"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/choose_language" />
+
+    <Spinner
+        android:layout_marginStart="120sp"
+        android:layout_marginTop="10sp"
+        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:layout_height="48sp"
+        android:id="@+id/lang_spinner"
+        />
+
 
 </LinearLayout>
