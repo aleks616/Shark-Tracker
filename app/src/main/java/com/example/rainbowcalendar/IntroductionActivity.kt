@@ -11,7 +11,7 @@ class IntroductionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_introduction)
 
-        val sharedpref: SharedPreferences =applicationContext.getSharedPreferences("com.example.android.your_application", MODE_PRIVATE)
+        val sharedpref: SharedPreferences =applicationContext.getSharedPreferences("com.example.android.rainbowcalendar", MODE_PRIVATE)
         val token: String?=sharedpref.getString("token", null)
 
         val spinner = findViewById<Spinner>(R.id.themeSpinner)
@@ -20,7 +20,6 @@ class IntroductionActivity : AppCompatActivity() {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner.adapter = adapter
         }
-
         if (token=="False"||token==null){
             TODO("first time settings have to show when they're not saved, not only 1st launch")
         }

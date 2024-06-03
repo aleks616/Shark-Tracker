@@ -28,8 +28,8 @@
         <item>Dark</item>
         <item>Light</item>
     </string-array>
-    <string-array name="lang_array" translatable="false">
-        <item>English</item>
-        <item>Polski</item>
-    </string-array>
+    <string name="choose_gender_mode">Choose your gender/mode, there will be more detailed modes on the next screen. You can always change these settings.</string>
+    <string name="gender_mode_tm">Transmasculine mode, we\'ll try not to make you dysphoric, and won\'t mention possibly triggering topics</string>
+    <string name="gender_mode_f">Woman mode, we\'ll use traditional feminine terms.</string>
+    <string name="gender_mode_n">Neutral mode, for non-binary, questioning and other users, who don\'t want to see gendered terms.</string>
 </resources>
