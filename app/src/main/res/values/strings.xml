@@ -32,4 +32,16 @@
     <string name="gender_mode_tm">Transmasculine mode, we\'ll try not to make you dysphoric, and won\'t mention possibly triggering topics</string>
     <string name="gender_mode_f">Woman mode, we\'ll use traditional feminine terms.</string>
     <string name="gender_mode_n">Neutral mode, for non-binary, questioning and other users, who don\'t want to see gendered terms.</string>
+    <string name="home_button_name">Home</string>
+    <string name="account_button_name">Account</string>
+    <string name="add_button_text">Add</string>
+    <string name="calendar_button_text">Calendar</string>
+    <string name="intro2_header">Choose a most fitting option</string>
+    <string name="intro2_young">I recently started having periods and I\'m not thinking about getting pregnant. (version for minors, adults choose the last option)</string>
+    <string name="intro2_gay">I\'m in a relationship I can\'t get pregnant in./I can\'t physically get pregnant for some other reason.</string>
+    <string name="intro2_ftm">I\'m a pre-T transguy(trans masculine-leaning person) planning on taking T someday.</string>
+    <string name="intro2_ftmT">I\'m in ftm transition at start of T/I microdose, and I want to track period dissapearing.</string>
+    <string name="intro2_gnc">I\'m gnc/I simply don\'t like feminine aesthetics of similar apps.</string>
+    <string name="intro2_nb">I\'m trans in some way, but I don\'t plan on taking hrt.</string>
+    <string name="intro2_ace">I\'m a virgin or I live in celibate (no sex, whatever reason)</string>
 </resources>

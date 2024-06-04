@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Rainbow Calendar</string>
+    <string name="welcome_text">Hi! Bienvenue sur Rainbow Calendar</string>
+    <string name="choose_language">Choisir la langue </string>
+    <string name="welcome_back">Re-bonjour</string>
+    <string name="logo_desc">app logo</string>
+    <string name="enter_name">Comment voudrais-tu être appelé?</string>
+    <string name="enter_name_hint">Name</string>
+    <string name="color_scheme">Quelle couleur préfères-tu?</string>
+    <string-array name="themes_array">
+        <item>Sombre</item>
+        <item>Blanc</item>
+    </string-array>
+    <string name="choose_gender_mode">Choisis ton genre/mode, les détails s\'afficheront. Tu pourras le changer dans les paramètres.</string>
+    <string name="gender_mode_tm">Homme trans, nous essaierons de ne pas te remdre dysphorique, et ne mentionnerons pas de sujets pouvant trigger</string>
+    <string name="gender_mode_f">Femme, nous utiliserons des termes traditionnellement fèminins</string>
+    <string name="gender_mode_n">Neutre, pour les personnes non-binaires, en questionnement tous les autres, qui ne veulent pas être genrés</string>
+    <string name="home_button_name">Accueil</string>
+    <string name="account_button_name">Compte</string>
+    <string name="add_button_text">Ajout</string>
+    <string name="calendar_button_text">Calendrier</string>
+    <string name="intro2_header"> Choisis une option qui te correspond le mieux</string>
+    <string name="intro2_young">Je n\'en suis qu\'à mes premières règles et ne pense pas encore à la grossesse. (Pour les mineurs)</string>
+    <string name="intro2_gay">Je suis dans une relation et ne peux pas tomber enceint.e(((this is a gendered term, I put it in gender neutral, remove this, just telling ya))) /Je ne peux physiquement pas tomber enceint.e</string>
+    <string name="intro2_ftm"> Je suis une personne transmasculine pré-T ayant l\'intention d\'en prendre un jour</string>
+    <string name="intro2_ftmT">Je suis une personne transmasculine et je viens de commencer à prendre de la testostérone/je microdose et j\'aimerais voir mes règles s\'arrêter.</string>
+    <string name="intro2_gnc">Je n\'aime juste pas les applications uniquement centrées sur le féminin.</string>
+    <string name="intro2_nb">Je suis trans mais n\'ai pas l\'intention de prendre de la testostérone.</string>
+    <string name="intro2_ace">Je suis vierge/Je n\'ai pas de relations sexuelles (peu importe la raison)</string>
+</resources>

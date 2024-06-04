@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.Spinner
 import android.widget.Toast
 import java.util.Locale
@@ -22,6 +23,11 @@ class LanguageSettingsActivity : AppCompatActivity(){
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 spinner.adapter = adapter
             }
+
+        val button=findViewById<Button>(R.id.buttonNext)
+        button.setOnClickListener{
+            startActivity(Intent(this, IntroductionActivity::class.java))
+        }
 
         spinner.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener{
@@ -58,6 +64,7 @@ class LanguageSettingsActivity : AppCompatActivity(){
         return when(lang){
             "English" -> "en"
             "Polski" -> "pl"
+            "Francais" -> "fr"
             else ->{
                 "en"
             }
