@@ -28,7 +28,6 @@
         <item>Dark</item>
         <item>Light</item>
     </string-array>
-    <string name="choose_gender_mode">Choose your gender/mode, there will be more detailed modes on the next screen. You can always change these settings.</string>
     <string name="gender_mode_tm">Transmasculine mode, we\'ll try not to make you dysphoric, and won\'t mention possibly triggering topics</string>
     <string name="gender_mode_f">Woman mode, we\'ll use traditional feminine terms.</string>
     <string name="gender_mode_n">Neutral mode, for non-binary, questioning and other users, who don\'t want to see gendered terms.</string>
@@ -44,4 +43,7 @@
     <string name="intro2_gnc">I\'m gnc/I simply don\'t like feminine aesthetics of similar apps.</string>
     <string name="intro2_nb">I\'m trans in some way, but I don\'t plan on taking hrt.</string>
     <string name="intro2_ace">I\'m a virgin or I live in celibate (no sex, whatever reason)</string>
+    <string name="choose_gender_mode">Choose your gender/mode, there will be more detailed modes on the next screen. You can always change these settings.</string>
+    <string name="choose_age">Choose your age group.</string>
+    <string name="choose_birthday">If you want to, enter your birthday, (you\'ll get birthday wishes). Advised if you\'re a minor, the age setting will change automatically.</string>
 </resources>

@@ -65,6 +65,7 @@ class LanguageSettingsActivity : AppCompatActivity(){
             "English" -> "en"
             "Polski" -> "pl"
             "Francais" -> "fr"
+            "Italiano" -> "it"
             else ->{
                 "en"
             }

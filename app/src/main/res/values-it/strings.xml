@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Rainbow Calendar</string>
+    <string name="welcome_text">Ciao! Benvenuto nell\'Rainbow Calendar!</string>
+    <string name="choose_language">Scegli la lingua dell\'app</string>
+    <string name="welcome_back">Bentornato</string>
+    <string name="logo_desc">app logo</string>
+    <string name="enter_name">Inserisci il nome che vuoi usare.</string>
+    <string name="enter_name_hint">Nome</string>
+    <string name="color_scheme">Quale colore preferisci?</string>
+    <string-array name="themes_array">
+        <item>Scuro</item>
+        <item>Chiaro</item>
+    </string-array>
+    <string name="choose_gender_mode">Scegli il tuo genere/modalità, ci saranno modalità più dettagliate nella schermata successiva. Puoi sempre cambiare queste impostazioni.</string>
+    <string name="gender_mode_tm">Modalità transmaschile: cercheremo di non farti sentire a disagio e non menzioneremo argomenti potenzialmente scatenanti.</string>
+    <string name="gender_mode_f">Modalità donna: useremo termini tradizionalmente femminili.</string>
+    <string name="gender_mode_n">Modalità neutra: per utenti non binari, in fase di esplorazione o che non vogliono vedere termini di genere.</string>
+    <string name="home_button_name">Home</string>
+    <string name="account_button_name">Account</string>
+    <string name="add_button_text">Aggiungi</string>
+    <string name="calendar_button_text">Calendario</string>
+    <string name="intro2_header">Scegli un\'opzione più adatta</string>
+    <string name="intro2_young">Pregante no interesante</string>
+    <string name="intro2_gay">Non pregante</string>
+    <string name="intro2_ftm">No testosterone</string>
+    <string name="intro2_ftmT">Microdoso testosterone</string>
+    <string name="intro2_gnc">No me gusta donna</string>
+    <string name="intro2_nb">Trans no hrt</string>
+    <string name="intro2_ace">Virgino</string>
+    <string name="choose_age">Cose tu edad</string>
+    <string name="choose_birthday">il birth dia</string>
+</resources>

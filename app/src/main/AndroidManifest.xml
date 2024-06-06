@@ -13,6 +13,9 @@
         android:theme="@style/Theme.RainbowCalendar"
         tools:targetApi="s">
         <activity
+            android:name=".IntroductionActivity2"
+            android:exported="false" />
+        <activity
             android:name=".IntroductionActivity"
             android:exported="false" />
         <activity
