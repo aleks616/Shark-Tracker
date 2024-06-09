@@ -10,9 +10,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.Spinner
-import android.widget.Toast
+import android.widget.TextView
 
 class IntroductionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,33 +38,53 @@ class IntroductionActivity : AppCompatActivity() {
         //TODO: do themes
 
 
-        val sharedpref: SharedPreferences =applicationContext.getSharedPreferences("com.example.rainbowcalendar", MODE_PRIVATE)
-        val token: String?=sharedpref.getString("token", null)
+        //val sharedpref: SharedPreferences =applicationContext.getSharedPreferences("com.example.rainbowcalendar", MODE_PRIVATE)
+        //val token: String?=sharedpref.getString("token", null)
 
         val sharedPrefGender = applicationContext.getSharedPreferences("com.example.rainbowcalendar_gender", Context.MODE_PRIVATE) ?: return
         var gender: String? =sharedPrefGender.getString("com.example.rainbowcalendar_gender","")
+        val sharedPrefName = applicationContext.getSharedPreferences("com.example.rainbowcalendar_name", Context.MODE_PRIVATE)
+        //var name: String?=sharedPrefName.getString("com.example.rainbowcalendar_name", "")
         val genderM=findViewById<RadioButton>(R.id.genderMale)
         val genderF=findViewById<RadioButton>(R.id.genderFemale)
         val genderN=findViewById<RadioButton>(R.id.genderNeutral)
 
         val button=findViewById<Button>(R.id.buttonNext)
         button.setOnClickListener{
-            startActivity(Intent(this, IntroductionActivity2::class.java))
+            val errorText=findViewById<TextView>(R.id.errorText)
+            val nameText=findViewById<TextView>(R.id.nameET)
+            val name=nameText.text.toString()
+            if(name.isEmpty()){
+                errorText.text=getString(R.string.fill_name)
+            }
+            else{
+                with (sharedPrefName.edit()) {
+                    putString("com.example.rainbowcalendar_name", name)
+                    apply()
+                    errorText.text=""
+                }
+            }
 
             if(genderM.isChecked) gender="m"
             else if (genderF.isChecked) gender="f"
             else if (genderN.isChecked) gender="n"
-
+            else errorText.text=getString(R.string.select_one_option)
             if(gender!=null){
-                val sharedPrefGender: SharedPreferences =applicationContext.getSharedPreferences("com.example.rainbowcalendar_gender", MODE_PRIVATE)
+                //val sharedPrefGender: SharedPreferences =applicationContext.getSharedPreferences("com.example.rainbowcalendar_gender", MODE_PRIVATE)
                 with (sharedPrefGender.edit()) {
                     putString("com.example.rainbowcalendar_gender", gender)
-                    //Toast.makeText(this@IntroductionActivity, "tried saving sharedpref", Toast.LENGTH_SHORT).show()
                     apply()
                 }
-                val genderRead: String? =sharedPrefGender.getString("com.example.rainbowcalendar_gender","")
-                Toast.makeText(this@IntroductionActivity, "g1: $genderRead", Toast.LENGTH_SHORT).show()
+                //val genderRead: String? =sharedPrefGender.getString("com.example.rainbowcalendar_gender","")
+                //Toast.makeText(this@IntroductionActivity, "g1: $genderRead", Toast.LENGTH_SHORT).show()
+
             }
+            if(name.isNotEmpty()&&(!gender.isNullOrEmpty())){
+                errorText.text=""
+                startActivity(Intent(this, IntroductionActivity2::class.java))
+                //Toast.makeText(this@IntroductionActivity, name, Toast.LENGTH_SHORT).show()
+            }
+
         }
 
 

@@ -30,4 +30,8 @@
     <string name="intro2_ace">Nie uprawiam seksu.</string>
     <string name="choose_age">Wybierz swoją grupę wiekową.</string>
     <string name="choose_birthday">Jeśli chcesz, wprowadź swoją datę urodzenia (będziesz dostawać życzenia urodzinowe). Zalecane jeśli jesteś niepełnoletn*, wtedy ustawienie wieku przełączy się automatycznie.</string>
+    <string name="additional_options">Dodatkowe ustawienia</string>
+    <string name="too_young">Jesteś za młod* aby korzystać z aplikacji</string>
+    <string name="select_one_option">Wybierz jedną z poniższych opcji</string>
+    <string name="fill_name">Wpisz imię</string>
 </resources>

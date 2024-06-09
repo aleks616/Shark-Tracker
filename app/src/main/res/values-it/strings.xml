@@ -30,4 +30,6 @@
     <string name="intro2_ace">Virgino</string>
     <string name="choose_age">Cose tu edad</string>
     <string name="choose_birthday">il birth dia</string>
+    <string name="additional_options">sample</string>
+    <string name="too_young">You\'re too young</string>
 </resources>

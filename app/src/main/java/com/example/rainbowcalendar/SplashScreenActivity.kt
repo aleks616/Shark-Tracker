@@ -32,22 +32,24 @@ class SplashScreenActivity : AppCompatActivity() {
         return tempContext
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
         val welcomeTextView=findViewById<TextView>(R.id.welcome)
-        val sharedpref: SharedPreferences=applicationContext.getSharedPreferences("com.example.android.rainbowcalendar", MODE_PRIVATE)
-        val token: String?=sharedpref.getString("token", null)
+        //val sharedpref: SharedPreferences=applicationContext.getSharedPreferences("com.example.android.rainbowcalendar", MODE_PRIVATE)
+        //val token: String?=sharedpref.getString("token", null)
+        val sharedPrefSetup: SharedPreferences =applicationContext.getSharedPreferences("com.example.rainbowcalendar_setup", MODE_PRIVATE)
+        val setupDone=sharedPrefSetup.getBoolean("com.example.rainbowcalendar_setup",false)
+
         val welcomeText: String=getString(R.string.welcome_text)
         val welcomeBackText: String=getString(R.string.welcome_back)
         val delay: Long
 
-        if (token=="False"||token==null){
+        if (!setupDone){
             welcomeTextView.text=welcomeText
-            sharedpref.edit().putString("token", "true").apply()
-            delay=4000
+            //sharedpref.edit().putString("token", "true").apply()
+            delay=2000
             val intent=Intent(this, LanguageSettingsActivity::class.java)
             Handler(Looper.getMainLooper()).postDelayed({
                 startActivity(intent)
@@ -57,7 +59,7 @@ class SplashScreenActivity : AppCompatActivity() {
         else {
             welcomeTextView.text=welcomeBackText
             // rest of the Not-FirstTime Logic here
-            delay=500
+            delay=0
             val intent=Intent(this, MainActivity::class.java)
             Handler(Looper.getMainLooper()).postDelayed({
                 startActivity(intent)
