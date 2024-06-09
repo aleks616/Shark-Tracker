@@ -32,4 +32,6 @@
     <string name="choose_birthday">le birthday</string>
     <string name="additional_options">sample</string>
     <string name="too_young">You\'re too young</string>
+    <string name="select_one_option">Select one of the options below</string>
+    <string name="fill_name">Enter your name</string>
 </resources>
