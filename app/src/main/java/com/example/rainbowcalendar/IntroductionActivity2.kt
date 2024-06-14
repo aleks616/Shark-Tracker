@@ -16,6 +16,7 @@ import android.widget.NumberPicker
 import android.widget.RadioButton
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.TimePicker
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import java.util.Calendar
@@ -143,24 +144,50 @@ class IntroductionActivity2 : AppCompatActivity() {
 
 
         val helperCalendar=findViewById<CalendarView>(R.id.helperCalendar)
+        //helperCalendar.visibility=View.GONE
         val showCalendarCB=findViewById<CheckBox>(R.id.showCalendarCB)
 
         showCalendarCB.setOnCheckedChangeListener{_, isChecked ->
-            if(isChecked) helperCalendar.visibility=View.VISIBLE
-            else helperCalendar.visibility=View.GONE
+            if(isChecked) {
+                helperCalendar.visibility=View.VISIBLE
+            } //TODO: FIX IT, CALENDAR DOESN'T SHOW NOW
+            else{
+                helperCalendar.visibility=View.GONE
+            }
+
+
         }
 
         val daysSinceTInput=findViewById<NumberPicker>(R.id.daysSinceT)
         daysSinceTInput.minValue=0
         daysSinceTInput.maxValue=180
 
-        val TIntervalInput=findViewById<NumberPicker>(R.id.TInterval)
-        TIntervalInput.minValue=1
-        TIntervalInput.maxValue=180
+        val tIntervalInput=findViewById<NumberPicker>(R.id.TInterval)
+        tIntervalInput.minValue=1
+        tIntervalInput.maxValue=180
 
+        val tTime=findViewById<TimePicker>(R.id.tTime)
         val gelCb=findViewById<CheckBox>(R.id.gelCB)
 
+        val lastDoseText=findViewById<TextView>(R.id.lastDoseText)
+
         gelCb.setOnCheckedChangeListener{_, isChecked ->
+            if(isChecked){
+                tIntervalInput.visibility=View.GONE
+                daysSinceTInput.visibility=View.GONE
+                tTime.visibility=View.VISIBLE
+                lastDoseText.visibility=View.GONE
+                showCalendarCB.visibility=View.GONE //doc: calendar isn't needed for daily dose
+            }
+            else{
+                tIntervalInput.visibility=View.VISIBLE
+                daysSinceTInput.visibility=View.VISIBLE
+                tTime.visibility=View.GONE
+                lastDoseText.visibility=View.VISIBLE
+                showCalendarCB.visibility=View.VISIBLE
+            }
+
+
             //todo: show/hide the what time view and opposite with days quantity
             //  remind everyday in the morning, watch the time zone!
         }
@@ -325,14 +352,9 @@ class IntroductionActivity2 : AppCompatActivity() {
                 with(sharedPrefT.edit()){
                     putString("com.example.rainbowcalendar_tday", tDate)
                 }
-
-                if(showCalendarCB.isChecked)
-                    helperCalendar.visibility=View.VISIBLE //todo: move to event
-
                 val daysSinceT=daysSinceTInput.value
 
             }
-            //showCalendarCB helperCalendar daysSinceTInput
 
             //reg: BIRTHDAY
             val errorText=findViewById<TextView>(R.id.errorText)

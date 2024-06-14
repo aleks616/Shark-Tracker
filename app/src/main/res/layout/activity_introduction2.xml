@@ -92,7 +92,7 @@
                 android:text="@string/intro2_ace"
                 android:textSize="16sp"
                 android:visibility="gone" />
-        </RadioGroup>
+        </RadioGroup> <!-- mode-->
 
         <LinearLayout
             android:id="@+id/ageGroup"
@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:minHeight="48dp" />
-        </LinearLayout>
+        </LinearLayout> <!-- ageGroup-->
 
         <LinearLayout
             android:id="@+id/layoutBirthday"
@@ -141,17 +141,17 @@
                 android:calendarViewShown="false"
                 android:datePickerMode="spinner"
                 android:spinnersShown="true" />
-        </LinearLayout>
-
+        </LinearLayout> <!-- birthday-->
 
         <LinearLayout
             android:id="@+id/tStartDateLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
+                android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10sp"
@@ -169,6 +169,7 @@
             <!--mm-dd-yyyy-->
 
             <TextView
+                android:id="@+id/lastDoseText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="10sp"
@@ -189,9 +190,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20sp"
-                android:visibility="gone" />
-
-
+                android:visibility="gone"
+                 />
             <NumberPicker
                 android:id="@+id/daysSinceT"
                 android:layout_width="wrap_content"
@@ -206,6 +206,7 @@
                 android:textSize="20sp" />
 
             <NumberPicker
+                android:visibility="visible"
                 android:id="@+id/TInterval"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -219,8 +220,15 @@
                 android:minHeight="48dp"
                 android:text="T gel, everyday" />
 
-        </LinearLayout>
+            <TimePicker
+                android:visibility="gone"
+                android:layout_gravity="center"
+                android:id="@+id/tTime"
+                android:timePickerMode="spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/startDatePicker"
@@ -254,7 +262,7 @@
                     android:layout_height="wrap_content" />
 
             </LinearLayout>
-        </LinearLayout>
+        </LinearLayout> <!--approx start date picker-->
 
         <LinearLayout
             android:id="@+id/layoutSex"
@@ -289,7 +297,7 @@
                     android:minHeight="48dp"
                     android:text="No" />
             </RadioGroup>
-        </LinearLayout>
+        </LinearLayout> <!--sex-->
 
         <TextView
             android:id="@+id/errorText"
