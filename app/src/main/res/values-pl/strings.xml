@@ -34,4 +34,16 @@
     <string name="too_young">Jesteś za młod* aby korzystać z aplikacji</string>
     <string name="select_one_option">Wybierz jedną z poniższych opcji</string>
     <string name="fill_name">Wpisz imię</string>
+    <string name="t_start_when">Od kiedy bierzesz testosteron?</string>
+    <string name="last_t_dose">Ile dni temu ostatnio go wzi*ł*ś?</string>
+    <string name="show_calendar">Pokaż kalendarz dla ułatwienia</string>
+    <string name="t_how_often">Jak często przyjmujesz testosteron?</string>
+    <string name="t_gel">W żelu, codziennie</string>
+    <string name="what_time">O której godzinie?</string>
+    <string name="t_notif">Czy chcesz dostawać przypomnienia?</string>
+    <string name="approx_t_start">Jeśli wiesz kiedy mniej więcej zaczniesz testosteron, wybierz miesiąc i rok, możesz zmienić to ustawienie później.</string>
+    <string name="sexually_active_question">Czy jesteś aktywn* seksualnie? (w jakikolwiek sposób, nie tylko piv)  Jeżeli wybierzesz nie, to nie zostanie to nigdy wspomniane dopóki nie zmienisz tej opcji.</string>
+    <string name="yes">Tak</string>
+    <string name="no">Nie</string>
+    <string name="next">Dalej</string>
 </resources>

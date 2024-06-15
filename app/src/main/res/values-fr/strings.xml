@@ -34,4 +34,16 @@
     <string name="too_young">You\'re too young</string>
     <string name="select_one_option">Select one of the options below</string>
     <string name="fill_name">Enter your name</string>
+    <string name="t_start_when">When did you start T?</string>
+    <string name="last_t_dose">How many days ago did you last take it</string>
+    <string name="show_calendar">Show calendar to make it easy</string>
+    <string name="t_how_often">How often do you take it?</string>
+    <string name="t_gel">T gel, everyday</string>
+    <string name="what_time">What time?</string>
+    <string name="t_notif">Do you want to get reminding notifications?\"</string>
+    <string name="approx_t_start">If you know more or less when you will start T, enter the approx. month and year, you can change it later.</string>
+    <string name="sexually_active_question">Are you sexually active? (not only PIV), if no, it won\'t be ever mentioned till you change that option.</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="next">Next</string>
 </resources>
