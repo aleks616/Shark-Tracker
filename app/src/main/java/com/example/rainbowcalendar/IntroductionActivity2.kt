@@ -1,6 +1,7 @@
 package com.example.rainbowcalendar
 import android.content.Context
 import android.content.SharedPreferences
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -37,10 +38,14 @@ class IntroductionActivity2 : AppCompatActivity() {
             }
 
         var ageValue=""
+        val minorConsent=findViewById<CheckBox>(R.id.legal_minor_consent)
         ageSpinner.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener{
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 ageValue = parent?.getItemAtPosition(position).toString()
+                if(ageToCode(ageValue)==2){
+                    minorConsent.visibility=View.VISIBLE
+                }
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 //("Not yet implemented")
@@ -69,13 +74,17 @@ class IntroductionActivity2 : AppCompatActivity() {
         val m5Gnc=findViewById<RadioButton>(R.id.m5_gnc)
         val m6Nb=findViewById<RadioButton>(R.id.m6_nb)
         val m7Ace=findViewById<RadioButton>(R.id.m7_ace)
+        val m8FtmtL=findViewById<RadioButton>(R.id.m8_ftm_tL)
 
         val sexActiveText=findViewById<TextView>(R.id.sexActiveText)
         val sharedPrefGender = applicationContext.getSharedPreferences("com.example.rainbowcalendar_gender", Context.MODE_PRIVATE) ?: return
         val gender: String? =sharedPrefGender.getString("com.example.rainbowcalendar_gender","")
-        var tooYoungError: String=""
+        val sharedPrefTM=applicationContext.getSharedPreferences("com.example.rainbowcalendar_tm", Context.MODE_PRIVATE)
+        val tM:Boolean=sharedPrefTM.getBoolean("com.example.rainbowcalendar_tm", false)
+        var tooYoungError=""
         val birthdayPickerTextView=findViewById<TextView>(R.id.birthdayPicker_text)
         val lastDoseText=findViewById<TextView>(R.id.lastDoseText)
+
         when (gender) {
             "f" -> {
                 m1Young.visibility= View.VISIBLE
@@ -89,10 +98,10 @@ class IntroductionActivity2 : AppCompatActivity() {
             }
             "m" -> {
                 m1Young.visibility= View.VISIBLE
-                m2Gay.visibility=View.VISIBLE
                 m3Ftm.visibility=View.VISIBLE
                 m4FtmT.visibility=View.VISIBLE
                 m7Ace.visibility=View.VISIBLE
+                m8FtmtL.visibility=View.VISIBLE
                 sexActiveText.text=getString(R.string.sexually_active_question_male)
                 tooYoungError=getString(R.string.too_young_m)
                 birthdayPickerTextView.text=getString(R.string.choose_birthday_m)
@@ -107,9 +116,11 @@ class IntroductionActivity2 : AppCompatActivity() {
                 m5Gnc.visibility=View.VISIBLE
                 m6Nb.visibility=View.VISIBLE
                 m7Ace.visibility=View.VISIBLE
+                m8FtmtL.visibility=View.VISIBLE
                 tooYoungError=getString(R.string.too_young_n)
                 birthdayPickerTextView.text=getString(R.string.choose_birthday_n)
                 m1Young.text=getString(R.string.intro2_young_n)
+                m3Ftm.text=getString(R.string.intro2_ftm_n)
                 lastDoseText.text=getString(R.string.last_t_dose_n)
             }
         }
@@ -138,6 +149,7 @@ class IntroductionActivity2 : AppCompatActivity() {
         //var testosterone: Int? =sharedPrefTestosterone.getInt("com.example.rainbowcalendar_testosterone",0)
         val sharedPrefFertile= applicationContext.getSharedPreferences("com.example.rainbowcalendar_fert", Context.MODE_PRIVATE)
         //var fertile=sharedPrefFertile.getInt("com.example.rainbowcalendar_fert", 0)
+        val sharedPrefPeriod=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pr", Context.MODE_PRIVATE)
         //age=ageToCode(ageValue)
         //doc
         // ALWAYS:  0: none
@@ -147,11 +159,7 @@ class IntroductionActivity2 : AppCompatActivity() {
         // FERTILE (_fert) 1: yes
         // birthday: dd-mm-yyyy
         // ACTUAL T START (_tday) dd-mm-yyyy
-
-        with (sharedPrefAge.edit()) {
-            putInt("com.example.rainbowcalendar_gender", ageToCode(ageValue))
-            apply()
-        }
+        // PERIOD: 1: regular 2: irregular 3: no 4: ask
 
 
         val helperCalendar=findViewById<CalendarView>(R.id.helperCalendar)
@@ -202,6 +210,13 @@ class IntroductionActivity2 : AppCompatActivity() {
             tReminders = isChecked
         }
 
+        val skipBd=findViewById<CheckBox>(R.id.skipBd)
+        skipBd.setOnCheckedChangeListener{_, isChecked->
+            if(isChecked) dpBirthday.visibility=View.GONE
+            else dpBirthday.visibility=View.VISIBLE
+        }
+
+        val errorText=findViewById<TextView>(R.id.errorText)
         //reg: BUTTON 1
         button.setOnClickListener{
             if(m1Young.isChecked)
@@ -218,7 +233,8 @@ class IntroductionActivity2 : AppCompatActivity() {
                 mode=6
             else if(m7Ace.isChecked)
                 mode=7
-
+            else if(m8FtmtL.isChecked)
+                mode=8
             when(mode){
                 1->{
                     with (sharedPrefSex.edit()) {
@@ -233,6 +249,11 @@ class IntroductionActivity2 : AppCompatActivity() {
                         putInt("com.example.rainbowcalendar_fert", 0)
                         apply()
                     }
+                    //todo: ask like is it regular already
+                    with(sharedPrefPeriod.edit()){
+                        putInt("com.example.rainbowcalendar_pr",4)
+                    }
+
                 }
                 2->{
                     with (sharedPrefSex.edit()) {
@@ -247,6 +268,10 @@ class IntroductionActivity2 : AppCompatActivity() {
                         putInt("com.example.rainbowcalendar_fert", 0)
                         apply()
                     }
+                    with(sharedPrefPeriod.edit()){
+                        putInt("com.example.rainbowcalendar_pr",4)
+                    }
+
                 }
                 3->{
                     with (sharedPrefSex.edit()) {
@@ -260,6 +285,9 @@ class IntroductionActivity2 : AppCompatActivity() {
                     with (sharedPrefFertile.edit()) {
                         putInt("com.example.rainbowcalendar_fert", 1)
                         apply()
+                    }
+                    with(sharedPrefPeriod.edit()){
+                        putInt("com.example.rainbowcalendar_pr",4)
                     }
                 }
                 4->{
@@ -275,6 +303,9 @@ class IntroductionActivity2 : AppCompatActivity() {
                         putInt("com.example.rainbowcalendar_fert", 1)
                         apply()
                     }
+                    with(sharedPrefPeriod.edit()){
+                        putInt("com.example.rainbowcalendar_pr",2)
+                    }
                 }
                 5->{
                     with (sharedPrefSex.edit()) {
@@ -288,6 +319,9 @@ class IntroductionActivity2 : AppCompatActivity() {
                     with (sharedPrefFertile.edit()) {
                         putInt("com.example.rainbowcalendar_fert", 1)
                         apply()
+                    }
+                    with(sharedPrefPeriod.edit()){
+                        putInt("com.example.rainbowcalendar_pr",4)
                     }
                 }
                 6->{
@@ -303,6 +337,9 @@ class IntroductionActivity2 : AppCompatActivity() {
                         putInt("com.example.rainbowcalendar_fert", 1)
                         apply()
                     }
+                    with(sharedPrefPeriod.edit()){
+                        putInt("com.example.rainbowcalendar_pr",4)
+                    }
                 }
                 7->{
                     with (sharedPrefSex.edit()) {
@@ -317,6 +354,26 @@ class IntroductionActivity2 : AppCompatActivity() {
                         putInt("com.example.rainbowcalendar_fert", 0)
                         apply()
                     }
+                    with(sharedPrefPeriod.edit()){
+                        putInt("com.example.rainbowcalendar_pr",4)
+                    }
+                }
+                8->{
+                    with (sharedPrefSex.edit()) {
+                        putInt("com.example.rainbowcalendar_sex", 3)
+                        apply()
+                    }
+                    with (sharedPrefTestosterone.edit()) {
+                        putInt("com.example.rainbowcalendar_testosterone", 1)
+                        apply()
+                    }
+                    with (sharedPrefFertile.edit()) {
+                        putInt("com.example.rainbowcalendar_fert", 1)
+                        apply()
+                    }
+                    with(sharedPrefPeriod.edit()){
+                        putInt("com.example.rainbowcalendar_pr",3)
+                    }
                 }
             }
 
@@ -329,14 +386,31 @@ class IntroductionActivity2 : AppCompatActivity() {
             m5Gnc.visibility=View.GONE
             m6Nb.visibility=View.GONE
             m7Ace.visibility=View.GONE
+            m8FtmtL.visibility=View.GONE
             button.visibility=View.GONE
             button1.visibility=View.VISIBLE
             ageLayout.visibility=View.GONE
             layoutBirthday.visibility=View.VISIBLE
+            minorConsent.visibility=View.GONE
             //doc: show sex active choice if it's not obvious and if over 16
-            val age1=ageToCode(ageValue)
-            if(sex==3&&(age1==2||age1==3))
+            var age1=ageToCode(ageValue)
+            if(age1==2&&(!minorConsent.isChecked)){
+                age1=1
+                errorText.text="You didn't confirm you are of legal age, age option automatically has been switched to 'minor'"
+            }
+
+            with (sharedPrefAge.edit()) {
+                putInt("com.example.rainbowcalendar_gender", age1)
+                apply()
+            }
+            //todo: this shit here
+            if(sex==3&&(age1==2||age1==3)){
+
+
                 layoutSex.visibility=View.VISIBLE
+            }
+
+
             //doc: if is planning to start T, enter approx date
             if(m3Ftm.isChecked) startDatePicker.visibility=View.VISIBLE
             //doc: if on T, show start date
@@ -371,30 +445,30 @@ class IntroductionActivity2 : AppCompatActivity() {
                     //doc: todo: from the daysTillShot, remind every interval
                 }
                 else{ //doc: gel
-
+                    //todo: gel reminders
                 }
 
                 //val nextTDate=
             }
 
             //reg: BIRTHDAY
-            val errorText=findViewById<TextView>(R.id.errorText)
-            //doc: birthday dd-mm-yyyy
-            val birthday: String=dpBirthday.dayOfMonth.toString()+"/"+dpBirthday.month.toString()+"/"+dpBirthday.year
-            if(year-dpBirthday.year > 9){
-                errorText.text=""
-                with (sharedPrefBirthday.edit()) {
-                    putString("com.example.rainbowcalendar_birthday", birthday)
-                    apply()
+            if(dpBirthday.visibility==View.VISIBLE){
+                //doc: birthday dd-mm-yyyy
+                val birthday: String=dpBirthday.dayOfMonth.toString()+"/"+dpBirthday.month.toString()+"/"+dpBirthday.year
+                if(year-dpBirthday.year > 9){
+                    errorText.text=""
+                    with (sharedPrefBirthday.edit()) {
+                        putString("com.example.rainbowcalendar_birthday", birthday)
+                        apply()
+                    }
+                }
+                //doc: show too young if younger than 10, and error if date is today
+                else if(year-dpBirthday.year==0 && month-dpBirthday.month==0)
+                    errorText.text=getString(R.string.date_error)
+                else if(year-dpBirthday.year in 0..9){
+                    errorText.text=tooYoungError
                 }
             }
-            //doc: show too young if younger than 10, and error if date is today
-            else if(year-dpBirthday.year==0 && month-dpBirthday.month==0)
-                errorText.text=getString(R.string.date_error)
-            else if(year-dpBirthday.year in 0..9){
-                errorText.text=tooYoungError
-            }
-            //todo: errorText.text!="Enter correct date" needed to save settings
             //doc: if 16-17 or 18+ and it's unknown if sexually active or not, hide sex options for inactive, show the tick for active somewhere close
             val age1=ageToCode(ageValue)
             if(sex==3&&(age1==2||age1==3)){
@@ -428,9 +502,9 @@ class IntroductionActivity2 : AppCompatActivity() {
 
     private fun ageToCode(age: String): Int{
         return when(age){
-            "under 16" -> 1
-            "17-18" -> 2
-            "over 18" -> 3
+            "minor" -> 1
+            "minor, but legal" -> 2
+            "adult (18+)" -> 3
             else -> 0
         }
     }

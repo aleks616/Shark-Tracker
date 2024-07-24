@@ -64,6 +64,16 @@
                 android:visibility="gone" />
 
             <RadioButton
+                android:id="@+id/m8_ftm_tL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10sp"
+                android:minHeight="48dp"
+                android:text="@string/intro2_ftmTl"
+                android:textSize="16sp"
+                android:visibility="gone"/>
+
+            <RadioButton
                 android:id="@+id/m5_gnc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -92,6 +102,7 @@
                 android:text="@string/intro2_ace"
                 android:textSize="16sp"
                 android:visibility="gone" />
+
         </RadioGroup> <!-- mode-->
 
         <LinearLayout
@@ -114,6 +125,16 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:minHeight="48dp" />
+
+            <CheckBox
+                android:id="@+id/legal_minor_consent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:visibility="gone"
+                android:layout_marginHorizontal="10sp"
+                android:text="@string/minor_consent"
+                />
         </LinearLayout> <!-- ageGroup-->
 
         <LinearLayout
@@ -131,6 +152,14 @@
                 android:text="@string/choose_birthday_n"
                 android:textAlignment="center"
                 android:textSize="20sp" />
+
+            <CheckBox
+                android:id="@+id/skipBd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="I don't want to enter my birthday"
+                android:layout_gravity="center"
+                />
 
             <DatePicker
                 android:id="@+id/datePickerBirthday"

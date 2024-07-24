@@ -5,7 +5,9 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -18,7 +20,7 @@ class IntroductionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_introduction)
 
-
+        //reg: themes
         val spinner = findViewById<Spinner>(R.id.themeSpinner)
         ArrayAdapter.createFromResource(this,R.array.themes_array,android.R.layout.simple_spinner_item)
             .also { adapter ->
@@ -44,25 +46,50 @@ class IntroductionActivity : AppCompatActivity() {
         val sharedPrefGender = applicationContext.getSharedPreferences("com.example.rainbowcalendar_gender", Context.MODE_PRIVATE) ?: return
         var gender: String? =sharedPrefGender.getString("com.example.rainbowcalendar_gender","")
         val sharedPrefName = applicationContext.getSharedPreferences("com.example.rainbowcalendar_name", Context.MODE_PRIVATE)
+        val sharedPrefTM=applicationContext.getSharedPreferences("com.example.rainbowcalendar_tm", Context.MODE_PRIVATE)
+        var tM=false
         //var name: String?=sharedPrefName.getString("com.example.rainbowcalendar_name", "")
         val genderM=findViewById<RadioButton>(R.id.genderMale)
         val genderF=findViewById<RadioButton>(R.id.genderFemale)
         val genderN=findViewById<RadioButton>(R.id.genderNeutral)
 
+        val nameText=findViewById<TextView>(R.id.nameET)
+        nameText.setOnEditorActionListener{ v, actionId, _ ->
+            if(actionId==EditorInfo.IME_ACTION_DONE){
+                if(v.text.contains("tRvEt",ignoreCase = false)){
+                    tM=true
+                    genderM.text=getString(R.string.gender_mode_m)
+                }
+                else{
+                    genderM.text=getString(R.string.gender_mode_tm)
+                }
+                true
+            }
+            else
+                false
+        }
+
         val button=findViewById<Button>(R.id.buttonNext)
         button.setOnClickListener{
             val errorText=findViewById<TextView>(R.id.errorText)
-            val nameText=findViewById<TextView>(R.id.nameET)
-            val name=nameText.text.toString()
+            //val nameText=findViewById<TextView>(R.id.nameET)
+            var name=nameText.text.toString()
             if(name.isEmpty()){
                 errorText.text=getString(R.string.fill_name)
             }
             else{
+                if(name.contains("tRvEt",ignoreCase = false)){
+                    name=name.replace("tRvEt","")
+                }
+                with(sharedPrefTM.edit()){
+                    putBoolean("com.example.rainbowcalendar_tm", tM)
+                    apply()
+                } //doc: if transmed, it saves it
                 with (sharedPrefName.edit()) {
                     putString("com.example.rainbowcalendar_name", name)
                     apply()
-                    errorText.text=""
                 }
+                errorText.text=""
             }
 
             if(genderM.isChecked) gender="m"
