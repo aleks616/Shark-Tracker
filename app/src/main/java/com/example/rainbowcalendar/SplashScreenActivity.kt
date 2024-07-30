@@ -1,5 +1,7 @@
 package com.example.rainbowcalendar
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -47,6 +49,7 @@ class SplashScreenActivity : AppCompatActivity() {
         val delay: Long
 
         if (!setupDone){
+            createNotificationChannel(this)
             welcomeTextView.text=welcomeText
             //sharedpref.edit().putString("token", "true").apply()
             delay=2000
@@ -66,5 +69,13 @@ class SplashScreenActivity : AppCompatActivity() {
                 finish()
             }, delay)
         }
+    }
+    private fun createNotificationChannel(context: Context){
+        val channel=NotificationChannel("hrt","Hrt reminders", NotificationManager.IMPORTANCE_HIGH).apply{
+            description="This channel is for hrt reminders"
+        }
+
+        val notificationManager=context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 }

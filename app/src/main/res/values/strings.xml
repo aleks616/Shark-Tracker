@@ -78,4 +78,5 @@
     <string name="choose_birthday_m">If you want to, enter your birthday, (you\'ll get birthday wishes). Advised if you\'re a minor, the age setting will change automatically.</string>
     <string name="intro2_ftm_m">I\'m a pre-T trans guy (trans masculine-leaning person) planning on taking T someday.</string>
     <string name="minor_consent">By selecting this option, I confirm that I am of legal age to discuss sexual activity according to the laws of my country or state.</string>
+    <string name="error_minor_consent">You didn\'t confirm you are of legal age, age option automatically has been switched to \'minor\'</string>
 </resources>

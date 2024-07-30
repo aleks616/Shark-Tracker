@@ -60,4 +60,5 @@
     <string name="intro2_ftm_n">I\'m a trans masculine-leaning person planning on taking T someday.</string>
     <string name="gender_mode_m">Man mode, pregnancy won\'t ever be mentioned</string>
     <string name="minor_consent">By selecting this option, I confirm that I am of legal age to discuss sexual activity according to the laws of my country or state.</string>
+    <string name="error_minor_consent">You didn\'t confirm you are of legal age, age option automatically has been switched to \'minor\'</string>
 </resources>
