@@ -1,5 +1,6 @@
 package com.example.rainbowcalendar
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -24,6 +25,11 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+
+
+        val intent=Intent(this, PasswordActivity::class.java) //todo: delete this soon!!1
+        startActivity(intent)
+
     }
     private fun makeCurrentFragment(fragment: Fragment)=
         supportFragmentManager.beginTransaction().apply {

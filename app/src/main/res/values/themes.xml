@@ -3,6 +3,9 @@
     <style name="Base.Theme.RainbowCalendar" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/cornsilk</item>
+        <item name="colorButtonNormal">@color/white</item>
+        <item name="colorSecondary">@color/dodger_blue</item>
+        <item name="colorOutline">@color/black</item>
     </style>
 
     <style name="Theme.RainbowCalendar" parent="Base.Theme.RainbowCalendar" />
