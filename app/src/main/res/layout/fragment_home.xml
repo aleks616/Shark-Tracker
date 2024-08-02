@@ -9,6 +9,36 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="home fragment" />
+        android:text="home"
+        android:textSize="50sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/testButton"
+            android:layout_width="150sp"
+            android:layout_height="70sp"
+            android:layout_gravity="center"
+            android:layout_marginStart="30sp"
+            android:background="@color/royal_blue"
+            android:gravity="center"
+            android:text="test button 1\ngo to password activity"
+            android:textAllCaps="false"
+            tools:ignore="HardcodedText" />
+
+        <Button
+            android:id="@+id/testButton2"
+            android:layout_width="150sp"
+            android:layout_height="70sp"
+            android:layout_gravity="center"
+            android:layout_marginStart="30sp"
+            android:background="@color/royal_blue"
+            android:gravity="center"
+            android:text="test button 2\nreset password"
+            android:textAllCaps="false"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
 
 </FrameLayout>
