@@ -15,6 +15,9 @@
         android:theme="@style/Theme.RainbowCalendar"
         tools:targetApi="s">
         <activity
+            android:name=".RecoveryActivity"
+            android:exported="false" />
+        <activity
             android:name=".PasswordActivity"
             android:exported="false" />
         <activity

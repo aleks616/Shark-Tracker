@@ -18,7 +18,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val alarm=Alarm(context)
     }
     private fun showPushNotification(context: Context){
-        Log.d("notifcation","should work")
+        Log.d("notification","should work")
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notification = NotificationCompat.Builder(context, "hrt")
             .setContentTitle("Reminder")

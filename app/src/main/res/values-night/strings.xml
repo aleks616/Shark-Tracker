@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="error_minor_consent">You didn\'t confirm you are of legal age, age option automatically has been switched to \'minor\'</string>
-    <string name="enter_pin">Enter pin</string>
-</resources>

@@ -12,12 +12,12 @@
         <item>Ciemny</item>
         <item>Jasny</item>
     </string-array>
-    <string name="intro2_ftmTl">I\'ve been on T for some time, I don\'t experience shark weeks anymore, I want shot reminders</string>
+    <string name="intro2_ftmTl">Zażywam testosteron od jakiegoś czasu, nie mam już okresu, będę używać aplikacji dla śledzenia zastrzyków.</string>
     <string name="choose_gender_mode">Wybierz tryb/płeć, na następnym ekranie będzie więcej opcji. Możesz zmienić te ustawienia później.</string>
     <string name="gender_mode_tm">Tryb transmęski, będziemy używać męskich zwrotów, i postaramy się unikać triggerujących tematów.</string>
     <string name="gender_mode_f">Tryb kobiecy, będziemy używać żeńskich zwrotów.</string>
     <string name="gender_mode_n">"Tryb neutralny, dla osób niebinarnych, i tych które wolą neutralne zwroty. "</string>
-    <string name="home_button_name">Strona główna</string>
+    <string name="home_button_name">Główna</string>
     <string name="account_button_name">Konto</string>
     <string name="add_button_text">Dodaj</string>
     <string name="calendar_button_text">Kalendarz</string>
@@ -27,10 +27,10 @@
     <string name="intro2_young_m">Mam okres od niedawna i nie myśle o ciąży. (wersja przyjazna nieletnim, jeśli jesteś dorosły, wybierz ostatnią opcję)</string>
     <string name="intro2_gay">Jestem w związku w którym nie mogę zajść w ciążę/Nie mogę z innego powodu.</string>
     <string name="intro2_ftm">Jestem nie biorącą testosteronu osobą transmęską, która planuje/chcę go kiedyś brać.</string>
-    <string name="intro2_ftmT">Przechodze tranzycję k/m i zaczynam testosteron/mikrodawkuje i chcę śledzić zanikanie okresu.</string>
+    <string name="intro2_ftmT">Przechodzę tranzycję k/m i zaczynam testosteron/mikrodawkuje i chcę śledzić zanikanie okresu.</string>
     <string name="intro2_gnc">Nie lubię stereotypowego kobiecego wyglądu tego typu aplikacji.</string>
     <string name="intro2_nb">Jestem osobą trans(niebinarną), ale nie planuję terapii hormonalnej.</string>
-    <string name="intro2_ace">Nie uprawiam seksu.</string>
+    <string name="intro2_ace">Nie jestem aktywny(a/*) seksualnie</string>
     <string name="choose_age">Wybierz swoją grupę wiekową.</string>
     <string name="choose_birthday_n">Jeśli chcesz, wprowadź swoją datę urodzenia (będziesz dostawać życzenia urodzinowe). Zalecane jeśli jesteś niepełnoletn*, wtedy ustawienie wieku przełączy się automatycznie.</string>
     <string name="choose_birthday_m">Jeśli chcesz, wprowadź swoją datę urodzenia (będziesz dostawać życzenia urodzinowe). Zalecane jeśli jesteś niepełnoletni, wtedy ustawienie wieku przełączy się automatycznie.</string>
@@ -58,14 +58,70 @@
     <string name="too_young_n">Jesteś za młod* aby korzystać z aplikacji</string>
     <string name="intro2_ftm_m">I\\\'m a pre-T trans guy (trans masculine-leaning person) planning on taking T someday.</string>
     <string name="intro2_ftm_n">I\'m a trans masculine-leaning person planning on taking T someday.</string>
-    <string name="gender_mode_m">Man mode, pregnancy won\'t ever be mentioned</string>
+    <string name="gender_mode_m">Odblokowałeś sekretny tryb prawdziwego mężczyzny!</string>
     <string name="minor_consent">By selecting this option, I confirm that I am of legal age to discuss sexual activity according to the laws of my country or state.</string>
     <string name="error_minor_consent">You didn\'t confirm you are of legal age, age option automatically has been switched to \'minor\'</string>
-    <string name="pin_length_error">Wrong pin length\n</string>
-    <string name="password">password</string>
-    <string name="enter_pin">Enter pin</string>
-    <string name="pin_circle_description">circle indicating if digit has been set</string>
-    <string name="enter_password">Enter password</string>
-    <string name="pin_delete_description">delete pin character</string>
-    <string name="pin_enter_description">enter pin and proceed</string>
+    <string name="pin_length_error">Niepoprawna długość pinu</string>
+    <string name="password">hasło</string>
+    <string name="enter_pin">Wrpowadź pin</string>
+    <string name="pin_circle_description">kontrolka pokazująca czy znak został wprowadzony</string>
+    <string name="enter_password">Wprowadź hasło</string>
+    <string name="pin_delete_description">usuń znak pinu</string>
+    <string name="pin_enter_description">przejdź dalej</string>
+    <string name="recovery_setup_title">Ustaw pytania do odzyskiwania konta</string>
+    <string name="answer_recovery_questions">Odpowiedz na pytania aby odzyskać konto</string>
+    <string name="enter_answer">wprowadź odpowiedź</string>
+    <string name="enter">dalej</string>
+    <string name="recovery_noquestion_error">Jeśli nie widzisz pytania, nastąpił błąd</string>
+    <string name="password_type_title">Wybierz rodzaj hasła</string>
+    <string name="password_text_password">Tekst</string>
+    <string name="password_pin_password">Pin</string>
+    <string name="password_confirm_type">Potwierdź rodzaj hasła</string>
+    <string name="password_warning">Pamiętaj to hasło, jeśli je zapomnisz, stracisz dostęp do aplikacji.</string>
+    <string name="password_show">pokaż hasło</string>
+    <string name="enter_the_app">Wejdź do aplikacji</string>
+    <string name="password_repeat">Wprowadź to samo hasło ponownie</string>
+    <string name="recovery_answer_empty">Odpowiedzi nie mogą być puste</string>
+    <string name="recovery_wrong_answer">"Zła odpowiedź na pytanie   "</string>
+    <string name="recovery_questions_repeat">Pytania nie mogą się powtarzać</string>
+    <string name="recovery_choose_all">Wybierz wszystkie 3 pytania</string>
+    <string name="recovery_answer_all">Odpowiedz na wszystkie 3 pytania</string>
+    <string name="create_pin">Utwórz pin</string>
+    <string name="enter_pin_again">Wprowadź pin ponownie</string>
+    <string name="wrong_password">Niepoprawne hasło</string>
+    <string name="create_password">Utwórz hasło</string>
+    <string name="passwords_different_error">Hasła się różnią</string>
+    <string name="password_length_error">Hasło musi mieć conajmniej 6 znaków</string>
+    <string name="password_digit_error">Jeśli chcesz hasło złożone z cyfr, użyj pinu</string>
+    <string name="wrong_pin_try_again">Zły pin, spróbuj ponownie</string>
+    <string name="pins_different_error">Piny się różnią, spróbuj ponownie</string>
+    <string name="no_birthday">Nie chcę podaweać daty urodzenia</string>
+    <string name="settings">Ustawienia</string>
+
+
+    <string-array name="recoveryQuestions">
+        <item>Wybierz pytanie</item>
+        <item>Jako dziecko, jaki był twój wymarzony zawód?</item>
+        <item>Nazwisko panieńskie babci?</item>
+        <item>Losowe zdanie/fraza którą pamiętasz.</item>
+        <item>Jaki był twój pierwszy koncert?</item>
+        <item>Jakiej marki był twój pierwszy telefon?</item>
+        <item>Jak miała na imię pierwsza osoba którą pocałował*ś?</item>
+        <item>Jaki rozmiar miały twoje pierwsze buty?</item>
+        <item>O której godzinie się urodził*ś?</item>
+        <item>Na jakiej ulicy mieszkał* twój najlepsz* przyjaciel(przyjaciółka) z dziedziństwa?</item>
+        <item>Jaka była twój pierwszy album muzyczny który kupił*ś?</item>
+        <item>Jaki był twój ulubiony smak lodów w dziedziństwie?</item>
+        <item>Kto wygrał pierwszy mecz który widział*ś na żywo?</item>
+        <item>Dokąd pierwszy raz leciał*ś samolotem?</item>
+        <item>Jakiego przedmiotu najbardziej nie lubiłeś w szkole średniej?</item>
+        <item>Jaka była twoja ulubiona gra komputerowa w dziedziństwie?</item>
+        <item>Jaki kolor miał twój ulubiony koc w dziedziństwie?</item>
+        <item>Jaka była pierwsza książka którą przeczytał*ś?</item>
+        <item>Pierwsz* crush?</item>
+        <item>Jakie było pierwsze danie które nauczył*ś się przygotowywać?</item>
+        <item>Jaki był tw*j najbardziej znienawidzony nauczyciel?</item>
+        <item>Jak ma na drugie imię tw*j* najstarsz* kuzyn/kuzynka?</item>
+        <item>Gdzie poznali się twoji rodzice?</item>
+    </string-array>
 </resources>
