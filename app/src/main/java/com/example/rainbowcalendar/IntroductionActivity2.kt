@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -23,17 +22,23 @@ import android.widget.TimePicker
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import java.util.Calendar
-import com.example.rainbowcalendar.AlarmReceiver
 
 class IntroductionActivity2 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_introduction2)
 
-        //val dpBirthday=findViewById<DatePicker>(R.id.datePickerBirthday)
-        //val birthday=dpBirthday.dayOfMonth.toString()+"/"+dpBirthday.month.toString()+"/"+dpBirthday.year
-        //Toast.makeText(this@IntroductionActivity2,birthday, Toast.LENGTH_SHORT).show()
+        //TODO:
+        // 1. after button1 do button2 and whole lockscreen mechanism after SplashScreenActivity
+        // 2. change age categories just into legal and minor
+        // 3. if year is same as now skip year but still send birthday notifications
+        // 4. extract strings
+        // 5. make notifications take text from strings
+        // 6. UI modes
+        // 7. option to reset settings/remove data and change them
+        // 8. period options menu
 
+        //region age categories
         //doc: age spinner with age group values
         val ageSpinner = findViewById<Spinner>(R.id.ageSpinner)
         val ageLayout=findViewById<LinearLayout>(R.id.ageGroup)
@@ -44,24 +49,21 @@ class IntroductionActivity2 : AppCompatActivity() {
             }
 
         var ageValue=""
-        val minorConsent=findViewById<CheckBox>(R.id.legal_minor_consent)
+        val legalAgeProof=findViewById<CheckBox>(R.id.legal_minor_consent)
         ageSpinner.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener{
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 ageValue = parent?.getItemAtPosition(position).toString()
-                if(ageToCode(ageValue)==2){
-                    minorConsent.visibility=View.VISIBLE
-                }
-                else{
-                    minorConsent.visibility=View.GONE
-                }
+                if(ageToCode(ageValue)==2)
+                    legalAgeProof.visibility=View.VISIBLE
+                else
+                    legalAgeProof.visibility=View.GONE
             }
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                //("Not yet implemented")
-            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+        //endregion
 
-        //doc: possible T date picker
+        //region possible T date picker
         val tDatePickerMonth=findViewById<NumberPicker>(R.id.TDatePickerMonth)
         tDatePickerMonth.minValue=1
         tDatePickerMonth.maxValue=12
@@ -75,7 +77,9 @@ class IntroductionActivity2 : AppCompatActivity() {
         tDatePickerYear.setOnValueChangedListener{ _, _, _ ->
             fixAvailableMonths(tDatePickerYear,tDatePickerMonth)
         }
+        //endregion
 
+        //region modes finding views and shared preferences
         val m1Young=findViewById<RadioButton>(R.id.m1_young)
         val m2Gay=findViewById<RadioButton>(R.id.m2_gay)
         val m3Ftm=findViewById<RadioButton>(R.id.m3_ftm)
@@ -88,12 +92,13 @@ class IntroductionActivity2 : AppCompatActivity() {
         val sexActiveText=findViewById<TextView>(R.id.sexActiveText)
         val sharedPrefGender = applicationContext.getSharedPreferences("com.example.rainbowcalendar_gender", Context.MODE_PRIVATE) ?: return
         val gender: String? =sharedPrefGender.getString("com.example.rainbowcalendar_gender","")
-        val sharedPrefTM=applicationContext.getSharedPreferences("com.example.rainbowcalendar_tm", Context.MODE_PRIVATE)
+        val sharedPrefTM=applicationContext.getSharedPreferences("com.example.rainbowcalendar_tm", Context.MODE_PRIVATE) //todo: transmed
         val tM:Boolean=sharedPrefTM.getBoolean("com.example.rainbowcalendar_tm", false)
         var tooYoungError=""
         val birthdayPickerTextView=findViewById<TextView>(R.id.birthdayPicker_text)
         val lastDoseText=findViewById<TextView>(R.id.lastDoseText)
 
+        //region settings by gender
         when (gender) {
             "f" -> {
                 m1Young.visibility= View.VISIBLE
@@ -133,6 +138,7 @@ class IntroductionActivity2 : AppCompatActivity() {
                 lastDoseText.text=getString(R.string.last_t_dose_n)
             }
         }
+        //endregion
 
         var mode=0
         val button=findViewById<Button>(R.id.buttonNext)
@@ -145,21 +151,18 @@ class IntroductionActivity2 : AppCompatActivity() {
         val dpBirthday=findViewById<DatePicker>(R.id.datePickerBirthday)
         val tStartDateLayout=findViewById<LinearLayout>(R.id.tStartDateLayout)
         val tStartDate=findViewById<DatePicker>(R.id.tStartDate)
+        val errorText=findViewById<TextView>(R.id.errorText)
 
         val sharedPrefT = applicationContext.getSharedPreferences("com.example.rainbowcalendar_tday", Context.MODE_PRIVATE)
         val sharedPrefBirthday = applicationContext.getSharedPreferences("com.example.rainbowcalendar_birthday", Context.MODE_PRIVATE)
         dpBirthday.maxDate=System.currentTimeMillis()
 
         val sharedPrefAge = applicationContext.getSharedPreferences("com.example.rainbowcalendar_minor", Context.MODE_PRIVATE)
-        //var age: Int =sharedPrefAge.getInt("com.example.rainbowcalendar_minor",0)
         val sharedPrefSex = applicationContext.getSharedPreferences("com.example.rainbowcalendar_sex", Context.MODE_PRIVATE)
         val sex: Int =sharedPrefSex.getInt("com.example.rainbowcalendar_sex",0)
         val sharedPrefTestosterone = applicationContext.getSharedPreferences("com.example.rainbowcalendar_testosterone", Context.MODE_PRIVATE)
-        //var testosterone: Int? =sharedPrefTestosterone.getInt("com.example.rainbowcalendar_testosterone",0)
         val sharedPrefFertile= applicationContext.getSharedPreferences("com.example.rainbowcalendar_fert", Context.MODE_PRIVATE)
-        //var fertile=sharedPrefFertile.getInt("com.example.rainbowcalendar_fert", 0)
         val sharedPrefPeriod=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pr", Context.MODE_PRIVATE)
-        //age=ageToCode(ageValue)
         //doc
         // ALWAYS:  0: none
         // AGE (_minor) 1: 16- 2: 16-17 3: 18+
@@ -169,8 +172,9 @@ class IntroductionActivity2 : AppCompatActivity() {
         // birthday: dd-mm-yyyy
         // ACTUAL T START (_tday) dd-mm-yyyy
         // PERIOD: 1: regular 2: irregular 3: no 4: ask
+        //endregion
 
-
+        //region T settings and notifications setup
         val helperCalendar=findViewById<CalendarView>(R.id.helperCalendar)
         val showCalendarCB=findViewById<CheckBox>(R.id.showCalendarCB)
 
@@ -191,8 +195,8 @@ class IntroductionActivity2 : AppCompatActivity() {
         val timeText=findViewById<TextView>(R.id.timeText)
         val gelCb=findViewById<CheckBox>(R.id.gelCB)
 
-        //val lastDoseText=findViewById<TextView>(R.id.lastDoseText)
 
+        //doc: gel switch
         gelCb.setOnCheckedChangeListener{_, isChecked ->
             if(isChecked){
                 tIntervalInput.visibility=View.GONE
@@ -213,20 +217,19 @@ class IntroductionActivity2 : AppCompatActivity() {
         }
 
         val notifCB=findViewById<CheckBox>(R.id.notifCB)
-        var tReminders: Boolean=false
+        var tReminders=false
 
         notifCB.setOnCheckedChangeListener{_, isChecked ->
             tReminders = isChecked
         }
+        //endregion
 
         val skipBd=findViewById<CheckBox>(R.id.skipBd)
         skipBd.setOnCheckedChangeListener{_, isChecked->
             if(isChecked) dpBirthday.visibility=View.GONE
             else dpBirthday.visibility=View.VISIBLE
         }
-
-        val errorText=findViewById<TextView>(R.id.errorText)
-        //reg: BUTTON 1
+        //region BUTTON 1
         button.setOnClickListener{
             notif()
             if(m1Young.isChecked)
@@ -401,10 +404,10 @@ class IntroductionActivity2 : AppCompatActivity() {
             button1.visibility=View.VISIBLE
             ageLayout.visibility=View.GONE
             layoutBirthday.visibility=View.VISIBLE
-            minorConsent.visibility=View.GONE
+            legalAgeProof.visibility=View.GONE
             //doc: show sex active choice if it's not obvious and if over 16
             var age1=ageToCode(ageValue)
-            if(age1==2&&(!minorConsent.isChecked)){
+            if(age1==2&&(!legalAgeProof.isChecked)){
                 age1=1
                 errorText.text=getString(R.string.error_minor_consent)
             }
@@ -428,11 +431,10 @@ class IntroductionActivity2 : AppCompatActivity() {
 
             helperCalendar.visibility=View.GONE
         }
-
+        //endregion handling
 
         val sharedPrefTReminderI=applicationContext.getSharedPreferences("com.example.rainbowcalendar_TReminderI", Context.MODE_PRIVATE)
-
-        //reg: BUTTON2
+        //region BUTTON2
         button1.setOnClickListener{
             //doc: possible t start, show on main screen when it's close
             if(mode==3){
@@ -516,12 +518,14 @@ class IntroductionActivity2 : AppCompatActivity() {
                 }
             }
 
-            //reg: saving "settings done"
+            //reg: saving "settings done" + notifcations
             if(errorText.text!="Enter correct date"){
-                val sharedPrefSetup: SharedPreferences =applicationContext.getSharedPreferences("com.example.rainbowcalendar_setup", MODE_PRIVATE)
-                with(sharedPrefSetup.edit()){
-                    putBoolean("com.example.rainbowcalendar_setup",true)
-                    apply()
+                if(tReminders){
+                    val sharedPrefSetup: SharedPreferences =applicationContext.getSharedPreferences("com.example.rainbowcalendar_setup", MODE_PRIVATE)
+                    with(sharedPrefSetup.edit()){
+                        putBoolean("com.example.rainbowcalendar_setup",true)
+                        apply()
+                    }
                 }
                 val intent=Intent(this, MainActivity::class.java)
                 startActivity(intent)
@@ -529,7 +533,10 @@ class IntroductionActivity2 : AppCompatActivity() {
             }
 
         }
+        //endregion
+
     }
+    //region helper functions
     private fun notif(){
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -572,4 +579,6 @@ class IntroductionActivity2 : AppCompatActivity() {
 
         }
     }
+
+    //endregion
 }

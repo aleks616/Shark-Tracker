@@ -79,4 +79,11 @@
     <string name="intro2_ftm_m">I\'m a pre-T trans guy (trans masculine-leaning person) planning on taking T someday.</string>
     <string name="minor_consent">By selecting this option, I confirm that I am of legal age to discuss sexual activity according to the laws of my country or state.</string>
     <string name="error_minor_consent">You didn\'t confirm you are of legal age, age option automatically has been switched to \'minor\'</string>
+    <string name="pin_length_error">Wrong pin length</string>
+    <string name="password">password</string>
+    <string name="enter_pin">Enter pin</string>
+    <string name="pin_circle_description">circle indicating if digit has been set</string>
+    <string name="enter_password">Enter password</string>
+    <string name="pin_delete_description">delete pin character</string>
+    <string name="pin_enter_description">enter pin and proceed</string>
 </resources>
