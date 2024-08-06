@@ -46,4 +46,8 @@
     <string name="choose_gender_mode">Choose your gender/mode, there will be more detailed modes on the next screen. You can always change these settings.</string>
     <string name="choose_age">Choose your age group.</string>
     <string name="choose_birthday">If you want to, enter your birthday, (you\'ll get birthday wishes). Advised if you\'re a minor, the age setting will change automatically.</string>
+    <string name="additional_options">Additional settings</string>
+    <string name="too_young">You\'re too young</string>
+    <string name="select_one_option">Select one of the options below</string>
+    <string name="fill_name">Enter your name</string>
 </resources>

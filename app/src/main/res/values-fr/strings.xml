@@ -30,4 +30,6 @@
     <string name="intro2_ace">Je suis vierge/Je n\'ai pas de relations sexuelles (peu importe la raison)</string>
     <string name="choose_age">Choisis ton edad</string>
     <string name="choose_birthday">le birthday</string>
+    <string name="additional_options">sample</string>
+    <string name="too_young">You\'re too young</string>
 </resources>
