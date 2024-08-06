@@ -98,7 +98,7 @@
         android:drawableEnd="@drawable/icon_arrow_right_triangle"
         android:drawableTint="@color/dark_blue"
         android:layout_gravity="end"
-        android:text="next"
+        android:text="@string/next"
         android:textAlignment="textEnd"
         />
 

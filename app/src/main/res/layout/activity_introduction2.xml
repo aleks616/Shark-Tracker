@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10sp"
             android:text="@string/intro2_header"
-            android:textSize="30sp" /> <!-- change to additional settings-->
+            android:textSize="30sp" /> <!-- change to "additional settings"-->
 
         <RadioGroup
             android:layout_width="match_parent"
@@ -151,11 +151,11 @@
             android:visibility="gone">
 
             <TextView
-                android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10sp"
-                android:text="When did you start T?"
+                android:gravity="center"
+                android:text="@string/t_start_when"
                 android:textSize="18sp" />
 
             <DatePicker
@@ -174,7 +174,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="10sp"
                 android:gravity="center"
-                android:text="How many days ago did you last take it?"
+                android:text="@string/last_t_dose"
                 android:textSize="20sp" />
 
             <CheckBox
@@ -183,15 +183,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20sp"
                 android:minHeight="48dp"
-                android:text="Show calendar to make it easy" />
+                android:text="@string/show_calendar" />
 
             <CalendarView
                 android:id="@+id/helperCalendar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20sp"
-                android:visibility="gone"
-                 />
+                android:layout_marginHorizontal="20sp" />
+
             <NumberPicker
                 android:id="@+id/daysSinceT"
                 android:layout_width="wrap_content"
@@ -202,15 +201,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="How often do you take it?"
+                android:text="@string/t_how_often"
                 android:textSize="20sp" />
 
+
             <NumberPicker
-                android:visibility="visible"
                 android:id="@+id/TInterval"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:visibility="visible" />
 
             <CheckBox
                 android:id="@+id/gelCB"
@@ -218,17 +218,33 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:minHeight="48dp"
-                android:text="T gel, everyday" />
+                android:text="@string/t_gel" />
+
+            <TextView
+                android:id="@+id/timeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/what_time"
+                android:textSize="20sp"
+                android:visibility="gone" />
 
             <TimePicker
-                android:visibility="gone"
-                android:layout_gravity="center"
                 android:id="@+id/tTime"
-                android:timePickerMode="spinner"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:timePickerMode="spinner"
+                android:visibility="gone" />
 
-        </LinearLayout>
+            <CheckBox
+                android:id="@+id/notifCB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:minHeight="48dp"
+                android:text="@string/t_notif" />
+        </LinearLayout> <!-- t options -->
 
         <LinearLayout
             android:id="@+id/startDatePicker"
@@ -241,7 +257,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10sp"
-                android:text="If you know more or less when you will start T, enter the approx. month and year, you can change it later."
+                android:text="@string/approx_t_start"
                 android:textSize="18sp" />
 
             <LinearLayout
@@ -275,7 +291,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="15sp"
-                android:text="Are you sexually active? (not only PIV), if no, it won't be ever mentioned till you change that option."
+                android:text="@string/sexually_active_question"
                 android:textSize="18sp" />
 
             <RadioGroup
@@ -288,14 +304,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="48dp"
-                    android:text="Yes" />
+                    android:text="@string/yes" />
 
                 <RadioButton
                     android:id="@+id/sexNo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="48dp"
-                    android:text="No" />
+                    android:text="@string/no" />
             </RadioGroup>
         </LinearLayout> <!--sex-->
 
@@ -306,7 +322,7 @@
             android:layout_margin="10sp"
             android:text=""
             android:textColor="@color/orange_red"
-            android:textSize="20sp" />
+            android:textSize="20sp" /> <!--error text-->
 
         <Button
             android:id="@+id/buttonNext"
@@ -318,8 +334,8 @@
             android:background="@color/dark_goldenrod"
             android:drawableEnd="@drawable/icon_arrow_right_triangle"
             android:drawableTint="@color/dark_blue"
-            android:text="next"
-            android:textAlignment="textEnd" />
+            android:text="@string/next"
+            android:textAlignment="textEnd" /> <!--button1-->
 
         <Button
             android:id="@+id/buttonNext1"
@@ -328,13 +344,12 @@
             android:layout_gravity="end"
             android:layout_marginTop="40sp"
             android:layout_marginEnd="20sp"
-            android:layout_marginRight="20sp"
             android:layout_marginBottom="20sp"
             android:background="@color/teal"
             android:drawableEnd="@drawable/icon_arrow_right_triangle"
             android:drawableTint="@color/dark_blue"
-            android:text="next"
+            android:text="@string/next"
             android:textAlignment="textEnd"
-            android:visibility="gone" />
+            android:visibility="gone" /> <!--button2-->
     </LinearLayout>
 </ScrollView>

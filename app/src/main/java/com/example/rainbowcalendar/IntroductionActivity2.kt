@@ -1,6 +1,5 @@
 package com.example.rainbowcalendar
 import android.content.Context
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -18,12 +17,9 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import java.util.Calendar
-import kotlin.math.log
 
 class IntroductionActivity2 : AppCompatActivity() {
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_introduction2)
@@ -120,14 +116,14 @@ class IntroductionActivity2 : AppCompatActivity() {
         dpBirthday.maxDate=System.currentTimeMillis()
 
         val sharedPrefAge = applicationContext.getSharedPreferences("com.example.rainbowcalendar_minor", Context.MODE_PRIVATE)
-        var age: Int =sharedPrefAge.getInt("com.example.rainbowcalendar_minor",0)
+        //var age: Int =sharedPrefAge.getInt("com.example.rainbowcalendar_minor",0)
         val sharedPrefSex = applicationContext.getSharedPreferences("com.example.rainbowcalendar_sex", Context.MODE_PRIVATE)
-        var sex: Int =sharedPrefSex.getInt("com.example.rainbowcalendar_sex",0)
+        val sex: Int =sharedPrefSex.getInt("com.example.rainbowcalendar_sex",0)
         val sharedPrefTestosterone = applicationContext.getSharedPreferences("com.example.rainbowcalendar_testosterone", Context.MODE_PRIVATE)
         //var testosterone: Int? =sharedPrefTestosterone.getInt("com.example.rainbowcalendar_testosterone",0)
         val sharedPrefFertile= applicationContext.getSharedPreferences("com.example.rainbowcalendar_fert", Context.MODE_PRIVATE)
         //var fertile=sharedPrefFertile.getInt("com.example.rainbowcalendar_fert", 0)
-        age=ageToCode(ageValue)
+        //age=ageToCode(ageValue)
         //doc
         // ALWAYS:  0: none
         // AGE (_minor) 1: 16- 2: 16-17 3: 18+
@@ -144,7 +140,6 @@ class IntroductionActivity2 : AppCompatActivity() {
 
 
         val helperCalendar=findViewById<CalendarView>(R.id.helperCalendar)
-        //helperCalendar.visibility=View.GONE
         val showCalendarCB=findViewById<CheckBox>(R.id.showCalendarCB)
 
         showCalendarCB.setOnCheckedChangeListener{_, isChecked ->
@@ -154,7 +149,6 @@ class IntroductionActivity2 : AppCompatActivity() {
             else{
                 helperCalendar.visibility=View.GONE
             }
-
 
         }
 
@@ -167,6 +161,7 @@ class IntroductionActivity2 : AppCompatActivity() {
         tIntervalInput.maxValue=180
 
         val tTime=findViewById<TimePicker>(R.id.tTime)
+        val timeText=findViewById<TextView>(R.id.timeText)
         val gelCb=findViewById<CheckBox>(R.id.gelCB)
 
         val lastDoseText=findViewById<TextView>(R.id.lastDoseText)
@@ -176,6 +171,7 @@ class IntroductionActivity2 : AppCompatActivity() {
                 tIntervalInput.visibility=View.GONE
                 daysSinceTInput.visibility=View.GONE
                 tTime.visibility=View.VISIBLE
+                timeText.visibility=View.VISIBLE
                 lastDoseText.visibility=View.GONE
                 showCalendarCB.visibility=View.GONE //doc: calendar isn't needed for daily dose
             }
@@ -183,13 +179,19 @@ class IntroductionActivity2 : AppCompatActivity() {
                 tIntervalInput.visibility=View.VISIBLE
                 daysSinceTInput.visibility=View.VISIBLE
                 tTime.visibility=View.GONE
+                timeText.visibility=View.GONE
                 lastDoseText.visibility=View.VISIBLE
                 showCalendarCB.visibility=View.VISIBLE
             }
+        }
 
+        val notifCB=findViewById<CheckBox>(R.id.notifCB)
 
-            //todo: show/hide the what time view and opposite with days quantity
-            //  remind everyday in the morning, watch the time zone!
+        notifCB.setOnCheckedChangeListener{_, isChecked ->
+            if(isChecked){
+                //todo: notifications mechanism
+            }
+
         }
 
         //reg: BUTTON 1
@@ -333,6 +335,8 @@ class IntroductionActivity2 : AppCompatActivity() {
             if(m4FtmT.isChecked){
                 tStartDateLayout.visibility=View.VISIBLE
             }
+
+            helperCalendar.visibility=View.GONE
         }
         //reg: BUTTON2
         button1.setOnClickListener{
@@ -352,8 +356,15 @@ class IntroductionActivity2 : AppCompatActivity() {
                 with(sharedPrefT.edit()){
                     putString("com.example.rainbowcalendar_tday", tDate)
                 }
-                val daysSinceT=daysSinceTInput.value
+                if(!gelCb.isChecked){ //doc: normal T
+                    val daysSinceT: Int=daysSinceTInput.value
 
+                }
+                else{ //doc: gel
+
+                }
+
+                //val nextTDate=
             }
 
             //reg: BIRTHDAY
