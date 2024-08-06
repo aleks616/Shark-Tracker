@@ -8,6 +8,8 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.CalendarView
+import android.widget.CheckBox
 import android.widget.DatePicker
 import android.widget.LinearLayout
 import android.widget.NumberPicker
@@ -29,6 +31,7 @@ class IntroductionActivity2 : AppCompatActivity() {
         //val birthday=dpBirthday.dayOfMonth.toString()+"/"+dpBirthday.month.toString()+"/"+dpBirthday.year
         //Toast.makeText(this@IntroductionActivity2,birthday, Toast.LENGTH_SHORT).show()
 
+        //doc: age spinner with age group values
         val ageSpinner = findViewById<Spinner>(R.id.ageSpinner)
         val ageLayout=findViewById<LinearLayout>(R.id.ageGroup)
         ArrayAdapter.createFromResource(this,R.array.age_array,android.R.layout.simple_spinner_item)
@@ -48,11 +51,13 @@ class IntroductionActivity2 : AppCompatActivity() {
             }
         }
 
+        //doc: possible T date picker
         val tDatePickerMonth=findViewById<NumberPicker>(R.id.TDatePickerMonth)
         tDatePickerMonth.minValue=1
         tDatePickerMonth.maxValue=12
         val tDatePickerYear=findViewById<NumberPicker>(R.id.TDatePickerYear)
         val year=Calendar.getInstance().get(Calendar.YEAR)
+        val month=Calendar.getInstance().get(Calendar.YEAR)
         tDatePickerYear.minValue=year
         tDatePickerYear.maxValue=year+5
         fixAvailableMonths(tDatePickerYear,tDatePickerMonth)
@@ -60,7 +65,6 @@ class IntroductionActivity2 : AppCompatActivity() {
         tDatePickerYear.setOnValueChangedListener{ _, _, _ ->
             fixAvailableMonths(tDatePickerYear,tDatePickerMonth)
         }
-        //Toast.makeText(this@IntroductionActivity2, year, Toast.LENGTH_LONG).show()
 
         val m1Young=findViewById<RadioButton>(R.id.m1_young)
         val m2Gay=findViewById<RadioButton>(R.id.m2_gay)
@@ -72,7 +76,6 @@ class IntroductionActivity2 : AppCompatActivity() {
 
         val sharedPrefGender = applicationContext.getSharedPreferences("com.example.rainbowcalendar_gender", Context.MODE_PRIVATE) ?: return
         val gender: String? =sharedPrefGender.getString("com.example.rainbowcalendar_gender","")
-        //Toast.makeText(this@IntroductionActivity2, "g$gender", Toast.LENGTH_SHORT).show()
         when (gender) {
             "f" -> {
                 m1Young.visibility= View.VISIBLE
@@ -137,7 +140,32 @@ class IntroductionActivity2 : AppCompatActivity() {
             putInt("com.example.rainbowcalendar_gender", ageToCode(ageValue))
             apply()
         }
-        //doc: BUTTON 1
+
+
+        val helperCalendar=findViewById<CalendarView>(R.id.helperCalendar)
+        val showCalendarCB=findViewById<CheckBox>(R.id.showCalendarCB)
+
+        showCalendarCB.setOnCheckedChangeListener{_, isChecked ->
+            if(isChecked) helperCalendar.visibility=View.VISIBLE
+            else helperCalendar.visibility=View.GONE
+        }
+
+        val daysSinceTInput=findViewById<NumberPicker>(R.id.daysSinceT)
+        daysSinceTInput.minValue=0
+        daysSinceTInput.maxValue=180
+
+        val TIntervalInput=findViewById<NumberPicker>(R.id.TInterval)
+        TIntervalInput.minValue=1
+        TIntervalInput.maxValue=180
+
+        val gelCb=findViewById<CheckBox>(R.id.gelCB)
+
+        gelCb.setOnCheckedChangeListener{_, isChecked ->
+            //todo: show/hide the what time view and opposite with days quantity
+            //  remind everyday in the morning, watch the time zone!
+        }
+
+        //reg: BUTTON 1
         button.setOnClickListener{
             if(m1Young.isChecked)
                 mode=1
@@ -156,7 +184,6 @@ class IntroductionActivity2 : AppCompatActivity() {
 
             when(mode){
                 1->{
-                    sex=2
                     with (sharedPrefSex.edit()) {
                         putInt("com.example.rainbowcalendar_sex", 2)
                         apply()
@@ -171,7 +198,6 @@ class IntroductionActivity2 : AppCompatActivity() {
                     }
                 }
                 2->{
-                    sex=2
                     with (sharedPrefSex.edit()) {
                         putInt("com.example.rainbowcalendar_fert", 2)
                         apply()
@@ -186,8 +212,6 @@ class IntroductionActivity2 : AppCompatActivity() {
                     }
                 }
                 3->{
-                    //TODO: SEE HOW IT WORKS WITHOUT EXPLICITLY SETTINGS SEX VALUE, SAME WITH FERT AND TESTOSTERONE
-                    sex=3
                     with (sharedPrefSex.edit()) {
                         putInt("com.example.rainbowcalendar_sex", 3)
                         apply()
@@ -202,7 +226,6 @@ class IntroductionActivity2 : AppCompatActivity() {
                     }
                 }
                 4->{
-                    sex=3
                     with (sharedPrefSex.edit()) {
                         putInt("com.example.rainbowcalendar_sex", 3)
                         apply()
@@ -217,7 +240,6 @@ class IntroductionActivity2 : AppCompatActivity() {
                     }
                 }
                 5->{
-                    sex=3
                     with (sharedPrefSex.edit()) {
                         putInt("com.example.rainbowcalendar_sex", 3)
                         apply()
@@ -232,7 +254,6 @@ class IntroductionActivity2 : AppCompatActivity() {
                     }
                 }
                 6->{
-                    sex=3
                     with (sharedPrefSex.edit()) {
                         putInt("com.example.rainbowcalendar_sex", 3)
                         apply()
@@ -247,7 +268,6 @@ class IntroductionActivity2 : AppCompatActivity() {
                     }
                 }
                 7->{
-                    sex=2
                     with (sharedPrefSex.edit()) {
                         putInt("com.example.rainbowcalendar_sex", 2)
                         apply()
@@ -263,7 +283,7 @@ class IntroductionActivity2 : AppCompatActivity() {
                 }
             }
 
-
+            //doc: change header text and hide options
             introHeader.text= getString(R.string.additional_options)
             m1Young.visibility= View.GONE
             m2Gay.visibility=View.GONE
@@ -274,19 +294,20 @@ class IntroductionActivity2 : AppCompatActivity() {
             m7Ace.visibility=View.GONE
             button.visibility=View.GONE
             button1.visibility=View.VISIBLE
+            ageLayout.visibility=View.GONE
+            layoutBirthday.visibility=View.VISIBLE
+            //doc: show sex active choice if it's not obvious and if over 16
             val age1=ageToCode(ageValue)
             if(sex==3&&(age1==2||age1==3))
                 layoutSex.visibility=View.VISIBLE
-            Toast.makeText(this@IntroductionActivity2, ageToCode(ageValue).toString(), Toast.LENGTH_SHORT).show()
+            //doc: if is planning to start T, enter approx date
             if(m3Ftm.isChecked) startDatePicker.visibility=View.VISIBLE
-            ageLayout.visibility=View.GONE
-            layoutBirthday.visibility=View.VISIBLE
-            //todo: IF BIRTHDAY IS TODAY, DON'T PUT IT INTO SETTINGS
+            //doc: if on T, show start date
             if(m4FtmT.isChecked){
                 tStartDateLayout.visibility=View.VISIBLE
             }
         }
-        //doc BUTTON2
+        //reg: BUTTON2
         button1.setOnClickListener{
             //doc: possible t start, show on main screen when it's close
             if(m3Ftm.isChecked){
@@ -296,26 +317,41 @@ class IntroductionActivity2 : AppCompatActivity() {
                     apply()
                 }
             }
+            //reg: MEN ON T
             //doc: actual t day if started T, remind of anniversary and ask about last shot and shot frequency later
             if(m4FtmT.isChecked){
                 val tDate:String=tStartDate.dayOfMonth.toString()+"/"+tStartDate.month.toString()+"/"+tStartDate.year
+                tStartDate.maxDate=System.currentTimeMillis()
                 with(sharedPrefT.edit()){
                     putString("com.example.rainbowcalendar_tday", tDate)
                 }
+
+                if(showCalendarCB.isChecked)
+                    helperCalendar.visibility=View.VISIBLE //todo: move to event
+
+                val daysSinceT=daysSinceTInput.value
+
             }
-            //doc: show too young if younger than 10
+            //showCalendarCB helperCalendar daysSinceTInput
+
+            //reg: BIRTHDAY
             val errorText=findViewById<TextView>(R.id.errorText)
-            if(year-dpBirthday.year in 1..9)
-                errorText.text=getString(R.string.too_young)
-            else
-                errorText.text=""
             //doc: birthday dd-mm-yyyy
             val birthday: String=dpBirthday.dayOfMonth.toString()+"/"+dpBirthday.month.toString()+"/"+dpBirthday.year
-            //Toast.makeText(this@IntroductionActivity2,birthday, Toast.LENGTH_SHORT).show()
-            with (sharedPrefBirthday.edit()) {
-                putString("com.example.rainbowcalendar_birthday", birthday)
-                apply()
+            if(year-dpBirthday.year > 9){
+                errorText.text=""
+                with (sharedPrefBirthday.edit()) {
+                    putString("com.example.rainbowcalendar_birthday", birthday)
+                    apply()
+                }
             }
+            //doc: show too young if younger than 10, and error if date is today
+            else if(year-dpBirthday.year==0 && month-dpBirthday.month==0)
+                errorText.text="Enter correct date"
+            else if(year-dpBirthday.year in 0..9){
+                errorText.text=getString(R.string.too_young)
+            }
+            //todo: errorText.text!="Enter correct date" needed to save settings
             //doc: if 16-17 or 18+ and it's unknown if sexually active or not, hide sex options for inactive, show the tick for active somewhere close
             val age1=ageToCode(ageValue)
             if(sex==3&&(age1==2||age1==3)){

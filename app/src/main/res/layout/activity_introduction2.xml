@@ -1,283 +1,332 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-<LinearLayout
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    tools:context=".IntroductionActivity2">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/intro2_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10sp"
-        android:text="@string/intro2_header"
-        android:textSize="30sp" /> <!-- change to additional settings-->
-
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <RadioButton
-            android:id="@+id/m1_young"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:minHeight="48dp"
-            android:text="@string/intro2_young"
-            android:textSize="16sp"
-            android:visibility="gone" />
-
-        <RadioButton
-            android:id="@+id/m2_gay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:minHeight="48dp"
-            android:text="@string/intro2_gay"
-            android:textSize="16sp"
-            android:visibility="gone" />
-
-        <RadioButton
-            android:id="@+id/m3_ftm"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:minHeight="48dp"
-            android:text="@string/intro2_ftm"
-            android:textSize="16sp"
-            android:visibility="gone" />
-
-        <RadioButton
-            android:id="@+id/m4_ftm_t"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:minHeight="48dp"
-            android:text="@string/intro2_ftmT"
-            android:textSize="16sp"
-            android:visibility="gone" />
-
-        <RadioButton
-            android:id="@+id/m5_gnc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:minHeight="48dp"
-            android:text="@string/intro2_gnc"
-            android:textSize="16sp"
-            android:visibility="gone" />
-
-        <RadioButton
-            android:id="@+id/m6_nb"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:minHeight="48dp"
-            android:text="@string/intro2_nb"
-            android:textSize="16sp"
-            android:visibility="gone" />
-
-        <RadioButton
-            android:id="@+id/m7_ace"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:minHeight="48dp"
-            android:text="@string/intro2_ace"
-            android:textSize="16sp"
-            android:visibility="gone" />
-    </RadioGroup>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:id="@+id/ageGroup"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/choose_age"
-            android:textAlignment="center"
-            android:textSize="25sp"
-            android:visibility="gone" />
-        <Spinner
-            android:minHeight="48dp"
-            android:id="@+id/ageSpinner"
-            android:layout_width="200sp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layoutBirthday"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/birthdayPicker_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20sp"
-            android:text="@string/choose_birthday"
-            android:textAlignment="center"
-            android:textSize="20sp" />
-
-        <DatePicker
-            android:id="@+id/datePickerBirthday"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="20sp"
-            android:calendarViewShown="false"
-            android:datePickerMode="spinner"
-            android:spinnersShown="true" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/tStartDateLayout"
+    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone">
+        tools:context=".IntroductionActivity2">
 
         <TextView
+            android:id="@+id/intro2_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10sp"
-            android:text="When did you start T?"
-            android:textSize="18sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <DatePicker
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/tStartDate"
-                android:datePickerMode="spinner"
-                android:minDate="01-01-2000"
-                />
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/startDatePicker"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:text="If you know more or less when you will start T, enter the approx. month and year, you can change it later."
-            android:textSize="18sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <NumberPicker
-                android:id="@+id/TDatePickerMonth"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <NumberPicker
-                android:id="@+id/TDatePickerYear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:visibility="gone"
-        android:id="@+id/layoutSex"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15sp"
-            android:text="Are you sexually active? (not only PIV), if no, it won't be ever mentioned till you change that option."
-            android:textSize="18sp" />
+            android:text="@string/intro2_header"
+            android:textSize="30sp" /> <!-- change to additional settings-->
 
         <RadioGroup
             android:layout_width="match_parent"
-            android:layout_margin="15sp"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <RadioButton
-                android:id="@+id/sexYes"
-                android:minHeight="48dp"
+                android:id="@+id/m1_young"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Yes" />
+                android:layout_margin="10sp"
+                android:minHeight="48dp"
+                android:text="@string/intro2_young"
+                android:textSize="16sp"
+                android:visibility="gone" />
 
             <RadioButton
-                android:id="@+id/sexNo"
-                android:minHeight="48dp"
+                android:id="@+id/m2_gay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="No" />
+                android:layout_margin="10sp"
+                android:minHeight="48dp"
+                android:text="@string/intro2_gay"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <RadioButton
+                android:id="@+id/m3_ftm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10sp"
+                android:minHeight="48dp"
+                android:text="@string/intro2_ftm"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <RadioButton
+                android:id="@+id/m4_ftm_t"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10sp"
+                android:minHeight="48dp"
+                android:text="@string/intro2_ftmT"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <RadioButton
+                android:id="@+id/m5_gnc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10sp"
+                android:minHeight="48dp"
+                android:text="@string/intro2_gnc"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <RadioButton
+                android:id="@+id/m6_nb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10sp"
+                android:minHeight="48dp"
+                android:text="@string/intro2_nb"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <RadioButton
+                android:id="@+id/m7_ace"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10sp"
+                android:minHeight="48dp"
+                android:text="@string/intro2_ace"
+                android:textSize="16sp"
+                android:visibility="gone" />
         </RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/ageGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/choose_age"
+                android:textAlignment="center"
+                android:textSize="25sp"
+                android:visibility="gone" />
+
+            <Spinner
+                android:id="@+id/ageSpinner"
+                android:layout_width="200sp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:minHeight="48dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutBirthday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/birthdayPicker_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20sp"
+                android:text="@string/choose_birthday"
+                android:textAlignment="center"
+                android:textSize="20sp" />
+
+            <DatePicker
+                android:id="@+id/datePickerBirthday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="20sp"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner"
+                android:spinnersShown="true" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/tStartDateLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10sp"
+                android:text="When did you start T?"
+                android:textSize="18sp" />
+
+            <DatePicker
+                android:id="@+id/tStartDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner"
+                android:minDate="01-01-2000"
+                android:spinnersShown="true" />
+            <!--mm-dd-yyyy-->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10sp"
+                android:gravity="center"
+                android:text="How many days ago did you last take it?"
+                android:textSize="20sp" />
+
+            <CheckBox
+                android:id="@+id/showCalendarCB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20sp"
+                android:minHeight="48dp"
+                android:text="Show calendar to make it easy" />
+
+            <CalendarView
+                android:id="@+id/helperCalendar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20sp"
+                android:visibility="gone" />
+
+
+            <NumberPicker
+                android:id="@+id/daysSinceT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="How often do you take it?"
+                android:textSize="20sp" />
+
+            <NumberPicker
+                android:id="@+id/TInterval"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+            <CheckBox
+                android:id="@+id/gelCB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:minHeight="48dp"
+                android:text="T gel, everyday" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/startDatePicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10sp"
+                android:text="If you know more or less when you will start T, enter the approx. month and year, you can change it later."
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <NumberPicker
+                    android:id="@+id/TDatePickerMonth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <NumberPicker
+                    android:id="@+id/TDatePickerYear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutSex"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15sp"
+                android:text="Are you sexually active? (not only PIV), if no, it won't be ever mentioned till you change that option."
+                android:textSize="18sp" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15sp">
+
+                <RadioButton
+                    android:id="@+id/sexYes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:text="Yes" />
+
+                <RadioButton
+                    android:id="@+id/sexNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:text="No" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/errorText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp"
+            android:text=""
+            android:textColor="@color/orange_red"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/buttonNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="40sp"
+            android:layout_marginEnd="20sp"
+            android:background="@color/dark_goldenrod"
+            android:drawableEnd="@drawable/icon_arrow_right_triangle"
+            android:drawableTint="@color/dark_blue"
+            android:text="next"
+            android:textAlignment="textEnd" />
+
+        <Button
+            android:id="@+id/buttonNext1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="40sp"
+            android:layout_marginEnd="20sp"
+            android:layout_marginRight="20sp"
+            android:layout_marginBottom="20sp"
+            android:background="@color/teal"
+            android:drawableEnd="@drawable/icon_arrow_right_triangle"
+            android:drawableTint="@color/dark_blue"
+            android:text="next"
+            android:textAlignment="textEnd"
+            android:visibility="gone" />
     </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/errorText"
-        android:textSize="20sp"
-        android:textColor="@color/orange_red"
-        android:layout_margin="10sp"
-        android:text=""
-        />
-
-    <Button
-        android:id="@+id/buttonNext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginTop="40sp"
-        android:layout_marginEnd="20sp"
-        android:background="@color/dark_goldenrod"
-        android:drawableEnd="@drawable/icon_arrow_right_triangle"
-        android:drawableTint="@color/dark_blue"
-        android:text="next"
-        android:textAlignment="textEnd" />
-
-    <Button
-        android:id="@+id/buttonNext1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginTop="40sp"
-        android:layout_marginEnd="20sp"
-        android:background="@color/teal"
-        android:drawableEnd="@drawable/icon_arrow_right_triangle"
-        android:drawableTint="@color/dark_blue"
-        android:text="next"
-        android:textAlignment="textEnd"
-        android:visibility="gone" />
-</LinearLayout>
 </ScrollView>
