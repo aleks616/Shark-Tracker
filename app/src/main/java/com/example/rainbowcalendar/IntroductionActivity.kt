@@ -22,7 +22,7 @@ class IntroductionActivity : AppCompatActivity() {
         }
 
         if (token=="False"||token==null){
-            
+            TODO("first time settings have to show when they're not saved, not only 1st launch")
         }
 
     }
