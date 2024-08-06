@@ -136,7 +136,7 @@ class PasswordActivity : AppCompatActivity() {
         //endregion
 
         val passwordValue=sharedPrefs.getString("passwordValue","")
-        val failedAttemptsCount=sharedPrefs.getInt("failedAttempts",0)
+        var failedAttemptsCount=sharedPrefs.getInt("failedAttempts",0)
 
         //region text password
         //doc: show password when tapping eye
@@ -300,6 +300,7 @@ class PasswordActivity : AppCompatActivity() {
                 0->{
                     //normal login
                     if(pin!=passwordValue){
+                        failedAttemptsCount++
                         errorText.text=getString(R.string.wrong_pin_try_again)
                         pin=""
                         digitsEntered=0
