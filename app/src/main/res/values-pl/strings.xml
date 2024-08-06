@@ -12,4 +12,8 @@
         <item>Ciemny</item>
         <item>Jasny</item>
     </string-array>
+    <string name="choose_gender_mode">Wybierz tryb/płeć, na następnym ekranie będzie więcej opcji. Możesz zmienić te ustawienia później.</string>
+    <string name="gender_mode_tm">Tryb transmęski, męskie zwroty, postaramy się nie poruszać triggerujących tematów.</string>
+    <string name="gender_mode_f">Tryb kobiecy, żeńskie zwroty.</string>
+    <string name="gender_mode_n">"Neutralny tryb, dla osób niebinarnych, i innych osób które wolą neutralne zwroty. "</string>
 </resources>

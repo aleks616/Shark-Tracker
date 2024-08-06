@@ -38,7 +38,7 @@ class SplashScreenActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash_screen)
 
         val welcomeTextView=findViewById<TextView>(R.id.welcome)
-        val sharedpref: SharedPreferences=applicationContext.getSharedPreferences("com.example.android.your_application", MODE_PRIVATE)
+        val sharedpref: SharedPreferences=applicationContext.getSharedPreferences("com.example.android.rainbowcalendar", MODE_PRIVATE)
         val token: String?=sharedpref.getString("token", null)
         val welcomeText: String=getString(R.string.welcome_text)
         val welcomeBackText: String=getString(R.string.welcome_back)
