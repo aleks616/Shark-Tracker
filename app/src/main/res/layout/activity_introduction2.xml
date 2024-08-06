@@ -216,6 +216,7 @@
 
             <CalendarView
                 android:id="@+id/helperCalendar"
+                android:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20sp" />
@@ -264,7 +265,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:timePickerMode="spinner"
-                android:visibility="gone" />
+                android:visibility="visible"/>
 
             <CheckBox
                 android:id="@+id/notifCB"
@@ -272,7 +273,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:minHeight="48dp"
-                android:text="@string/t_notif" />
+                android:text="@string/t_notif" /> <!--make string better-->
         </LinearLayout> <!-- t options -->
 
         <LinearLayout
@@ -365,7 +366,7 @@
             android:drawableEnd="@drawable/icon_arrow_right_triangle"
             android:drawableTint="@color/dark_blue"
             android:text="@string/next"
-            android:textAlignment="textEnd" /> <!--button1-->
+            android:textAlignment="textEnd" /> <!--button-->
 
         <Button
             android:id="@+id/buttonNext1"
@@ -380,6 +381,6 @@
             android:drawableTint="@color/dark_blue"
             android:text="@string/next"
             android:textAlignment="textEnd"
-            android:visibility="gone" /> <!--button2-->
+            android:visibility="gone" /> <!--button1-->
     </LinearLayout>
 </ScrollView>

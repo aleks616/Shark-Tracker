@@ -1,9 +1,12 @@
 package com.example.rainbowcalendar
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
-import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -17,7 +20,10 @@ import android.widget.RadioButton
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.TimePicker
+import android.widget.Toast
+import androidx.core.app.NotificationCompat
 import java.util.Calendar
+import com.example.rainbowcalendar.AlarmReceiver
 
 class IntroductionActivity2 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +51,9 @@ class IntroductionActivity2 : AppCompatActivity() {
                 ageValue = parent?.getItemAtPosition(position).toString()
                 if(ageToCode(ageValue)==2){
                     minorConsent.visibility=View.VISIBLE
+                }
+                else{
+                    minorConsent.visibility=View.GONE
                 }
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -188,7 +197,7 @@ class IntroductionActivity2 : AppCompatActivity() {
             if(isChecked){
                 tIntervalInput.visibility=View.GONE
                 daysSinceTInput.visibility=View.GONE
-                tTime.visibility=View.VISIBLE
+                //tTime.visibility=View.VISIBLE
                 timeText.visibility=View.VISIBLE
                 lastDoseText.visibility=View.GONE
                 showCalendarCB.visibility=View.GONE //doc: calendar isn't needed for daily dose
@@ -196,7 +205,7 @@ class IntroductionActivity2 : AppCompatActivity() {
             else{
                 tIntervalInput.visibility=View.VISIBLE
                 daysSinceTInput.visibility=View.VISIBLE
-                tTime.visibility=View.GONE
+                //tTime.visibility=View.GONE
                 timeText.visibility=View.GONE
                 lastDoseText.visibility=View.VISIBLE
                 showCalendarCB.visibility=View.VISIBLE
@@ -219,6 +228,7 @@ class IntroductionActivity2 : AppCompatActivity() {
         val errorText=findViewById<TextView>(R.id.errorText)
         //reg: BUTTON 1
         button.setOnClickListener{
+            notif()
             if(m1Young.isChecked)
                 mode=1
             else if(m2Gay.isChecked)
@@ -396,7 +406,7 @@ class IntroductionActivity2 : AppCompatActivity() {
             var age1=ageToCode(ageValue)
             if(age1==2&&(!minorConsent.isChecked)){
                 age1=1
-                errorText.text="You didn't confirm you are of legal age, age option automatically has been switched to 'minor'"
+                errorText.text=getString(R.string.error_minor_consent)
             }
 
             with (sharedPrefAge.edit()) {
@@ -405,8 +415,6 @@ class IntroductionActivity2 : AppCompatActivity() {
             }
             //todo: this shit here
             if(sex==3&&(age1==2||age1==3)){
-
-
                 layoutSex.visibility=View.VISIBLE
             }
 
@@ -414,16 +422,20 @@ class IntroductionActivity2 : AppCompatActivity() {
             //doc: if is planning to start T, enter approx date
             if(m3Ftm.isChecked) startDatePicker.visibility=View.VISIBLE
             //doc: if on T, show start date
-            if(m4FtmT.isChecked){
+            if(m4FtmT.isChecked||m8FtmtL.isChecked){
                 tStartDateLayout.visibility=View.VISIBLE
             }
 
             helperCalendar.visibility=View.GONE
         }
+
+
+        val sharedPrefTReminderI=applicationContext.getSharedPreferences("com.example.rainbowcalendar_TReminderI", Context.MODE_PRIVATE)
+
         //reg: BUTTON2
         button1.setOnClickListener{
             //doc: possible t start, show on main screen when it's close
-            if(m3Ftm.isChecked){
+            if(mode==3){
                 val stringDate: String=tDatePickerYear.value.toString()+"-"+tDatePickerMonth.value.toString().padStart(2,'0')+"-01"
                 with (sharedPrefPossTDate.edit()) {
                     putString("com.example.rainbowcalendar_posstday", stringDate)
@@ -432,7 +444,7 @@ class IntroductionActivity2 : AppCompatActivity() {
             }
             //reg: MEN ON T
             //doc: actual t day if started T, remind of anniversary and ask about last shot and shot frequency later
-            if(m4FtmT.isChecked){
+            if(mode==4||mode==8){
                 val tDate:String=tStartDate.dayOfMonth.toString()+"/"+tStartDate.month.toString()+"/"+tStartDate.year
                 tStartDate.maxDate=System.currentTimeMillis()
                 with(sharedPrefT.edit()){
@@ -442,10 +454,26 @@ class IntroductionActivity2 : AppCompatActivity() {
                     val daysSinceT: Int=daysSinceTInput.value
                     val tInterval: Int=tIntervalInput.value
                     val daysTillShot=tInterval-daysSinceT
-                    //doc: todo: from the daysTillShot, remind every interval
+
+                    val alarm=Alarm(this)
+                    alarm.schedulePushNotifications(tTime.hour, tTime.minute, tInterval, daysTillShot)
+                    Toast.makeText(this@IntroductionActivity2, "notification set to"+tTime.hour.toString()+":"+tTime.minute.toString()+"in "+daysTillShot+" days",Toast.LENGTH_SHORT).show()
+
+                    with(sharedPrefTReminderI.edit()){
+                        putInt("com.example.rainbowcalendar_TReminderI",tInterval)
+                        apply()
+                    }
                 }
                 else{ //doc: gel
-                    //todo: gel reminders
+                    val alarm=Alarm(this)
+                    alarm.schedulePushNotifications(tTime.hour,tTime.minute,1,0)
+
+                    with(sharedPrefTReminderI.edit()){
+                        putInt("com.example.rainbowcalendar_TReminderI",1)
+                        apply()
+                    }
+                    //Toast.makeText(this@IntroductionActivity2, "HERE", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@IntroductionActivity2, "notification set to"+tTime.hour.toString()+":"+tTime.minute.toString(),Toast.LENGTH_SHORT).show()
                 }
 
                 //val nextTDate=
@@ -495,10 +523,30 @@ class IntroductionActivity2 : AppCompatActivity() {
                     putBoolean("com.example.rainbowcalendar_setup",true)
                     apply()
                 }
+                val intent=Intent(this, MainActivity::class.java)
+                startActivity(intent)
+
             }
 
         }
     }
+    private fun notif(){
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        val channel = NotificationChannel("channel",  "Default", NotificationManager.IMPORTANCE_DEFAULT).apply {
+            description = "Description"
+        }
+        notificationManager.createNotificationChannel(channel)
+
+        val notification = NotificationCompat.Builder(this, "channel")
+            .setContentTitle("Title")
+            .setContentText("Content")
+            .setSmallIcon(R.drawable.alarm_icon)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .build()
+
+        notificationManager.notify(1, notification)
+    } //todo: delete this
 
     private fun ageToCode(age: String): Int{
         return when(age){
