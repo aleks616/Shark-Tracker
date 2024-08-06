@@ -36,14 +36,13 @@ class IntroductionActivity : AppCompatActivity() {
         }
         //TODO: do themes
 
+        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
+        //doc:
+        // gender:String m/f/n
+        // tm:Boolean (is transmed)
+        // name:String
 
-        //val sharedpref: SharedPreferences =applicationContext.getSharedPreferences("com.example.rainbowcalendar", MODE_PRIVATE)
-        //val token: String?=sharedpref.getString("token", null)
-
-        val sharedPrefGender = applicationContext.getSharedPreferences("com.example.rainbowcalendar_gender", Context.MODE_PRIVATE) ?: return
-        var gender: String? =sharedPrefGender.getString("com.example.rainbowcalendar_gender","")
-        val sharedPrefName = applicationContext.getSharedPreferences("com.example.rainbowcalendar_name", Context.MODE_PRIVATE)
-        val sharedPrefTM=applicationContext.getSharedPreferences("com.example.rainbowcalendar_tm", Context.MODE_PRIVATE)
+        var gender: String?=sharedPrefs.getString("gender","n")
         var tM=false
         //var name: String?=sharedPrefName.getString("com.example.rainbowcalendar_name", "")
         val genderM=findViewById<RadioButton>(R.id.genderMale)
@@ -51,9 +50,9 @@ class IntroductionActivity : AppCompatActivity() {
         val genderN=findViewById<RadioButton>(R.id.genderNeutral)
 
         val nameText=findViewById<TextView>(R.id.nameET)
-        nameText.setOnEditorActionListener{ v, actionId, _ ->
+        nameText.setOnEditorActionListener{v,actionId,_ ->
             if(actionId==EditorInfo.IME_ACTION_DONE){
-                if(v.text.contains("tRvEt",ignoreCase = false)){
+                if(v.text.contains("tRvEt",ignoreCase=false)){
                     tM=true
                     genderM.text=getString(R.string.gender_mode_m)
                 }
@@ -75,17 +74,11 @@ class IntroductionActivity : AppCompatActivity() {
                 errorText.text=getString(R.string.fill_name)
             }
             else{
-                if(name.contains("tRvEt",ignoreCase = false)){
+                if(name.contains("tRvEt",ignoreCase=false)){
                     name=name.replace("tRvEt","")
                 }
-                with(sharedPrefTM.edit()){
-                    putBoolean("com.example.rainbowcalendar_tm", tM)
-                    apply()
-                } //doc: if transmed, it saves it
-                with (sharedPrefName.edit()) {
-                    putString("com.example.rainbowcalendar_name", name)
-                    apply()
-                }
+                sharedPrefs.edit().putBoolean("tm",tM).apply()
+                sharedPrefs.edit().putString("name",name).apply()
                 errorText.text=""
             }
 
@@ -94,19 +87,11 @@ class IntroductionActivity : AppCompatActivity() {
             else if (genderN.isChecked) gender="n"
             else errorText.text=getString(R.string.select_one_option)
             if(gender!=null){
-                //val sharedPrefGender: SharedPreferences =applicationContext.getSharedPreferences("com.example.rainbowcalendar_gender", MODE_PRIVATE)
-                with (sharedPrefGender.edit()) {
-                    putString("com.example.rainbowcalendar_gender", gender)
-                    apply()
-                }
-                //val genderRead: String? =sharedPrefGender.getString("com.example.rainbowcalendar_gender","")
-                //Toast.makeText(this@IntroductionActivity, "g1: $genderRead", Toast.LENGTH_SHORT).show()
-
+                sharedPrefs.edit().putString("gender",gender).apply()
             }
             if(name.isNotEmpty()&&(!gender.isNullOrEmpty())){
                 errorText.text=""
                 startActivity(Intent(this, IntroductionActivity2::class.java))
-                //Toast.makeText(this@IntroductionActivity, name, Toast.LENGTH_SHORT).show()
             }
 
         }

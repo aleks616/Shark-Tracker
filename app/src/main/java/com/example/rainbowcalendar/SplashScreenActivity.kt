@@ -13,36 +13,34 @@ import android.os.Looper
 import android.widget.TextView
 import java.util.Locale
 
-class SplashScreenActivity : AppCompatActivity() {
+class SplashScreenActivity:AppCompatActivity(){
 
-    override fun attachBaseContext(newBase: Context) {
-    val sharedPreferences = newBase.getSharedPreferences (newBase.packageName, MODE_PRIVATE)
-    val locale = Locale (sharedPreferences.getString("code", "en")!!)
-    Locale.setDefault(locale)
-    val context = languageChange (newBase, locale)
-    super.attachBaseContext(context)
+    override fun attachBaseContext(newBase:Context){
+        //val sharedPreferences=newBase.getSharedPreferences(newBase.packageName,MODE_PRIVATE)
+        val sharedPrefs=newBase.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
+        val locale=Locale(sharedPrefs.getString("lang","en")!!)
+        Locale.setDefault(locale)
+        val context=languageChange(newBase,locale)
+        super.attachBaseContext(context)
     }
     private fun languageChange (context: Context, locale: Locale): Context {
-        var tempContext = context
-        val res = tempContext.resources
-        val configuration = res.configuration
+        var tempContext=context
+        val res=tempContext.resources
+        val configuration=res.configuration
         configuration.setLocale(locale)
-        val localList = LocaleList(locale)
+        val localList=LocaleList(locale)
         LocaleList.setDefault(localList)
         configuration.setLocales(localList)
-        tempContext = tempContext.createConfigurationContext(configuration)
+        tempContext=tempContext.createConfigurationContext(configuration)
         return tempContext
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
         val welcomeTextView=findViewById<TextView>(R.id.welcome)
-        //val sharedpref: SharedPreferences=applicationContext.getSharedPreferences("com.example.android.rainbowcalendar", MODE_PRIVATE)
-        //val token: String?=sharedpref.getString("token", null)
-        val sharedPrefSetup: SharedPreferences =applicationContext.getSharedPreferences("com.example.rainbowcalendar_setup", MODE_PRIVATE)
-        val setupDone=sharedPrefSetup.getBoolean("com.example.rainbowcalendar_setup",false)
+        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
+        val setupDone=sharedPrefs.getBoolean("setup",false)
 
         val welcomeText: String=getString(R.string.welcome_text)
         val welcomeBackText: String=getString(R.string.welcome_back)
@@ -51,7 +49,6 @@ class SplashScreenActivity : AppCompatActivity() {
         if (!setupDone){
             createNotificationChannel(this)
             welcomeTextView.text=welcomeText
-            //sharedpref.edit().putString("token", "true").apply()
             delay=2000
             val intent=Intent(this, LanguageSettingsActivity::class.java)
             Handler(Looper.getMainLooper()).postDelayed({
