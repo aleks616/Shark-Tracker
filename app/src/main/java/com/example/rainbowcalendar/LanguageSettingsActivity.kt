@@ -1,16 +1,9 @@
 package com.example.rainbowcalendar
 
-import android.app.LocaleManager
 import android.content.Intent
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.LocaleList
 import android.widget.Button
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
 import java.util.Locale
 
 class LanguageSettingsActivity : AppCompatActivity() {
