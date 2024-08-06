@@ -45,6 +45,7 @@
         android:textSize="20sp" />
 
     <RadioGroup
+        android:id="@+id/rg_gender"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -77,5 +78,18 @@
             android:text="@string/gender_mode_n" />
     </RadioGroup>
 
+    <Button
+        android:id="@+id/buttonNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40sp"
+        android:layout_marginEnd="20sp"
+        android:background="@color/dark_goldenrod"
+        android:drawableEnd="@drawable/icon_arrow_right_triangle"
+        android:drawableTint="@color/dark_blue"
+        android:layout_gravity="end"
+        android:text="next"
+        android:textAlignment="textEnd"
+        />
 
 </LinearLayout>

@@ -13,7 +13,7 @@
         <item>Blanc</item>
     </string-array>
     <string name="choose_gender_mode">Choisis ton genre/mode, les détails s\'afficheront. Tu pourras le changer dans les paramètres.</string>
-    <string name="gender_mode_tm">Homme trans, nous essaierons de ne pas te remdre dysphorique, et ne mentionnerons pas de sujets pouvant trigger</string>
+    <string name="gender_mode_tm">Homme trans, nous essaierons de ne pas te rendre dysphorique, et ne mentionnerons pas de sujets pouvant trigger</string>
     <string name="gender_mode_f">Femme, nous utiliserons des termes traditionnellement fèminins</string>
     <string name="gender_mode_n">Neutre, pour les personnes non-binaires, en questionnement tous les autres, qui ne veulent pas être genrés</string>
     <string name="home_button_name">Accueil</string>
@@ -28,4 +28,6 @@
     <string name="intro2_gnc">Je n\'aime juste pas les applications uniquement centrées sur le féminin.</string>
     <string name="intro2_nb">Je suis trans mais n\'ai pas l\'intention de prendre de la testostérone.</string>
     <string name="intro2_ace">Je suis vierge/Je n\'ai pas de relations sexuelles (peu importe la raison)</string>
+    <string name="choose_age">Choisis ton edad</string>
+    <string name="choose_birthday">le birthday</string>
 </resources>

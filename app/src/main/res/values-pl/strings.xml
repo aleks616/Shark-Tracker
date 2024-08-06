@@ -28,4 +28,6 @@
     <string name="intro2_gnc">Nie lubię stereotypowego kobiecego wyglądu tego typu aplikacji.</string>
     <string name="intro2_nb">Jestem osobą trans(niebinarną), ale nie planuję terapii hormonalnej.</string>
     <string name="intro2_ace">Nie uprawiam seksu.</string>
+    <string name="choose_age">Wybierz swoją grupę wiekową.</string>
+    <string name="choose_birthday">Jeśli chcesz, wprowadź swoją datę urodzenia (będziesz dostawać życzenia urodzinowe). Zalecane jeśli jesteś niepełnoletn*, wtedy ustawienie wieku przełączy się automatycznie.</string>
 </resources>
