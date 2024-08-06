@@ -1,5 +1,6 @@
 package com.example.rainbowcalendar
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,30 +12,30 @@ import android.widget.Spinner
 import android.widget.Toast
 import java.util.Locale
 
-class LanguageSettingsActivity : AppCompatActivity(){
+class LanguageSettingsActivity:AppCompatActivity(){
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState:Bundle?){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_language_settings)
 
-        val spinner = findViewById<Spinner>(R.id.lang_spinner)
+        val spinner=findViewById<Spinner>(R.id.lang_spinner)
         ArrayAdapter.createFromResource(this,R.array.lang_array,android.R.layout.simple_spinner_item)
-            .also { adapter ->
+            .also{adapter->
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                spinner.adapter = adapter
+                spinner.adapter=adapter
             }
 
         val button=findViewById<Button>(R.id.buttonNext)
         button.setOnClickListener{
-            startActivity(Intent(this, IntroductionActivity::class.java))
+            startActivity(Intent(this,IntroductionActivity::class.java))
         }
 
-        spinner.onItemSelectedListener = object :
+        spinner.onItemSelectedListener=object:
             AdapterView.OnItemSelectedListener{
-                override fun onItemSelected(parent: AdapterView<*>?,view: View?,position: Int,id: Long) {
-                    val lang: String = parent?.getItemAtPosition(position).toString()
+                override fun onItemSelected(parent: AdapterView<*>?,view:View?,position:Int,id:Long){
+                    val lang:String=parent?.getItemAtPosition(position).toString()
                     changeLanguage(langToCode(lang))
-                    Toast.makeText(this@LanguageSettingsActivity, langToCode(lang), Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this@LanguageSettingsActivity,langToCode(lang),Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -44,17 +45,15 @@ class LanguageSettingsActivity : AppCompatActivity(){
     }
 
     private fun changeLanguage(lang: String){
-        val config = resources.configuration
-        val locale = Locale(lang)
+        val config=resources.configuration
+        val locale=Locale(lang)
         Locale.setDefault(locale)
         config.setLocale(locale)
         createConfigurationContext(config)
         resources.updateConfiguration(config, resources.displayMetrics)
 
-        val sharedPreferences = getSharedPreferences(packageName, MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putString("code",lang)
-        editor.apply()
+        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
+        sharedPrefs.edit().putString("lang",lang).apply()
     }
     private fun toMainScreen(){
         val intent=Intent(this, MainActivity::class.java)
@@ -66,6 +65,7 @@ class LanguageSettingsActivity : AppCompatActivity(){
             "Polski" -> "pl"
             "Francais" -> "fr"
             "Italiano" -> "it"
+            "Espanol" -> "es"
             else ->{
                 "en"
             }

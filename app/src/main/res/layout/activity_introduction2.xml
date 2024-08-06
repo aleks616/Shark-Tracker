@@ -19,6 +19,7 @@
             android:textSize="30sp" /> <!-- change to "additional settings"-->
 
         <RadioGroup
+            android:id="@+id/modes_radioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -105,37 +106,14 @@
 
         </RadioGroup> <!-- mode-->
 
-        <LinearLayout
-            android:id="@+id/ageGroup"
+        <CheckBox
+            android:id="@+id/adultCb"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginStart="40sp"
+            android:layout_height="50dp"
+            android:text="I'm legally adult"
+            />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/choose_age"
-                android:textAlignment="center"
-                android:textSize="25sp"
-                android:visibility="gone" />
-
-            <Spinner
-                android:id="@+id/ageSpinner"
-                android:layout_width="200sp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:minHeight="48dp" />
-
-            <CheckBox
-                android:id="@+id/legal_minor_consent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:visibility="gone"
-                android:layout_marginHorizontal="10sp"
-                android:text="@string/minor_consent"
-                />
-        </LinearLayout> <!-- ageGroup-->
 
         <LinearLayout
             android:id="@+id/layoutBirthday"
@@ -344,7 +322,18 @@
                     android:minHeight="48dp"
                     android:text="@string/no" />
             </RadioGroup>
+
         </LinearLayout> <!--sex-->
+
+        <CheckBox
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="20sp"
+            android:textSize="18sp"
+            android:layout_height="wrap_content"
+            android:id="@+id/sexCb"
+            android:text="@string/sexually_active_question_n"
+            />
 
         <TextView
             android:id="@+id/errorText"

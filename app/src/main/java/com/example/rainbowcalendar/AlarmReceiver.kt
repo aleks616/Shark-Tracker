@@ -36,10 +36,9 @@ class BootReceiver : BroadcastReceiver() {
         if (intent.action == "android.intent.action.BOOT_COMPLETED") {
             val alarm=Alarm(context)
 
-            val sharedPrefNotif=context.getSharedPreferences("com.example.rainbowcalendar_notif",Context.MODE_PRIVATE)
-            val lastNotif=sharedPrefNotif.getLong("com.example.rainbowcalendar_notif",0L)
-            val sharedPrefTReminderI=context.getSharedPreferences("com.example.rainbowcalendar_TReminderI", Context.MODE_PRIVATE)
-            val reminderI=sharedPrefTReminderI.getInt("com.example.rainbowcalendar_TReminderI",1)
+            val sharedPrefs=context.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
+            val lastNotif=sharedPrefs.getLong("lastNotif",0L)
+            val reminderI=sharedPrefs.getInt("tInterval",1)
 
             val time=Calendar.getInstance().apply{timeInMillis=lastNotif}
             val days=((Calendar.getInstance().timeInMillis - time.timeInMillis) / (1000 * 60 * 60 * 24)).toInt()

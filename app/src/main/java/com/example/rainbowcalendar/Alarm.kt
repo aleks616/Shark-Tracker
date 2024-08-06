@@ -8,6 +8,7 @@ import android.content.Intent
 import java.util.Calendar
 import java.util.GregorianCalendar
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Toast
 
@@ -31,7 +32,7 @@ class Alarm(private val context: Context){
         }
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.timeInMillis,AlarmManager.INTERVAL_DAY*intervalD,alarmPendingIntent)
     }*/
-
+    private val sharedPrefs: SharedPreferences=context.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
     fun schedulePushNotifications(hour:Int,minute:Int,intervalD:Int,startFrom:Int){
         val calendar=GregorianCalendar.getInstance().apply{
             set(Calendar.HOUR_OF_DAY,hour)
@@ -39,8 +40,7 @@ class Alarm(private val context: Context){
             set(Calendar.SECOND,0)
             set(Calendar.MILLISECOND,0)
 
-            val sharedPrefNotif=context.getSharedPreferences("com.example.rainbowcalendar_notif",Context.MODE_PRIVATE)
-            val lastNotif=sharedPrefNotif.getLong("com.example.rainbowcalendar_notif",0L)
+            val lastNotif=sharedPrefs.getLong("lastNotif",0L)
 
             if(lastNotif>0) timeInMillis=lastNotif+intervalD*AlarmManager.INTERVAL_DAY
             else add(Calendar.DAY_OF_MONTH,startFrom)
@@ -49,11 +49,7 @@ class Alarm(private val context: Context){
         }
 
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.time.time,AlarmManager.INTERVAL_DAY*intervalD,alarmPendingIntent)
-        val sharedPref=context.getSharedPreferences("com.example.rainbowcalendar_notif",Context.MODE_PRIVATE)
-        with(sharedPref.edit()){
-            putLong("com.example.rainbowcalendar_notif",calendar.time.time)
-            apply()
-        }
+        sharedPrefs.edit().putLong("lastNotif",calendar.time.time).apply()
     }
 
 }
