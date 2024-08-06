@@ -16,7 +16,6 @@ class LanguageSettingsActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_language_settings)
 
-        val langArray by lazy { resources.getStringArray(R.array.lang_array) }
         val spinner = findViewById<Spinner>(R.id.lang_spinner)
         ArrayAdapter.createFromResource(this,R.array.lang_array,android.R.layout.simple_spinner_item)
             .also { adapter ->
@@ -29,7 +28,7 @@ class LanguageSettingsActivity : AppCompatActivity(){
                 override fun onItemSelected(parent: AdapterView<*>?,view: View?,position: Int,id: Long) {
                     val lang: String = parent?.getItemAtPosition(position).toString()
                     changeLanguage(langToCode(lang))
-                    Toast.makeText(this@LanguageSettingsActivity, langToCode(lang).toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LanguageSettingsActivity, langToCode(lang), Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
