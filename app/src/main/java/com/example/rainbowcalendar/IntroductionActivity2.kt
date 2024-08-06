@@ -1,8 +1,8 @@
 package com.example.rainbowcalendar
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -16,7 +16,6 @@ import android.widget.RadioButton
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.TimePicker
-import android.widget.Toast
 import java.util.Calendar
 
 class IntroductionActivity2 : AppCompatActivity() {
@@ -71,8 +70,12 @@ class IntroductionActivity2 : AppCompatActivity() {
         val m6Nb=findViewById<RadioButton>(R.id.m6_nb)
         val m7Ace=findViewById<RadioButton>(R.id.m7_ace)
 
+        val sexActiveText=findViewById<TextView>(R.id.sexActiveText)
         val sharedPrefGender = applicationContext.getSharedPreferences("com.example.rainbowcalendar_gender", Context.MODE_PRIVATE) ?: return
         val gender: String? =sharedPrefGender.getString("com.example.rainbowcalendar_gender","")
+        var tooYoungError: String=""
+        val birthdayPickerTextView=findViewById<TextView>(R.id.birthdayPicker_text)
+        val lastDoseText=findViewById<TextView>(R.id.lastDoseText)
         when (gender) {
             "f" -> {
                 m1Young.visibility= View.VISIBLE
@@ -80,6 +83,9 @@ class IntroductionActivity2 : AppCompatActivity() {
                 m5Gnc.visibility=View.VISIBLE
                 m6Nb.visibility=View.VISIBLE
                 m7Ace.visibility=View.VISIBLE
+                sexActiveText.text=getString(R.string.sexually_active_question_female)
+                tooYoungError=getString(R.string.too_young_f)
+                m1Young.text=getString(R.string.intro2_young_f)
             }
             "m" -> {
                 m1Young.visibility= View.VISIBLE
@@ -87,6 +93,11 @@ class IntroductionActivity2 : AppCompatActivity() {
                 m3Ftm.visibility=View.VISIBLE
                 m4FtmT.visibility=View.VISIBLE
                 m7Ace.visibility=View.VISIBLE
+                sexActiveText.text=getString(R.string.sexually_active_question_male)
+                tooYoungError=getString(R.string.too_young_m)
+                birthdayPickerTextView.text=getString(R.string.choose_birthday_m)
+                m1Young.text=getString(R.string.intro2_young_m)
+                lastDoseText.text=getString(R.string.last_t_dose_m)
             }
             "n" -> {
                 m1Young.visibility= View.VISIBLE
@@ -96,6 +107,10 @@ class IntroductionActivity2 : AppCompatActivity() {
                 m5Gnc.visibility=View.VISIBLE
                 m6Nb.visibility=View.VISIBLE
                 m7Ace.visibility=View.VISIBLE
+                tooYoungError=getString(R.string.too_young_n)
+                birthdayPickerTextView.text=getString(R.string.choose_birthday_n)
+                m1Young.text=getString(R.string.intro2_young_n)
+                lastDoseText.text=getString(R.string.last_t_dose_n)
             }
         }
 
@@ -143,13 +158,8 @@ class IntroductionActivity2 : AppCompatActivity() {
         val showCalendarCB=findViewById<CheckBox>(R.id.showCalendarCB)
 
         showCalendarCB.setOnCheckedChangeListener{_, isChecked ->
-            if(isChecked) {
-                helperCalendar.visibility=View.VISIBLE
-            } //TODO: FIX IT, CALENDAR DOESN'T SHOW NOW
-            else{
-                helperCalendar.visibility=View.GONE
-            }
-
+            if(isChecked) helperCalendar.visibility=View.VISIBLE
+            else helperCalendar.visibility=View.GONE
         }
 
         val daysSinceTInput=findViewById<NumberPicker>(R.id.daysSinceT)
@@ -164,7 +174,7 @@ class IntroductionActivity2 : AppCompatActivity() {
         val timeText=findViewById<TextView>(R.id.timeText)
         val gelCb=findViewById<CheckBox>(R.id.gelCB)
 
-        val lastDoseText=findViewById<TextView>(R.id.lastDoseText)
+        //val lastDoseText=findViewById<TextView>(R.id.lastDoseText)
 
         gelCb.setOnCheckedChangeListener{_, isChecked ->
             if(isChecked){
@@ -186,12 +196,10 @@ class IntroductionActivity2 : AppCompatActivity() {
         }
 
         val notifCB=findViewById<CheckBox>(R.id.notifCB)
+        var tReminders: Boolean=false
 
         notifCB.setOnCheckedChangeListener{_, isChecked ->
-            if(isChecked){
-                //todo: notifications mechanism
-            }
-
+            tReminders = isChecked
         }
 
         //reg: BUTTON 1
@@ -358,7 +366,9 @@ class IntroductionActivity2 : AppCompatActivity() {
                 }
                 if(!gelCb.isChecked){ //doc: normal T
                     val daysSinceT: Int=daysSinceTInput.value
-
+                    val tInterval: Int=tIntervalInput.value
+                    val daysTillShot=tInterval-daysSinceT
+                    //doc: todo: from the daysTillShot, remind every interval
                 }
                 else{ //doc: gel
 
@@ -382,7 +392,7 @@ class IntroductionActivity2 : AppCompatActivity() {
             else if(year-dpBirthday.year==0 && month-dpBirthday.month==0)
                 errorText.text=getString(R.string.date_error)
             else if(year-dpBirthday.year in 0..9){
-                errorText.text=getString(R.string.too_young)
+                errorText.text=tooYoungError
             }
             //todo: errorText.text!="Enter correct date" needed to save settings
             //doc: if 16-17 or 18+ and it's unknown if sexually active or not, hide sex options for inactive, show the tick for active somewhere close
@@ -404,6 +414,14 @@ class IntroductionActivity2 : AppCompatActivity() {
                 }
             }
 
+            //reg: saving "settings done"
+            if(errorText.text!="Enter correct date"){
+                val sharedPrefSetup: SharedPreferences =applicationContext.getSharedPreferences("com.example.rainbowcalendar_setup", MODE_PRIVATE)
+                with(sharedPrefSetup.edit()){
+                    putBoolean("com.example.rainbowcalendar_setup",true)
+                    apply()
+                }
+            }
 
         }
     }
