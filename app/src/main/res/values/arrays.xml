@@ -17,9 +17,9 @@
     </string-array>
 
     <string-array name="age_array">
-        <item>under 16</item>
-        <item>16–17</item>
-        <item>over 18</item>
+        <item>minor</item>
+        <item>minor, but legal</item>
+        <item>adult (18+)</item>
     </string-array>
 
 </resources>

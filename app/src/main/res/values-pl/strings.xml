@@ -12,10 +12,11 @@
         <item>Ciemny</item>
         <item>Jasny</item>
     </string-array>
+    <string name="intro2_ftmTl">I\'ve been on T for some time, I don\'t experience shark weeks anymore, I want shot reminders</string>
     <string name="choose_gender_mode">Wybierz tryb/płeć, na następnym ekranie będzie więcej opcji. Możesz zmienić te ustawienia później.</string>
-    <string name="gender_mode_tm">Tryb transmęski, męskie zwroty, postaramy się nie poruszać triggerujących tematów.</string>
-    <string name="gender_mode_f">Tryb kobiecy, żeńskie zwroty.</string>
-    <string name="gender_mode_n">"Neutralny tryb, dla osób niebinarnych, i innych osób które wolą neutralne zwroty. "</string>
+    <string name="gender_mode_tm">Tryb transmęski, będziemy używać męskich zwrotów, i postaramy się unikać triggerujących tematów.</string>
+    <string name="gender_mode_f">Tryb kobiecy, będziemy używać żeńskich zwrotów.</string>
+    <string name="gender_mode_n">"Tryb neutralny, dla osób niebinarnych, i tych które wolą neutralne zwroty. "</string>
     <string name="home_button_name">Strona główna</string>
     <string name="account_button_name">Konto</string>
     <string name="add_button_text">Dodaj</string>
@@ -55,4 +56,8 @@
     <string name="too_young_f">Jesteś za młoda aby korzystać z aplikacji</string>
     <string name="too_young_m">Jesteś za młody aby korzystać z aplikacji</string>
     <string name="too_young_n">Jesteś za młod* aby korzystać z aplikacji</string>
+    <string name="intro2_ftm_m">I\\\'m a pre-T trans guy (trans masculine-leaning person) planning on taking T someday.</string>
+    <string name="intro2_ftm_n">I\'m a trans masculine-leaning person planning on taking T someday.</string>
+    <string name="gender_mode_m">Man mode, pregnancy won\'t ever be mentioned</string>
+    <string name="minor_consent">By selecting this option, I confirm that I am of legal age to discuss sexual activity according to the laws of my country or state.</string>
 </resources>

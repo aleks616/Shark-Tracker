@@ -12,9 +12,10 @@
         <item>Scuro</item>
         <item>Chiaro</item>
     </string-array>
+    <string name="intro2_ftmTl">I\'ve been on T for some time, I don\'t experience shark weeks anymore, I want shot reminders</string>
     <string name="choose_gender_mode">Scegli il tuo genere/modalità, ci saranno modalità più dettagliate nella schermata successiva. Puoi sempre cambiare queste impostazioni.</string>
     <string name="gender_mode_tm">Modalità transmaschile: cercheremo di non farti sentire a disagio e non menzioneremo argomenti potenzialmente scatenanti.</string>
-    <string name="gender_mode_f">Modalità donna: useremo termini tradizionalmente femminili.</string>
+    <string name="gender_mode_f">Femme, nous utiliserons des termes traditionnellement fèminins</string>
     <string name="gender_mode_n">Modalità neutra: per utenti non binari, in fase di esplorazione o che non vogliono vedere termini di genere.</string>
     <string name="home_button_name">Home</string>
     <string name="account_button_name">Account</string>
@@ -55,4 +56,8 @@
     <string name="choose_birthday_m">il birth dia</string>
     <string name="intro2_young_f">Pregante no interesante</string>
     <string name="intro2_young_m">male here</string>
+    <string name="intro2_ftm_m">I\\\'m a pre-T trans guy (trans masculine-leaning person) planning on taking T someday.</string>
+    <string name="intro2_ftm_n">I\'m a trans masculine-leaning person planning on taking T someday.</string>
+    <string name="gender_mode_m">Man mode, pregnancy won\'t ever be mentioned</string>
+    <string name="minor_consent">By selecting this option, I confirm that I am of legal age to discuss sexual activity according to the laws of my country or state.</string>
 </resources>
