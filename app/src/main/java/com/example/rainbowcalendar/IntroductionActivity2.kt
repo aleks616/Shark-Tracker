@@ -346,6 +346,7 @@ class IntroductionActivity2 : AppCompatActivity() {
                     errorText.text=tooYoungError
                 }
             }
+            val gówno="dfdsfdsf"
             //doc: if adult and it's unknown if sexually active or not, hide sex options for inactive, show the tick for active somewhere close
             sexCb.setOnCheckedChangeListener{_, isChecked->
                 if(sex==false)
