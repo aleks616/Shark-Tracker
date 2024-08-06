@@ -380,7 +380,7 @@ class IntroductionActivity2 : AppCompatActivity() {
             }
             //doc: show too young if younger than 10, and error if date is today
             else if(year-dpBirthday.year==0 && month-dpBirthday.month==0)
-                errorText.text="Enter correct date"
+                errorText.text=getString(R.string.date_error)
             else if(year-dpBirthday.year in 0..9){
                 errorText.text=getString(R.string.too_young)
             }

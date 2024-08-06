@@ -46,4 +46,5 @@
     <string name="yes">Tak</string>
     <string name="no">Nie</string>
     <string name="next">Dalej</string>
+    <string name="date_error">Wprowadź prawidłową datę.</string>
 </resources>
