@@ -75,7 +75,6 @@ class PasswordActivity : AppCompatActivity() {
         pinDigit3.setBackgroundResource(R.drawable.rounded_button)
         pinDigit2.setBackgroundResource(R.drawable.rounded_button)
         pinDigit1.setBackgroundResource(R.drawable.rounded_button)
-
         //endregion
 
         //region password type
@@ -83,7 +82,7 @@ class PasswordActivity : AppCompatActivity() {
         val sharedPrefPasswordType=applicationContext.getSharedPreferences("com.example.rainbowcalendar_passwordType", Context.MODE_PRIVATE)
         val sharedPrefType=applicationContext.getSharedPreferences("temp",Context.MODE_PRIVATE)
         val sharedPrefPassTemp=applicationContext.getSharedPreferences("temp1",Context.MODE_PRIVATE)
-        var passwordType:Int=0
+        var passwordType=0
         var pinButtonType=sharedPrefType.getInt("temp",0)
 
         chooseTypeButton.setOnClickListener {
@@ -106,11 +105,11 @@ class PasswordActivity : AppCompatActivity() {
         }
 
         if(pinButtonType==1)
-            pinMainText.text="Create a pin"
+            pinMainText.text=getString(R.string.create_pin)
         else if(pinButtonType==2)
-            pinMainText.text="Enter pin again"
+            pinMainText.text= getString(R.string.enter_pin_again)
         else if(pinButtonType==0)
-            pinMainText.text="Enter pin"
+            pinMainText.text=getString(R.string.enter_pin)
 
 
         passwordType=sharedPrefPasswordType.getInt("com.example.rainbowcalendar_passwordType", 0)
@@ -170,13 +169,13 @@ class PasswordActivity : AppCompatActivity() {
                 startActivity(Intent(this, MainActivity::class.java))
             }
             else
-                errorText.text="Wrong password"
+                errorText.text= getString(R.string.wrong_password)
         }
         //doc: switching version of activity
         if(passwordValue.isNullOrEmpty()&&passwordType==1){
             //doc: password not created
             eyeShowPassword.visibility=View.INVISIBLE
-            passwordHeader.text="Create a password"
+            passwordHeader.text= getString(R.string.create_password)
             passwordEnterButton.visibility=View.GONE
             confirmPassword.visibility=View.VISIBLE
             createPasswordButton.visibility=View.VISIBLE
@@ -196,15 +195,15 @@ class PasswordActivity : AppCompatActivity() {
         //doc: creating passwords with error handling
         createPasswordButton.setOnClickListener {
             if(passwordT.text.toString()!=confirmPassword.text.toString())
-                errorText.text="Passwords aren't the same"
+                errorText.text=getString(R.string.passwords_different_error)
             else{
                 errorText.text=""
                 if(passwordT.text.length<6)
-                    errorText.text="This is for your safety, password has to be at least 6 characters."
+                    errorText.text=getString(R.string.password_length_error)
                 else{
                     errorText.text=""
                     if(isNumeric(passwordT.text.toString()))
-                        errorText.text="Oh come on, if you want a digit only password, set a pin instead"
+                        errorText.text=getString(R.string.password_digit_error)
                     else{
                         errorText.text=""
                         //handle
@@ -309,7 +308,7 @@ class PasswordActivity : AppCompatActivity() {
                 0->{
                     //normal login
                     if(pin!=passwordValue){
-                        errorText.text="Wrong pin, try again"
+                        errorText.text=getString(R.string.wrong_pin_try_again)
                         pin=""
                         digitsEntered=0
                         pinDigit4.setBackgroundResource(R.drawable.rounded_button)
@@ -336,8 +335,8 @@ class PasswordActivity : AppCompatActivity() {
                             putString("temp1",pinToSave)
                             apply()
                         }
-                        Log.v("gay immidiate read of pin to save in shared pref: ",sharedPrefPassTemp.getString("temp1","").toString())
-                        pinMainText.text="Enter pin again"
+                        Log.v("gay immediate read of pin to save in shared pref: ",sharedPrefPassTemp.getString("temp1","").toString())
+                        pinMainText.text=getString(R.string.enter_pin_again)
                         pinButtonType=2
                         with(sharedPrefType.edit()){
                             putInt("temp",pinButtonType)
@@ -346,13 +345,13 @@ class PasswordActivity : AppCompatActivity() {
                         pin=""
                         this.recreate()
                     }
-                } //todo: fix pintosave being blank and "enter pin again" changing
+                }
                 2->{
                     //confirm pin
                     Log.w("gay pins", "pin to save: $pinToSave1 pin entered now: $pin")
                     if(pin!=pinToSave1){
-                        errorText.text="Pins are different, try again"
-                        pinMainText.text="Create a pin"
+                        errorText.text= getString(R.string.pins_different_error)
+                        pinMainText.text=getString(R.string.create_pin)
                         pinButtonType=1
                         with(sharedPrefType.edit()){
                             putInt("temp",pinButtonType)

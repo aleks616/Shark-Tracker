@@ -1,6 +1,4 @@
 package com.example.rainbowcalendar
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -20,7 +18,6 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
-import androidx.core.app.NotificationCompat
 import java.util.Calendar
 
 class IntroductionActivity2 : AppCompatActivity() {
@@ -29,7 +26,7 @@ class IntroductionActivity2 : AppCompatActivity() {
         setContentView(R.layout.activity_introduction2)
 
         //TODO:
-        // 1. after button1 do button2 and whole lockscreen mechanism after SplashScreenActivity
+        // 1. pin lockscreen mechanism to SplashScreenActivity
         // 2. change age categories just into legal and minor
         // 3. if year is same as now skip year but still send birthday notifications
         // 4. extract strings
@@ -50,10 +47,10 @@ class IntroductionActivity2 : AppCompatActivity() {
 
         var ageValue=""
         val legalAgeProof=findViewById<CheckBox>(R.id.legal_minor_consent)
-        ageSpinner.onItemSelectedListener = object :
+        ageSpinner.onItemSelectedListener=object:
             AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                ageValue = parent?.getItemAtPosition(position).toString()
+            override fun onItemSelected(parent:AdapterView<*>?,view:View?,position:Int,id:Long){
+                ageValue=parent?.getItemAtPosition(position).toString()
                 if(ageToCode(ageValue)==2)
                     legalAgeProof.visibility=View.VISIBLE
                 else
@@ -517,7 +514,7 @@ class IntroductionActivity2 : AppCompatActivity() {
                 }
             }
 
-            //reg: saving "settings done" + notifcations
+            //reg: saving "settings done" + notifications
             if(errorText.text!="Enter correct date"){
                 if(tReminders){
                     val sharedPrefSetup: SharedPreferences =applicationContext.getSharedPreferences("com.example.rainbowcalendar_setup", MODE_PRIVATE)

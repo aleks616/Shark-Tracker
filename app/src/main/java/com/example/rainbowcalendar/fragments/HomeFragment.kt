@@ -9,10 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.findViewTreeLifecycleOwner
-import com.example.rainbowcalendar.PasswordActivity
 import com.example.rainbowcalendar.R
+import com.example.rainbowcalendar.RecoveryActivity
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,7 +30,8 @@ class HomeFragment : Fragment() {
         val testButton2=view.findViewById<Button>(R.id.testButton2)
 
         testButton?.setOnClickListener {
-            startActivity(Intent(requireActivity(), PasswordActivity::class.java))
+            //startActivity(Intent(requireActivity(), PasswordActivity::class.java))
+            startActivity(Intent(requireActivity(), RecoveryActivity::class.java))
         }
 
         testButton2?.setOnClickListener {
@@ -54,6 +53,17 @@ class HomeFragment : Fragment() {
             val sharedPrefPassTemp=requireActivity().getSharedPreferences("temp1",Context.MODE_PRIVATE)
             with(sharedPrefPassTemp.edit()){
                 putString("temp1","")
+                apply()
+            }
+            val sharedPrefRecovery=requireActivity().getSharedPreferences("com.example.rainbowcalendar_recovery", Context.MODE_PRIVATE)
+            with(sharedPrefRecovery.edit()){
+                putString("question1","")
+                putString("question2","")
+                putString("question3","")
+                putString("answer1","")
+                putString("answer2","")
+                putString("answer3","")
+                putBoolean("done",false)
                 apply()
             }
         }

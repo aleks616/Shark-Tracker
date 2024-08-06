@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="home"
+        android:text="@string/home_button_name"
         android:textSize="50sp" />
 
     <LinearLayout
@@ -39,6 +39,8 @@
             android:text="test button 2\nreset password"
             android:textAllCaps="false"
             tools:ignore="HardcodedText" />
+
+
     </LinearLayout>
 
 </FrameLayout>

@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
@@ -21,21 +20,19 @@ class IntroductionActivity : AppCompatActivity() {
         setContentView(R.layout.activity_introduction)
 
         //reg: themes
-        val spinner = findViewById<Spinner>(R.id.themeSpinner)
+        val spinner=findViewById<Spinner>(R.id.themeSpinner)
         ArrayAdapter.createFromResource(this,R.array.themes_array,android.R.layout.simple_spinner_item)
-            .also { adapter ->
+            .also {adapter->
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                spinner.adapter = adapter
+                spinner.adapter=adapter
             }
 
-        spinner.onItemSelectedListener = object :
+        spinner.onItemSelectedListener=object:
             AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val value: String = parent?.getItemAtPosition(position).toString()
+            override fun onItemSelected(parent:AdapterView<*>?,view:View?,position:Int,id:Long){
+                val value=parent?.getItemAtPosition(position).toString()
             }
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                //("Not yet implemented")
-            }
+            override fun onNothingSelected(parent:AdapterView<*>?){}
         }
         //TODO: do themes
 

@@ -157,7 +157,7 @@
                 android:id="@+id/skipBd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="I don't want to enter my birthday"
+                android:text="@string/no_birthday"
                 android:layout_gravity="center"
                 />
 
