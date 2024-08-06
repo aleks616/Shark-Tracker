@@ -5,4 +5,11 @@
     <string name="choose_language">Wybierz język aplikacji</string>
     <string name="welcome_back">Witamy ponownie</string>
     <string name="logo_desc">logo aplikacji</string>
+    <string name="enter_name">Wprowadź imię/ksywę, tak będziemy się do Ciebie zwracać.</string>
+    <string name="enter_name_hint">Imię</string>
+    <string name="color_scheme">Który motyw preferujesz?</string>
+    <string-array name="themes_array">
+        <item>Ciemny</item>
+        <item>Jasny</item>
+    </string-array>
 </resources>
