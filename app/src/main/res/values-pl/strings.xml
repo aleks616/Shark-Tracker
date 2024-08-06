@@ -16,4 +16,16 @@
     <string name="gender_mode_tm">Tryb transmęski, męskie zwroty, postaramy się nie poruszać triggerujących tematów.</string>
     <string name="gender_mode_f">Tryb kobiecy, żeńskie zwroty.</string>
     <string name="gender_mode_n">"Neutralny tryb, dla osób niebinarnych, i innych osób które wolą neutralne zwroty. "</string>
+    <string name="home_button_name">Strona główna</string>
+    <string name="account_button_name">Konto</string>
+    <string name="add_button_text">Dodaj</string>
+    <string name="calendar_button_text">Kalendarz</string>
+    <string name="intro2_header">Wybierz najbardziej pasującą opcję.</string>
+    <string name="intro2_young">Mam okres od niedawna i nie myśle o ciąży. (wersja przyjazna nieletnim, jeśli jesteś dorosł*, wybierz ostatnią opcję)</string>
+    <string name="intro2_gay">Jestem w związku w którym nie mogę zajść w ciążę/Nie mogę z innego powodu.</string>
+    <string name="intro2_ftm">Jestem nie biorącą testosteronu osobą transmęską, która planuje/chcę go kiedyś brać.</string>
+    <string name="intro2_ftmT">Przechodze tranzycję k/m i zaczynam testosteron/mikrodawkuje i chcę śledzić zanikanie okresu.</string>
+    <string name="intro2_gnc">Nie lubię stereotypowego kobiecego wyglądu tego typu aplikacji.</string>
+    <string name="intro2_nb">Jestem osobą trans(niebinarną), ale nie planuję terapii hormonalnej.</string>
+    <string name="intro2_ace">Nie uprawiam seksu.</string>
 </resources>
