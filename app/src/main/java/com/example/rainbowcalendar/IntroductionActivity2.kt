@@ -8,17 +8,17 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.DatePicker
 import android.widget.LinearLayout
 import android.widget.NumberPicker
 import android.widget.RadioButton
 import android.widget.Spinner
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 class IntroductionActivity2 : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -26,10 +26,10 @@ class IntroductionActivity2 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_introduction2)
 
-        /* todo: get birthday
+        //todo: get birthday
         val dpBirthday=findViewById<DatePicker>(R.id.datePickerBirthday)
         val sdf = SimpleDateFormat("dd/M/yyyy", Locale.US)
-        val currentDate = sdf.format(Date())*/
+        val currentDate = sdf.format(Date())
 
         val spinner = findViewById<Spinner>(R.id.ageSpinner)
         ArrayAdapter.createFromResource(this,R.array.age_array,android.R.layout.simple_spinner_item)
