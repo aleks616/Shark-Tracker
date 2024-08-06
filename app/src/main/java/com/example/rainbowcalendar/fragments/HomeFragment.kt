@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import com.example.rainbowcalendar.PasswordActivity
 import com.example.rainbowcalendar.R
 import com.example.rainbowcalendar.RecoveryActivity
 
@@ -33,28 +34,16 @@ class HomeFragment : Fragment() {
             //startActivity(Intent(requireActivity(), PasswordActivity::class.java))
             startActivity(Intent(requireActivity(), RecoveryActivity::class.java))
         }
+        val sharedPrefs=requireActivity().getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
 
         testButton2?.setOnClickListener {
-            val sharedPrefPasswordText=requireActivity().getSharedPreferences("com.example.rainbowcalendar_passwordtext", Context.MODE_PRIVATE)
-            with(sharedPrefPasswordText.edit()){
-                putString("com.example.rainbowcalendar_passwordtext","")
-                apply()
-            }
-            val sharedPrefPasswordType=requireActivity().getSharedPreferences("com.example.rainbowcalendar_passwordType", Context.MODE_PRIVATE)
-            with(sharedPrefPasswordType.edit()){
-                putInt("com.example.rainbowcalendar_passwordType",0)
-                apply()
-            }
-            val sharedPrefType=requireActivity().getSharedPreferences("temp",Context.MODE_PRIVATE)
-            with(sharedPrefType.edit()){
-                putInt("temp",0)
-                apply()
-            }
-            val sharedPrefPassTemp=requireActivity().getSharedPreferences("temp1",Context.MODE_PRIVATE)
-            with(sharedPrefPassTemp.edit()){
-                putString("temp1","")
-                apply()
-            }
+            sharedPrefs.edit().putString("passwordValue","").apply()
+            sharedPrefs.edit().putInt("passwordType",0).apply()
+
+            val sharedPrefTemp=requireActivity().getSharedPreferences("temp",Context.MODE_PRIVATE)
+            sharedPrefTemp.edit().putInt("temp",0).apply()
+            sharedPrefTemp.edit().putString("temp1","").apply()
+
             val sharedPrefRecovery=requireActivity().getSharedPreferences("com.example.rainbowcalendar_recovery", Context.MODE_PRIVATE)
             with(sharedPrefRecovery.edit()){
                 putString("question1","")

@@ -147,6 +147,8 @@ class IntroductionActivity2 : AppCompatActivity() {
         // lastNotif:Long       time from last notification
         // setup:Boolean        is setup done: show settings after splash screen or not
         // lang:String          language code
+        // passwordType:Int     0->unknown 1->text 2->pin
+        // passwordValue:String
 
 
         //region T settings and notifications setup

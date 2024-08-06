@@ -17,6 +17,7 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.graphics.red
 
 class PasswordActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
@@ -79,11 +80,12 @@ class PasswordActivity : AppCompatActivity() {
 
         //region password type
 
-        val sharedPrefPasswordType=applicationContext.getSharedPreferences("com.example.rainbowcalendar_passwordType", Context.MODE_PRIVATE)
-        val sharedPrefType=applicationContext.getSharedPreferences("temp",Context.MODE_PRIVATE)
-        val sharedPrefPassTemp=applicationContext.getSharedPreferences("temp1",Context.MODE_PRIVATE)
+        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
+
+        //val sharedPrefPasswordType=applicationContext.getSharedPreferences("com.example.rainbowcalendar_passwordType", Context.MODE_PRIVATE)
+        val sharedPrefTemp=applicationContext.getSharedPreferences("temp",Context.MODE_PRIVATE)
         var passwordType=0
-        var pinButtonType=sharedPrefType.getInt("temp",0)
+        var pinButtonType=sharedPrefTemp.getInt("temp",0)
 
         chooseTypeButton.setOnClickListener {
             if(rbPasswordText.isChecked)
@@ -92,14 +94,12 @@ class PasswordActivity : AppCompatActivity() {
                 passwordType=2
                 pinButtonType=1
             }
-            with(sharedPrefPasswordType.edit()){
+            /*with(sharedPrefPasswordType.edit()){
                 putInt("com.example.rainbowcalendar_passwordType",passwordType)
                 apply()
-            }
-            with(sharedPrefType.edit()){
-                putInt("temp",pinButtonType)
-                apply()
-            }
+            }*/
+            sharedPrefs.edit().putInt("passwordType",passwordType).apply()
+            sharedPrefTemp.edit().putInt("temp",pinButtonType).apply()
 
             this.recreate()
         }
@@ -112,8 +112,8 @@ class PasswordActivity : AppCompatActivity() {
             pinMainText.text=getString(R.string.enter_pin)
 
 
-        passwordType=sharedPrefPasswordType.getInt("com.example.rainbowcalendar_passwordType", 0)
-
+        //passwordType=sharedPrefPasswordType.getInt("com.example.rainbowcalendar_passwordType", 0)
+        passwordType=sharedPrefs.getInt("passwordType",0)
 
         when(passwordType){
             0->{//set type
@@ -135,12 +135,8 @@ class PasswordActivity : AppCompatActivity() {
 
         //endregion
 
-
-        val rc="com.example.rainbowcalendar"
-        val sharedPrefPasswordText=applicationContext.getSharedPreferences("com.example.rainbowcalendar_passwordtext",Context.MODE_PRIVATE)
-        val passwordValue=sharedPrefPasswordText.getString("com.example.rainbowcalendar_passwordtext","")
-        val sharedPreferencesPasswordFailedAttemptsCount=applicationContext.getSharedPreferences(rc+"count",Context.MODE_PRIVATE)
-        val failedAttemptsCount=sharedPreferencesPasswordFailedAttemptsCount.getInt(rc+"count",0)
+        val passwordValue=sharedPrefs.getString("passwordValue","")
+        val failedAttemptsCount=sharedPrefs.getInt("failedAttempts",0)
 
         //region text password
         //doc: show password when tapping eye
@@ -206,11 +202,7 @@ class PasswordActivity : AppCompatActivity() {
                         errorText.text=getString(R.string.password_digit_error)
                     else{
                         errorText.text=""
-                        //handle
-                        with(sharedPrefPasswordText.edit()){
-                            putString("com.example.rainbowcalendar_passwordtext",passwordT.text.toString())
-                            apply()
-                        }
+                        sharedPrefs.edit().putString("passwordValue",passwordT.text.toString()).apply()
                         Toast.makeText(this@PasswordActivity, passwordT.text.toString(),Toast.LENGTH_SHORT).show()
                         startActivity(Intent(this, MainActivity::class.java))
                     }
@@ -299,7 +291,7 @@ class PasswordActivity : AppCompatActivity() {
         Log.v("GAY",pinButtonType.toString())
         pinEnter.setOnClickListener {
             Log.v("GAY",pinButtonType.toString())
-            val pinToSave1=sharedPrefPassTemp.getString("temp1","")
+            val pinToSave1=sharedPrefTemp.getString("temp1","")
             if(!pinToSave1.isNullOrEmpty())
                 Log.w("gay read pin to save as ", pinToSave1)
 
@@ -331,17 +323,11 @@ class PasswordActivity : AppCompatActivity() {
                     else{
                         pinToSave=pin
                         Log.v("gay pin to save is ",pinToSave) //value ok here
-                        with(sharedPrefPassTemp.edit()){
-                            putString("temp1",pinToSave)
-                            apply()
-                        }
-                        Log.v("gay immediate read of pin to save in shared pref: ",sharedPrefPassTemp.getString("temp1","").toString())
+                        sharedPrefTemp.edit().putString("temp1",pinToSave).apply()
+                        Log.v("gay immediate read of pin to save in shared pref: ",sharedPrefTemp.getString("temp1","").toString())
                         pinMainText.text=getString(R.string.enter_pin_again)
                         pinButtonType=2
-                        with(sharedPrefType.edit()){
-                            putInt("temp",pinButtonType)
-                            apply()
-                        }
+                        sharedPrefTemp.edit().putInt("temp",pinButtonType).apply()
                         pin=""
                         this.recreate()
                     }
@@ -353,22 +339,13 @@ class PasswordActivity : AppCompatActivity() {
                         errorText.text= getString(R.string.pins_different_error)
                         pinMainText.text=getString(R.string.create_pin)
                         pinButtonType=1
-                        with(sharedPrefType.edit()){
-                            putInt("temp",pinButtonType)
-                            apply()
-                        }
+                        sharedPrefTemp.edit().putInt("temp",pinButtonType).apply()
                         pin=""
                         this.recreate()
                     }
                     else{
-                        with(sharedPrefType.edit()){
-                            putInt("temp",0)
-                            apply()
-                        }
-                        with(sharedPrefPasswordText.edit()){
-                            putString("com.example.rainbowcalendar_passwordtext",pin)
-                            apply()
-                        }
+                        sharedPrefTemp.edit().putInt("temp",pinButtonType).apply()
+                        sharedPrefs.edit().putString("passwordValue",passwordT.text.toString()).apply()
 
                         startActivity(Intent(this, MainActivity::class.java))
                     }
