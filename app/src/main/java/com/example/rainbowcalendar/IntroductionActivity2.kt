@@ -40,7 +40,7 @@ class IntroductionActivity2 : AppCompatActivity() {
 
         //region age categories
         //doc: age spinner with age group values
-        val ageSpinner = findViewById<Spinner>(R.id.ageSpinner)
+        val ageSpinner=findViewById<Spinner>(R.id.ageSpinner)
         val ageLayout=findViewById<LinearLayout>(R.id.ageGroup)
         ArrayAdapter.createFromResource(this,R.array.age_array,android.R.layout.simple_spinner_item)
             .also { adapter ->
@@ -231,7 +231,6 @@ class IntroductionActivity2 : AppCompatActivity() {
         }
         //region BUTTON 1
         button.setOnClickListener{
-            notif()
             if(m1Young.isChecked)
                 mode=1
             else if(m2Gay.isChecked)
@@ -537,24 +536,6 @@ class IntroductionActivity2 : AppCompatActivity() {
 
     }
     //region helper functions
-    private fun notif(){
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        val channel = NotificationChannel("channel",  "Default", NotificationManager.IMPORTANCE_DEFAULT).apply {
-            description = "Description"
-        }
-        notificationManager.createNotificationChannel(channel)
-
-        val notification = NotificationCompat.Builder(this, "channel")
-            .setContentTitle("Title")
-            .setContentText("Content")
-            .setSmallIcon(R.drawable.alarm_icon)
-            .setPriority(NotificationCompat.PRIORITY_MAX)
-            .build()
-
-        notificationManager.notify(1, notification)
-    } //todo: delete this
-
     private fun ageToCode(age: String): Int{
         return when(age){
             "minor" -> 1

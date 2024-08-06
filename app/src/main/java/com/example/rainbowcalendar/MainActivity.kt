@@ -27,9 +27,6 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        val intent=Intent(this, PasswordActivity::class.java) //todo: delete this soon!!1
-        startActivity(intent)
-
     }
     private fun makeCurrentFragment(fragment: Fragment)=
         supportFragmentManager.beginTransaction().apply {

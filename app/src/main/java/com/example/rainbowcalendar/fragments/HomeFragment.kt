@@ -1,10 +1,17 @@
 package com.example.rainbowcalendar.fragments
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.findViewTreeLifecycleOwner
+import com.example.rainbowcalendar.PasswordActivity
 import com.example.rainbowcalendar.R
 
 // TODO: Rename parameter arguments, choose names that match
@@ -18,23 +25,49 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+        val testButton=view.findViewById<Button>(R.id.testButton)
+        val testButton2=view.findViewById<Button>(R.id.testButton2)
+
+        testButton?.setOnClickListener {
+            startActivity(Intent(requireActivity(), PasswordActivity::class.java))
         }
+
+        testButton2?.setOnClickListener {
+            val sharedPrefPasswordText=requireActivity().getSharedPreferences("com.example.rainbowcalendar_passwordtext", Context.MODE_PRIVATE)
+            with(sharedPrefPasswordText.edit()){
+                putString("com.example.rainbowcalendar_passwordtext","")
+                apply()
+            }
+            val sharedPrefPasswordType=requireActivity().getSharedPreferences("com.example.rainbowcalendar_passwordType", Context.MODE_PRIVATE)
+            with(sharedPrefPasswordType.edit()){
+                putInt("com.example.rainbowcalendar_passwordType",0)
+                apply()
+            }
+            val sharedPrefType=requireActivity().getSharedPreferences("temp",Context.MODE_PRIVATE)
+            with(sharedPrefType.edit()){
+                putInt("temp",0)
+                apply()
+            }
+            val sharedPrefPassTemp=requireActivity().getSharedPreferences("temp1",Context.MODE_PRIVATE)
+            with(sharedPrefPassTemp.edit()){
+                putString("temp1","")
+                apply()
+            }
+        }
+
     }
 
+    //region generated
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
@@ -47,7 +80,7 @@ class HomeFragment : Fragment() {
          * @param param2 Parameter 2.
          * @return A new instance of fragment HomeFragment.
          */
-        // TODO: Rename and change types and number of parameters
+        //wtf is this
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             HomeFragment().apply {
@@ -57,4 +90,5 @@ class HomeFragment : Fragment() {
                 }
             }
     }
+    //endregion
 }
