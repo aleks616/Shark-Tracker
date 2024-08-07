@@ -79,7 +79,6 @@ class HomeFragment : Fragment() {
          * @param param2 Parameter 2.
          * @return A new instance of fragment HomeFragment.
          */
-        //wtf is this
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             HomeFragment().apply {
