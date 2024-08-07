@@ -310,6 +310,7 @@ class PasswordActivity : AppCompatActivity() {
                         pinDigit1.setBackgroundResource(R.drawable.rounded_button)
                     }
                     else{
+                        failedAttemptsCount=0
                         startActivity(Intent(this, MainActivity::class.java))
                     }
                 }

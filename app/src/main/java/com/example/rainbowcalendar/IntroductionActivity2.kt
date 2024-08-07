@@ -149,6 +149,7 @@ class IntroductionActivity2 : AppCompatActivity() {
         // lang:String          language code
         // passwordType:Int     0->unknown 1->text 2->pin
         // passwordValue:String
+        // failedAttemptsCount  password/pin
 
 
         //region T settings and notifications setup
