@@ -277,11 +277,9 @@ class IntroductionActivity2 : AppCompatActivity() {
             button1.visibility=View.VISIBLE
             adultCb.visibility=View.GONE
             layoutBirthday.visibility=View.VISIBLE
-            //legalAgeProof.visibility=View.GONE
             //doc: show sex active choice if it's not obvious and if adult
 
             if(sex==null&&adult){
-                //layoutSex.visibility=View.VISIBLE
                 sexCb.visibility=View.VISIBLE
             }
             sharedPrefs.edit().putBoolean("adult",adult).apply()
@@ -327,7 +325,6 @@ class IntroductionActivity2 : AppCompatActivity() {
                     alarm.schedulePushNotifications(tTime.hour,tTime.minute,1,0)
 
                     sharedPrefs.edit().putInt("tInterval",1).apply()
-                    //Toast.makeText(this@IntroductionActivity2, "HERE", Toast.LENGTH_SHORT).show()
                     Toast.makeText(this@IntroductionActivity2, "notification set to"+tTime.hour.toString()+":"+tTime.minute.toString(),Toast.LENGTH_SHORT).show()
                 }
 
@@ -349,7 +346,6 @@ class IntroductionActivity2 : AppCompatActivity() {
                     errorText.text=tooYoungError
                 }
             }
-            val gówno="dfdsfdsf"
             //doc: if adult and it's unknown if sexually active or not, hide sex options for inactive, show the tick for active somewhere close
             sexCb.setOnCheckedChangeListener{_, isChecked->
                 if(sex==false)
