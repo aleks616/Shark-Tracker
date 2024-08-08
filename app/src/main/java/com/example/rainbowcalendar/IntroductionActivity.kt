@@ -26,14 +26,16 @@ class IntroductionActivity : AppCompatActivity() {
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 spinner.adapter=adapter
             }
-
+        var themeValue=""
         spinner.onItemSelectedListener=object:
             AdapterView.OnItemSelectedListener{
             override fun onItemSelected(parent:AdapterView<*>?,view:View?,position:Int,id:Long){
-                val value=parent?.getItemAtPosition(position).toString()
+                themeValue=parent?.getItemAtPosition(position).toString()
             }
             override fun onNothingSelected(parent:AdapterView<*>?){}
         }
+        //themes here
+
         //TODO: do themes
 
         val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)

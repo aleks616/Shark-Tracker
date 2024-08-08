@@ -124,4 +124,5 @@
         <item>Jak ma na drugie imię tw*j* najstarsz* kuzyn/kuzynka?</item>
         <item>Gdzie poznali się twoji rodzice?</item>
     </string-array>
+    <string name="tReminderText">czas na testosteron</string>
 </resources>

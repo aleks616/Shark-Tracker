@@ -22,7 +22,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notification = NotificationCompat.Builder(context, "hrt")
             .setContentTitle("Reminder")
-            .setContentText("It's T time innit")
+            .setContentText(context.getString(R.string.tReminderText))
             .setSmallIcon(R.drawable.icon_vaccine)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .build()

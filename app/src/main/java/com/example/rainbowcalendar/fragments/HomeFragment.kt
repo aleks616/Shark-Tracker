@@ -13,27 +13,22 @@ import com.example.rainbowcalendar.PasswordActivity
 import com.example.rainbowcalendar.R
 import com.example.rainbowcalendar.RecoveryActivity
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val testButton=view.findViewById<Button>(R.id.testButton)
         val testButton2=view.findViewById<Button>(R.id.testButton2)
+        val testButton3=view.findViewById<Button>(R.id.testButton3)
 
         testButton?.setOnClickListener {
-            //startActivity(Intent(requireActivity(), PasswordActivity::class.java))
+            startActivity(Intent(requireActivity(), PasswordActivity::class.java))
+        }
+        testButton3?.setOnClickListener {
             startActivity(Intent(requireActivity(), RecoveryActivity::class.java))
         }
+
+
         val sharedPrefs=requireActivity().getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
 
         testButton2?.setOnClickListener {
@@ -56,7 +51,6 @@ class HomeFragment : Fragment() {
                 apply()
             }
         }
-
     }
 
     //region generated
@@ -70,23 +64,5 @@ class HomeFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
     //endregion
 }

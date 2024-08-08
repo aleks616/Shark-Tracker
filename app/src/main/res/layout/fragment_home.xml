@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".fragments.HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,18 +14,35 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="200dp"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/testButton"
-            android:layout_width="150sp"
-            android:layout_height="70sp"
-            android:layout_gravity="center"
-            android:layout_marginStart="30sp"
-            android:background="@color/royal_blue"
-            android:gravity="center"
-            android:text="test button 1\ngo to password activity"
-            android:textAllCaps="false"
-            tools:ignore="HardcodedText" />
+            <Button
+                android:layout_marginTop="300dp"
+                android:id="@+id/testButton"
+                android:layout_width="150sp"
+                android:layout_height="70sp"
+                android:layout_marginStart="30sp"
+                android:background="@color/royal_blue"
+                android:text="test button 1\ngo to password activity"
+                android:textAllCaps="false"
+                tools:ignore="HardcodedText" />
+
+            <Button
+                android:layout_marginTop="100dp"
+                android:id="@+id/testButton3"
+                android:layout_width="150sp"
+                android:layout_height="70sp"
+                android:layout_marginStart="30sp"
+                android:background="@color/royal_blue"
+                android:text="test button 3\ngo to recovery activity"
+                android:textAllCaps="false"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
 
         <Button
             android:id="@+id/testButton2"

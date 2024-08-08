@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -69,7 +70,7 @@ class PasswordActivity : AppCompatActivity() {
 
         val errorText=findViewById<TextView>(R.id.errorText)
         val pinMainText=findViewById<TextView>(R.id.pinMainText)
-
+        val noPasswordCb=findViewById<CheckBox>(R.id.noPasswordCB)
         //pinMainText.text="Enter pin"
 
         pinDigit4.setBackgroundResource(R.drawable.rounded_button)
@@ -88,6 +89,9 @@ class PasswordActivity : AppCompatActivity() {
         var pinButtonType=sharedPrefTemp.getInt("temp",0)
 
         chooseTypeButton.setOnClickListener {
+            if(noPasswordCb.isChecked)
+                startActivity(Intent(this,MainActivity::class.java))
+
             if(rbPasswordText.isChecked)
                 passwordType=1
             else if(rbPasswordPin.isChecked){
@@ -134,7 +138,6 @@ class PasswordActivity : AppCompatActivity() {
         }
 
         //endregion
-
         val passwordValue=sharedPrefs.getString("passwordValue","")
         var failedAttemptsCount=sharedPrefs.getInt("failedAttempts",0)
 
@@ -157,15 +160,33 @@ class PasswordActivity : AppCompatActivity() {
                 else -> false
             }
         }
-
+        val sharedPrefRecovery=applicationContext.getSharedPreferences("com.example.rainbowcalendar_recovery", Context.MODE_PRIVATE)
+        val recoverySet=sharedPrefRecovery.getBoolean("done",false)
+        var canExecute=true
         //doc: password handling
         passwordEnterButton.setOnClickListener{
             if(passwordT.text.toString()==passwordValue){
                 errorText.text=""
                 startActivity(Intent(this, MainActivity::class.java))
             }
-            else
+            else{
                 errorText.text= getString(R.string.wrong_password)
+                failedAttemptsCount++
+                sharedPrefs.edit().putInt("failedAttempts",failedAttemptsCount).apply()
+                if(failedAttemptsCount in 3..4){
+                    errorText.text="Wrong password 3 times, wait 30 seconds before next attempt"
+                    canExecute=false
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        canExecute=true
+                        errorText.text=""
+                    },30*1000)
+                }
+                else if(failedAttemptsCount>4){
+                    if(recoverySet)
+                        startActivity(Intent(this, RecoveryActivity::class.java))
+                }
+            }
+
         }
         //doc: switching version of activity
         if(passwordValue.isNullOrEmpty()&&passwordType==1){
@@ -213,71 +234,74 @@ class PasswordActivity : AppCompatActivity() {
         confirmPassword.text.clear()
 
         //endregion
-
         //region pin
         //doc general functioning
         var digitsEntered=0
         var pin=""
         val handler = Handler(Looper.getMainLooper())
         val setDigitsIndicators=Runnable{
-            when(digitsEntered){
-                0->{ pinDigit1.setBackgroundResource(R.drawable.rounded_button_filled) }
-                1->{ pinDigit2.setBackgroundResource(R.drawable.rounded_button_filled) }
-                2->{ pinDigit3.setBackgroundResource(R.drawable.rounded_button_filled) }
-                3->{ pinDigit4.setBackgroundResource(R.drawable.rounded_button_filled) }
+            if(canExecute){
+                when(digitsEntered){
+                    0->{ pinDigit1.setBackgroundResource(R.drawable.rounded_button_filled) }
+                    1->{ pinDigit2.setBackgroundResource(R.drawable.rounded_button_filled) }
+                    2->{ pinDigit3.setBackgroundResource(R.drawable.rounded_button_filled) }
+                    3->{ pinDigit4.setBackgroundResource(R.drawable.rounded_button_filled) }
+                }
+                digitsEntered++
             }
-            digitsEntered++
         }
-        val removeDigitsIndicators=Runnable {
-            when(digitsEntered){
-                4->{pinDigit4.setBackgroundResource(R.drawable.rounded_button)}
-                3->{pinDigit3.setBackgroundResource(R.drawable.rounded_button)}
-                2->{pinDigit2.setBackgroundResource(R.drawable.rounded_button)}
-                1->{pinDigit1.setBackgroundResource(R.drawable.rounded_button)}
+        val removeDigitsIndicators=Runnable{
+            if(canExecute){
+                when(digitsEntered){
+                    4->{pinDigit4.setBackgroundResource(R.drawable.rounded_button)}
+                    3->{pinDigit3.setBackgroundResource(R.drawable.rounded_button)}
+                    2->{pinDigit2.setBackgroundResource(R.drawable.rounded_button)}
+                    1->{pinDigit1.setBackgroundResource(R.drawable.rounded_button)}
+                }
+                if(digitsEntered>0)
+                    digitsEntered--
             }
-            if(digitsEntered>0)
-                digitsEntered--
         }
         //region pin buttons
         pinButton1.setOnClickListener{
             handler.post(setDigitsIndicators)
-            pin+="1"
+            if(digitsEntered<4) pin+="1"
         }
         pinButton2.setOnClickListener{
             handler.post(setDigitsIndicators)
-            pin+="2"
+            if(digitsEntered<4) pin+="2"
         }
         pinButton3.setOnClickListener{
             handler.post(setDigitsIndicators)
-            pin+="3"
+            if(digitsEntered<4) pin+="3"
         }
         pinButton4.setOnClickListener{
             handler.post(setDigitsIndicators)
-            pin+="4"
+            if(digitsEntered<4) pin+="4"
         }
         pinButton5.setOnClickListener{
             handler.post(setDigitsIndicators)
-            pin+="5"
+            if(digitsEntered<4) pin+="5"
         }
         pinButton6.setOnClickListener{
             handler.post(setDigitsIndicators)
-            pin+="6"
+            if(digitsEntered<4) pin+="6"
         }
         pinButton7.setOnClickListener{
             handler.post(setDigitsIndicators)
-            pin+="7"
+            if(digitsEntered<4) pin+="7"
         }
         pinButton8.setOnClickListener{
             handler.post(setDigitsIndicators)
-            pin+="8"
+            if(digitsEntered<4) pin+="8"
         }
         pinButton9.setOnClickListener{
             handler.post(setDigitsIndicators)
-            pin+="9"
+            if(digitsEntered<4) pin+="9"
         }
         pinButton0.setOnClickListener{
             handler.post(setDigitsIndicators)
-            pin+="0"
+            if(digitsEntered<4) pin+="0"
         }
         //endregion
 
@@ -285,22 +309,24 @@ class PasswordActivity : AppCompatActivity() {
             pin=pin.dropLast(1)
             handler.post(removeDigitsIndicators)
         }
-
         //doc: on pin enter
         var pinToSave=""
         Log.v("GAY",pinButtonType.toString())
         pinEnter.setOnClickListener {
+            if(!canExecute)
+                return@setOnClickListener
+
             Log.v("GAY",pinButtonType.toString())
             val pinToSave1=sharedPrefTemp.getString("temp1","")
             if(!pinToSave1.isNullOrEmpty())
                 Log.w("gay read pin to save as ", pinToSave1)
-
 
             when(pinButtonType){
                 0->{
                     //normal login
                     if(pin!=passwordValue){
                         failedAttemptsCount++
+                        sharedPrefs.edit().putInt("failedAttempts",failedAttemptsCount).apply()
                         errorText.text=getString(R.string.wrong_pin_try_again)
                         pin=""
                         digitsEntered=0
@@ -308,9 +334,23 @@ class PasswordActivity : AppCompatActivity() {
                         pinDigit3.setBackgroundResource(R.drawable.rounded_button)
                         pinDigit2.setBackgroundResource(R.drawable.rounded_button)
                         pinDigit1.setBackgroundResource(R.drawable.rounded_button)
+
+                        if(failedAttemptsCount in 3..4){
+                            errorText.text="Wrong password 3 times, wait 30 seconds before next attempt"
+                            canExecute=false
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                canExecute=true
+                                errorText.text=""
+                            },30*1000)
+                        }
+                        else if(failedAttemptsCount>4){
+                            if(recoverySet)
+                                startActivity(Intent(this, RecoveryActivity::class.java))
+                        }
                     }
-                    else{
+                    else{ //correct pin
                         failedAttemptsCount=0
+                        sharedPrefs.edit().putInt("failedAttempts",failedAttemptsCount).apply()
                         startActivity(Intent(this, MainActivity::class.java))
                     }
                 }
@@ -346,19 +386,19 @@ class PasswordActivity : AppCompatActivity() {
                         this.recreate()
                     }
                     else{
-                        sharedPrefTemp.edit().putInt("temp",pinButtonType).apply()
-                        sharedPrefs.edit().putString("passwordValue",passwordT.text.toString()).apply()
-
-                        startActivity(Intent(this, MainActivity::class.java))
+                        sharedPrefTemp.edit().putInt("temp",0).apply()
+                        sharedPrefs.edit().putString("passwordValue",pinToSave1).apply()
+                        if(recoverySet)
+                            startActivity(Intent(this, MainActivity::class.java))
+                        else
+                            startActivity(Intent(this,RecoveryActivity::class.java))
                     }
                 }
             }
-            errorText.text=""
         }
         //endregion
         //todo: if pin/password wasn't created show choose type screen,
-        // fix not showing "wrong pin" errors
-        //
+
     }
     private fun isNumeric(word:String):Boolean{
         return word.all{char->char.isDigit()}

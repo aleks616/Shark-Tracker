@@ -44,7 +44,7 @@ class RecoveryActivity : AppCompatActivity() {
         val recoveryButton=findViewById<Button>(R.id.recoveryButton)
 
         val errorText=findViewById<TextView>(R.id.errorText)
-
+        //todo: wrong recovery question answers system, attempts!
 
         val sharedPrefRecovery=applicationContext.getSharedPreferences("com.example.rainbowcalendar_recovery", Context.MODE_PRIVATE)
         val setupDone=sharedPrefRecovery.getBoolean("done",false)
@@ -124,14 +124,12 @@ class RecoveryActivity : AppCompatActivity() {
                 Log.e("g_q2",recoveryValue2)
                 Log.w("g_q3",recoveryValue3)
             }
-            //todo: strings
         }
         //endregion
 
         recoveryButton.setOnClickListener {
             if(!recoveryEditText1.text.isNullOrEmpty()&&!recoveryEditText2.text.isNullOrEmpty()&&!recoveryEditText3.text.isNullOrEmpty()){
                 errorText.text=""
-                //todo: not exact but fitting answer more or less
                 val correctAnswer1=simplify(sharedPrefRecovery.getString("answer1",""))
                 val correctAnswer2=simplify(sharedPrefRecovery.getString("answer2",""))
                 val correctAnswer3=simplify( sharedPrefRecovery.getString("answer3",""))

@@ -24,13 +24,9 @@ class IntroductionActivity2 : AppCompatActivity() {
         setContentView(R.layout.activity_introduction2)
 
         //TODO:
-        // 1. pin lockscreen mechanism to SplashScreenActivity
-        // 3. if year is same as now skip year but still send birthday notifications, set year to 2137!
-        // 4. fix shared preferences naming -> password/recovery
-        // 5. make notifications take text from strings
-        // 6. UI modes
-        // 7. option to reset settings/remove data and change them
-        // 8. period options menu
+        // 1. if year is same as now skip year but still send birthday notifications
+        // 2. UI modes ||woah it's hard
+        // 3. period options menu
 
         val adultCb=findViewById<CheckBox>(R.id.adultCb)
         var adult=false
@@ -354,19 +350,15 @@ class IntroductionActivity2 : AppCompatActivity() {
                     sharedPrefs.edit().putBoolean("sex",isChecked).apply()
             }
 
-            //todo: change to event listener
-
-
             //reg: saving "settings done" + notifications
             if(errorText.text!="Enter correct date"){
-                if(tReminders){
-                    sharedPrefs.edit().putBoolean("setup",true).apply()
-                }
-                val intent=Intent(this, MainActivity::class.java)
-                startActivity(intent)
+                sharedPrefs.edit().putBoolean("setup",true).apply()
 
+                if(!sharedPrefs.getString("passwordValue","").isNullOrEmpty())
+                    startActivity(Intent(this, MainActivity::class.java))
+                else
+                    startActivity(Intent(this,PasswordActivity::class.java))
             }
-
         }
         //endregion
 
