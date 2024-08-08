@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:theme="@style/Dark.RainbowCalendar"
     tools:context=".MainActivity">
 
 
@@ -29,8 +30,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:itemBackground="@color/dark_goldenrod"
-        app:itemIconTint="@color/cold"
-        app:itemTextColor="@color/dark_green"
+        app:itemBackground="?attr/colorOnBackground"
+        app:itemIconTint="?attr/colorTertiary"
+        app:itemTextColor="@color/old_lace"
         app:menu="@menu/nav_menu" />
 </RelativeLayout>

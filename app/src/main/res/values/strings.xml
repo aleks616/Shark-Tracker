@@ -142,6 +142,7 @@
         <item>What is the middle name of your oldest cousin?</item>
         <item>In what city or town did your parents meet?</item>
     </string-array>
+    <string name="title_activity_settings">SettingsActivity</string>
 
 
 </resources>
