@@ -44,7 +44,7 @@ class RecoveryActivity : AppCompatActivity() {
         val recoveryButton=findViewById<Button>(R.id.recoveryButton)
 
         val errorText=findViewById<TextView>(R.id.errorText)
-
+        //todo: wrong recovery question answers system, attempts!
 
         val sharedPrefRecovery=applicationContext.getSharedPreferences("com.example.rainbowcalendar_recovery", Context.MODE_PRIVATE)
         val setupDone=sharedPrefRecovery.getBoolean("done",false)

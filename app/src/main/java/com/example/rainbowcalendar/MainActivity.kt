@@ -3,6 +3,8 @@ package com.example.rainbowcalendar
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import com.example.rainbowcalendar.fragments.AddFragment
+import com.example.rainbowcalendar.fragments.CalendarFragment
 import com.example.rainbowcalendar.fragments.HomeFragment
 import com.example.rainbowcalendar.fragments.SettingsFragment
 
@@ -13,6 +15,8 @@ class MainActivity : AppCompatActivity() {
 
         val homeFragment=HomeFragment()
         val settingsFragment=SettingsFragment()
+        val calendarFragment=CalendarFragment()
+        val addFragment=AddFragment()
 
         makeCurrentFragment(homeFragment)
 
@@ -21,6 +25,8 @@ class MainActivity : AppCompatActivity() {
             when(it.itemId){
                 R.id.navMenu_home->makeCurrentFragment(homeFragment)
                 R.id.navMenu_acc->makeCurrentFragment(settingsFragment)
+                R.id.navMenu_calendar->makeCurrentFragment(calendarFragment)
+                R.id.navMenu_add->makeCurrentFragment(addFragment)
             }
             true
         }

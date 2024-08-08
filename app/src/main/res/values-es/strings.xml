@@ -124,6 +124,7 @@
         <item>¿Cuál es el segundo nombre de tu primo/a mayor?</item>
         <item>¿En qué ciudad o pueblo se conocieron tus padres?</item>
     </string-array>
+    <string name="tReminderText">It\'s T time innit</string>
 
 
 </resources>

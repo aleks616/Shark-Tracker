@@ -29,11 +29,16 @@ class HomeFragment : Fragment() {
 
         val testButton=view.findViewById<Button>(R.id.testButton)
         val testButton2=view.findViewById<Button>(R.id.testButton2)
+        val testButton3=view.findViewById<Button>(R.id.testButton3)
 
         testButton?.setOnClickListener {
-            //startActivity(Intent(requireActivity(), PasswordActivity::class.java))
+            startActivity(Intent(requireActivity(), PasswordActivity::class.java))
+        }
+        testButton3?.setOnClickListener {
             startActivity(Intent(requireActivity(), RecoveryActivity::class.java))
         }
+
+
         val sharedPrefs=requireActivity().getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
 
         testButton2?.setOnClickListener {
@@ -56,7 +61,6 @@ class HomeFragment : Fragment() {
                 apply()
             }
         }
-
     }
 
     //region generated

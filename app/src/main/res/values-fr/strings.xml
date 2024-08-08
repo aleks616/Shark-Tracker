@@ -97,4 +97,5 @@
     <string name="pins_different_error">Pins are different, try again</string>
     <string name="no_birthday">I don\'t want to enter my birthday</string>
     <string name="settings">settings</string>
+    <string name="tReminderText">It\'s T time innit</string>
 </resources>

@@ -41,7 +41,6 @@ class SplashScreenActivity:AppCompatActivity(){
         val welcomeTextView=findViewById<TextView>(R.id.welcome)
         val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
         val setupDone=sharedPrefs.getBoolean("setup",false)
-
         val welcomeText: String=getString(R.string.welcome_text)
         val welcomeBackText: String=getString(R.string.welcome_back)
         val delay: Long
@@ -57,6 +56,9 @@ class SplashScreenActivity:AppCompatActivity(){
             }, delay)
         }
         else {
+            if(!sharedPrefs.getString("passwordValue","").isNullOrEmpty()){ //there is password
+                startActivity(Intent(this,PasswordActivity::class.java))
+            }
             welcomeTextView.text=welcomeBackText
             // rest of the Not-FirstTime Logic here
             delay=0
