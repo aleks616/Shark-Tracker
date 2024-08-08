@@ -124,7 +124,6 @@ class PasswordActivity : AppCompatActivity() {
                 passwordTypeLayout.visibility=View.VISIBLE
                 passwordLayout.visibility=View.GONE
                 pinCodeLayout.visibility=View.GONE
-                //todo: option "i don't want password"
             }
             1->{ //text
                 passwordTypeLayout.visibility=View.GONE
@@ -185,7 +184,6 @@ class PasswordActivity : AppCompatActivity() {
                 else if(failedAttemptsCount>4){
                     if(recoverySet)
                         startActivity(Intent(this, RecoveryActivity::class.java))
-                    //todo: else
                 }
             }
 
@@ -323,7 +321,6 @@ class PasswordActivity : AppCompatActivity() {
             if(!pinToSave1.isNullOrEmpty())
                 Log.w("gay read pin to save as ", pinToSave1)
 
-            //TODO: IMPORTANT!!! FIX PIN BEING EMPTY
             when(pinButtonType){
                 0->{
                     //normal login
@@ -401,7 +398,6 @@ class PasswordActivity : AppCompatActivity() {
         }
         //endregion
         //todo: if pin/password wasn't created show choose type screen,
-        // fix not showing "wrong pin" errors
 
     }
     private fun isNumeric(word:String):Boolean{

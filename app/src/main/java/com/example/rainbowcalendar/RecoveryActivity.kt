@@ -124,14 +124,12 @@ class RecoveryActivity : AppCompatActivity() {
                 Log.e("g_q2",recoveryValue2)
                 Log.w("g_q3",recoveryValue3)
             }
-            //todo: strings
         }
         //endregion
 
         recoveryButton.setOnClickListener {
             if(!recoveryEditText1.text.isNullOrEmpty()&&!recoveryEditText2.text.isNullOrEmpty()&&!recoveryEditText3.text.isNullOrEmpty()){
                 errorText.text=""
-                //todo: not exact but fitting answer more or less
                 val correctAnswer1=simplify(sharedPrefRecovery.getString("answer1",""))
                 val correctAnswer2=simplify(sharedPrefRecovery.getString("answer2",""))
                 val correctAnswer3=simplify( sharedPrefRecovery.getString("answer3",""))

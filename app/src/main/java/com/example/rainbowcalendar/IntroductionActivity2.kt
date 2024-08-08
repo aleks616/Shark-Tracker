@@ -350,9 +350,6 @@ class IntroductionActivity2 : AppCompatActivity() {
                     sharedPrefs.edit().putBoolean("sex",isChecked).apply()
             }
 
-            //todo: change to event listener
-
-
             //reg: saving "settings done" + notifications
             if(errorText.text!="Enter correct date"){
                 sharedPrefs.edit().putBoolean("setup",true).apply()
