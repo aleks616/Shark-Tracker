@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".PeriodSettingsActivity">
+
+        <TextView
+            android:id="@+id/periodTitle"
+            android:text="Some more settings"
+            android:textSize="32sp"
+            android:layout_marginVertical="20sp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <CheckBox
+            android:layout_width="320sp"
+            android:layout_height="wrap_content"
+            android:id="@+id/periodRegularCB"
+            android:layout_gravity="center"
+            android:textSize="20sp"
+            android:text="Is your ... regular?"/>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/periodRegularL"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_margin="20sp"
+                android:textSize="20sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="How long does your cycle usually last?" />
+
+            <NumberPicker
+                android:id="@+id/cycleDaysPicker"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_margin="20sp"
+                android:textSize="20sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="How long does ... usually last?"/>
+
+            <NumberPicker
+                android:id="@+id/periodDaysPicker"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_margin="20sp"
+            android:textSize="20sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="How many days ago did it last start?"/>
+
+        <NumberPicker
+            android:layout_marginBottom="20sp"
+            android:id="@+id/lastStartPicker"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        <Button
+            android:id="@+id/buttonNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="40sp"
+            android:layout_marginEnd="20sp"
+            android:background="?attr/colorSecondary"
+            android:drawableEnd="@drawable/icon_arrow_right_triangle"
+            android:drawableTint="@color/dark_blue"
+            android:text="@string/next"
+            android:textAlignment="textEnd" />
+
+
+    </LinearLayout>
+
+</ScrollView>
