@@ -1,12 +1,14 @@
 package com.example.rainbowcalendar.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import com.example.rainbowcalendar.PeriodSettingsActivity
 import com.example.rainbowcalendar.R
 
 class SettingsFragment : Fragment() {
@@ -15,6 +17,12 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val testButton2=view.findViewById<Button>(R.id.testButton2)
+        val testButton=view.findViewById<Button>(R.id.testButton)
+
+        testButton.setOnClickListener {
+            startActivity(Intent(requireContext(), PeriodSettingsActivity::class.java))
+        }
+
         val sharedPrefs=requireActivity().getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
         testButton2?.setOnClickListener {
             sharedPrefs.edit().putString("passwordValue","").apply()
