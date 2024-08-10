@@ -397,7 +397,7 @@ class PasswordActivity : AppCompatActivity() {
             }
         }
         //endregion
-        //todo: if pin/password wasn't created show choose type screen,
+        //todo: **if pin/password wasn't created show choose type screen**
 
     }
     private fun isNumeric(word:String):Boolean{

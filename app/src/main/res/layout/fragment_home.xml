@@ -3,30 +3,71 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Dark.RainbowCalendar"
+    android:theme="@style/Theme.RainbowCalendar"
     tools:context=".fragments.HomeFragment">
 
-    <TextView
-        android:id="@+id/homeTitle"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/home_button_name"
-        android:textSize="50sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:layout_width="200dp"
-            android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Space
+            android:id="@+id/popUpSpace"
+            android:layout_width="match_parent"
+            android:layout_height="120sp"/>
+
+        <TextView
+            android:id="@+id/homeTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/home_button_name"
+            android:layout_margin="10dp"
+            android:textSize="50sp"/>
+
+        <TextView
+            android:layout_margin="10dp"
+            android:id="@+id/test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            tools:text="sample"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
 
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:indeterminate="false"
+                android:progressDrawable="@drawable/circular_progress_bar"
+                android:background="@drawable/circle_shape"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:max="100"
+                android:progress="20"
+                />
 
+            <TextView
+                android:id="@+id/progressText"
+                android:gravity="center"
+                android:layout_width="200dp"
+                android:layout_height="100dp"
+                android:layout_centerInParent="true"
+                android:textSize="25sp"
+                tools:text="X days left" />
+
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
         </LinearLayout>
-
-
     </LinearLayout>
 
 </FrameLayout>

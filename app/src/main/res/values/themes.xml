@@ -1,7 +1,9 @@
 <resources>
     <style name="Base.Theme.RainbowCalendar" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/cornsilk</item>
+        <item name="colorPrimary">@color/white_smoke</item>
         <item name="colorButtonNormal">@color/white</item>
+        <item name="colorOutlineVariant">@color/light_blue</item>
+        <item name="iconTint">@color/medium_blue</item>
         <item name="colorOnBackground">@color/royal_blue</item>
         <item name="colorSecondary">@color/dodger_blue</item>
         <item name="colorTertiary">@color/medium_turquoise</item>
