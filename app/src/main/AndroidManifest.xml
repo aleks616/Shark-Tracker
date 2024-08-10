@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Dark.Theme.RainbowCalendar"
+        android:theme="@style/Theme.RainbowCalendar"
         tools:targetApi="s">
         <activity
             android:name=".PeriodSettingsActivity"

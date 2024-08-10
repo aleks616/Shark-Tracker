@@ -3,12 +3,19 @@ package com.example.rainbowcalendar
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.NumberPicker
 import android.widget.TextView
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.GregorianCalendar
+import java.util.Locale
+
 class PeriodSettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,15 +35,20 @@ class PeriodSettingsActivity : AppCompatActivity() {
         periodDaysPicker.value=5
         val lastStartPicker=findViewById<NumberPicker>(R.id.lastStartPicker)
         lastStartPicker.minValue=0
-        lastStartPicker.maxValue=50
+        lastStartPicker.value=20
+        lastStartPicker.maxValue=600
         val buttonNext=findViewById<Button>(R.id.buttonNext)
 
         periodRegularCB.setOnCheckedChangeListener{_, isChecked->
             regular=isChecked
-            if(regular)
+            if(regular){
                 periodRegularL.visibility=View.VISIBLE
-            else
+                lastStartPicker.maxValue=cycleDaysPicker.value
+            }
+            else{
                 periodRegularL.visibility=View.GONE
+                lastStartPicker.maxValue=600
+            }
         }
 
         // lastStartPicker.maxValue=cycleDaysPicker.value-1
@@ -50,16 +62,34 @@ class PeriodSettingsActivity : AppCompatActivity() {
         //doc:
         // cycleLength: Int
         // periodLength: Int
-        //
+        // periodRegular: Boolean
+        // lastPeriod
 
 
         buttonNext.setOnClickListener {
+            sharedPrefs.edit().putBoolean("periodRegular",regular).apply()
+            val cycleLength=cycleDaysPicker.value
+            val periodLength=periodDaysPicker.value
             if(regular){
-                val cycleLength=cycleDaysPicker.value
-                val periodLength=periodDaysPicker.value
+                sharedPrefs.edit().putInt("cycleLength",cycleLength).apply()
+                sharedPrefs.edit().putInt("periodLength",periodLength).apply()
             }
+            else{
+                sharedPrefs.edit().putInt("cycleLength",0).apply()
+                sharedPrefs.edit().putInt("periodLength",0).apply()
 
+            }
+            //todo: last start
+            val formatter=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault())
+            val calendar=Calendar.getInstance()
+            calendar.add(Calendar.DAY_OF_YEAR,-1*lastStartPicker.value)
+            val date=formatter.format(calendar.time)
+            calendar.add(Calendar.DAY_OF_YEAR, cycleLength)
+            val nextDate=formatter.format(calendar.time)
 
+            Log.i("shit", date)
+            sharedPrefs.edit().putString("lastPeriod",date).apply()
+            sharedPrefs.edit().putString("nextPeriod",nextDate).apply()
         }
 
 

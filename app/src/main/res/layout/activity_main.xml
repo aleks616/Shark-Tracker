@@ -5,9 +5,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:theme="@style/Dark.RainbowCalendar"
+    android:theme="@style/Theme.RainbowCalendar"
     tools:context=".MainActivity">
 
+
+    <LinearLayout
+        android:id="@+id/popUp"
+        android:layout_width="match_parent"
+        android:background="?attr/colorOutlineVariant"
+        android:weightSum="1"
+        android:layout_height="120sp">
+
+
+        <LinearLayout
+            android:visibility="visible"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_weight="0.9"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/popUpText"
+                tools:text="SAMPLE TEXT YEAHHH LOREM IPSUM"
+                android:textSize="22sp"
+                android:textColor="@color/black"
+                android:layout_marginStart="14sp"
+                android:layout_marginTop="6sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/goToActivity"
+                android:layout_marginTop="15sp"
+                android:layout_marginStart="20sp"
+                android:layout_width="150sp"
+                android:layout_height="40sp"/>
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/buttonClosePopup"
+            android:background="@drawable/icon_x"
+            android:layout_width="0dp"
+            android:layout_height="40sp"
+            android:layout_weight="0.1"
+            android:contentDescription="close popup" />
+
+
+    </LinearLayout>
 
     <!--<TextView
         android:layout_width="wrap_content"
@@ -21,7 +67,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_nav" >
-
     </FrameLayout>
 
 
@@ -34,4 +79,5 @@
         app:itemIconTint="?attr/colorTertiary"
         app:itemTextColor="@color/old_lace"
         app:menu="@menu/nav_menu" />
+
 </RelativeLayout>
