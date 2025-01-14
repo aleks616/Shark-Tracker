@@ -5,16 +5,15 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         tools:context=".PeriodSettingsActivity">
 
         <TextView
             android:id="@+id/periodTitle"
-            android:text="Some more settings"
+            android:text="@string/period_settings_f"
             android:textSize="32sp"
             android:layout_marginVertical="20sp"
             android:gravity="center"
@@ -22,26 +21,28 @@
             android:layout_height="wrap_content"/>
 
         <CheckBox
+            android:minHeight="48dp"
             android:layout_width="320sp"
             android:layout_height="wrap_content"
             android:id="@+id/periodRegularCB"
             android:layout_gravity="center"
             android:textSize="20sp"
-            android:text="Is your ... regular?"/>
+            android:text="@string/period_regular_cb_f"/>
 
         <LinearLayout
-            android:visibility="gone"
+            android:visibility="visible"
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:id="@+id/periodRegularL"
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/cycleLengthText"
                 android:layout_margin="20sp"
                 android:textSize="20sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="How long does your cycle usually last?" />
+                android:text="@string/cycle_length_question_f" />
 
             <NumberPicker
                 android:id="@+id/cycleDaysPicker"
@@ -50,11 +51,12 @@
                 android:layout_height="wrap_content"/>
 
             <TextView
+                android:id="@+id/periodLengthText"
                 android:layout_margin="20sp"
                 android:textSize="20sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="How long does ... usually last?"/>
+                android:text="@string/period_length_question_f"/>
 
             <NumberPicker
                 android:id="@+id/periodDaysPicker"
@@ -69,7 +71,7 @@
             android:textSize="20sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="How many days ago did it last start?"/>
+            android:text="@string/last_start_question"/>
 
         <NumberPicker
             android:layout_marginBottom="20sp"

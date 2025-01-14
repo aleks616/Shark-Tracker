@@ -38,18 +38,17 @@
     <string name="calendar_button_text">Calendar</string>
 
     <string name="intro2_header">Choose a most fitting option</string>
-    <string name="intro2_young_n">I have recently started having shark weeks and I\'m not thinking about getting pregnant. (version for minors, adults choose the last option)</string>
+    <string name="intro2_young_n">I have recently started having blahaj weeks and I\'m not thinking about getting pregnant. (version for minors, adults choose the last option)</string>
     <string name="intro2_young_f">I have recently started having periods and I\'m not thinking about getting pregnant. (version for minors, adults choose the last option)</string>
-    <string name="intro2_young_m">I have recently started having shark weeks.(version for minors, adults choose the last option)</string>
+    <string name="intro2_young_m">I have recently started having blahaj weeks.(version for minors, adults choose the last option)</string>
     <string name="intro2_gay">I\'m in a relationship where pregnancy is not possible, or I\'m unable to get pregnant for another reason.</string>
     <string name="intro2_ftm">I\'m a trans guy planning on taking T someday.</string>
     <string name="intro2_ftm_n">I\'m a trans masculine-leaning person planning on taking T someday.</string>
-    <string name="intro2_ftmT">I\'m in FTM transition at the start of T or micro-dosing, and I want to track the disappearance of shark week.</string>
+    <string name="intro2_ftmT">I\'m in FTM transition at the start of T or micro-dosing, and I want to track the disappearance of blahaj week.</string>
     <string name="intro2_gnc">I\'m gender non-conforming (GNC) or I simply don\'t like the feminine aesthetics of similar apps.</string>
     <string name="intro2_nb">I\'m trans in some way, but I don\'t plan on taking HRT.</string>
     <string name="intro2_ace">I\'m a virgin or not sexually active at the moment, for any reason.</string>
-    <string name="intro2_ftmTl">I\'ve been on T for some time, I don\'t experience shark weeks anymore, I want shot reminders</string>
-
+    <string name="intro2_ftmTl">I\'ve been on T for some time, I don\'t experience blahaj weeks anymore, I want shot reminders</string>
     <string name="choose_gender_mode">Choose your gender/app mode, there will be more detailed modes on the next screen. You can always change these settings.</string>
     <string name="choose_age">Choose your age group.</string>
     <string name="choose_birthday_n">If you want to, enter your birthday, (you\'ll get birthday wishes). Advised if you\'re a minor, the age setting will change automatically.</string>
@@ -142,7 +141,14 @@
         <item>What is the middle name of your oldest cousin?</item>
         <item>In what city or town did your parents meet?</item>
     </string-array>
-    <string name="title_activity_settings">SettingsActivity</string>
-
-
+    <string name="title_activity_settings" translatable="false">SettingsActivity</string>
+    <string name="period_settings_f">Menstrual cycle settings</string>
+    <string name="period_settings_m">Blahaj cycle settings</string>
+    <string name="period_regular_cb_f">Is your period regular?</string>
+    <string name="period_regular_cb_m">Is your blahaj week regular?</string>
+    <string name="period_length_question_f">How many days does your menstruation usually last?</string>
+    <string name="period_length_question_m">How many days does your blahaj week usually last?</string>
+    <string name="cycle_length_question_f">How long does your cycle usually last?</string>
+    <string name="cycle_length_question_m">How long does your blahaj cycle usually last?</string>
+    <string name="last_start_question">How many days ago did it last start?</string>
 </resources>

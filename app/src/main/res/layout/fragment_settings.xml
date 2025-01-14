@@ -1,50 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.SettingsFragment">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/settings" />
-
+    android:theme="@style/Theme.RainbowCalendar"
+    tools:context=".fragments.HomeFragment">
 
     <LinearLayout
-        android:layout_gravity="center"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/testButton"
-            android:layout_width="150sp"
-            android:layout_height="70sp"
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/settings" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="30sp"
-            android:background="@color/royal_blue"
-            android:gravity="center"
-            android:text="custom"
-            android:textAllCaps="false"
-            tools:ignore="HardcodedText" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/testButton"
+                android:layout_width="150sp"
+                android:layout_height="70sp"
+                android:layout_gravity="center"
+                android:layout_marginStart="30sp"
+                android:background="@color/royal_blue"
+                android:gravity="center"
+                android:text="custom"
+                android:textAllCaps="false"
+                tools:ignore="HardcodedText" />
 
 
-        <Button
-            android:id="@+id/testButton2"
-            android:layout_width="150sp"
-            android:layout_height="70sp"
-            android:layout_gravity="center"
-            android:layout_marginStart="30sp"
-            android:background="@color/royal_blue"
-            android:gravity="center"
-            android:text="reset password and recovery"
-            android:textAllCaps="false"
-            tools:ignore="HardcodedText" />
+            <Button
+                android:id="@+id/testButton2"
+                android:layout_width="150sp"
+                android:layout_height="70sp"
+                android:layout_gravity="center"
+                android:layout_marginStart="30sp"
+                android:background="@color/royal_blue"
+                android:gravity="center"
+                android:text="reset password and recovery"
+                android:textAllCaps="false"
+                tools:ignore="HardcodedText" />
 
 
-
+        </LinearLayout>
     </LinearLayout>
-
-
-</FrameLayout>
+</ScrollView>

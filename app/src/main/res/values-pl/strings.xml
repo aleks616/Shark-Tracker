@@ -125,4 +125,13 @@
         <item>Gdzie poznali się twoji rodzice?</item>
     </string-array>
     <string name="tReminderText">czas na testosteron</string>
+    <string name="period_settings_f">Menstrual cycle settings</string>
+    <string name="period_settings_m">Shark cycle settings</string>
+    <string name="period_regular_cb_f">Is your period regular?</string>
+    <string name="period_regular_cb_m">Is your shark week regular?</string>
+    <string name="period_length_question_f">How long does your cycle usually last?</string>
+    <string name="period_length_question_m">How long does your shark cycle usually last?</string>
+    <string name="cycle_length_question_f">How long does your cycle usually last?</string>
+    <string name="cycle_length_question_m">How long does your blahaj cycle usually last?</string>
+    <string name="last_start_question">How many days ago did it last start?</string>
 </resources>
