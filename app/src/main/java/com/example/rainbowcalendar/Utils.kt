@@ -17,7 +17,7 @@ class Utils : Activity() {
      *
      * */
     //todo: i think this is useless? idk
-    fun popup(context: Context){
+   /* fun popup(context: Context){
         val sharedPrefs=context.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
         val popUpText=findViewById<TextView>(R.id.popUpText)
         val popUpL=findViewById<LinearLayout>(R.id.popUp)
@@ -52,5 +52,5 @@ class Utils : Activity() {
             popUpL.visibility= View.GONE
             //popUpSpace.visibility= View.GONE
         }
-    }
+    }*/
 }
