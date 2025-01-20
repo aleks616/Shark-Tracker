@@ -1,6 +1,7 @@
 package com.example.rainbowcalendar
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -11,18 +12,19 @@ import android.widget.LinearLayout
 import android.widget.NumberPicker
 import android.widget.TextView
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
-import java.util.GregorianCalendar
 import java.util.Locale
 
 class PeriodSettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_period_settings)
-
+        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
+        val gender=sharedPrefs.getString("gender","")
         val periodRegularL=findViewById<LinearLayout>(R.id.periodRegularL)
+
         val periodTitle=findViewById<TextView>(R.id.periodTitle)
+
         val periodRegularCB=findViewById<CheckBox>(R.id.periodRegularCB)
         var regular=true
         val cycleDaysPicker=findViewById<NumberPicker>(R.id.cycleDaysPicker)
@@ -38,6 +40,15 @@ class PeriodSettingsActivity : AppCompatActivity() {
         lastStartPicker.value=20
         lastStartPicker.maxValue=600
         val buttonNext=findViewById<Button>(R.id.buttonNext)
+        val periodLengthText=findViewById<TextView>(R.id.periodLengthText)
+        val cycleLengthText=findViewById<TextView>(R.id.cycleLengthText)
+
+        if(gender=="m"){
+            periodTitle.text=getString(R.string.period_settings_m)
+            periodRegularCB.text=getString(R.string.period_regular_cb_m)
+            periodLengthText.text=getString(R.string.period_length_question_m)
+            cycleLengthText.text=getString(R.string.cycle_length_question_m)
+        }
 
         periodRegularCB.setOnCheckedChangeListener{_, isChecked->
             regular=isChecked
@@ -58,7 +69,6 @@ class PeriodSettingsActivity : AppCompatActivity() {
         }
 
 
-        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
         //doc:
         // cycleLength: Int
         // periodLength: Int
@@ -90,6 +100,8 @@ class PeriodSettingsActivity : AppCompatActivity() {
             Log.i("shit", date)
             sharedPrefs.edit().putString("lastPeriod",date).apply()
             sharedPrefs.edit().putString("nextPeriod",nextDate).apply()
+
+            startActivity(Intent(applicationContext, MainActivity::class.java))
         }
 
 

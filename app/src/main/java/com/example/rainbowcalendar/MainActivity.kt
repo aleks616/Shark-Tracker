@@ -1,7 +1,6 @@
 package com.example.rainbowcalendar
 
-import android.content.res.Configuration
-import android.content.res.Resources
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -11,14 +10,12 @@ import com.example.rainbowcalendar.fragments.CalendarFragment
 import com.example.rainbowcalendar.fragments.HomeFragment
 import com.example.rainbowcalendar.fragments.SettingsFragment
 
-class MainActivity : AppCompatActivity() {
-    override fun getTheme(): Resources.Theme {
-        val theme=createConfigurationContext(Configuration()).theme
-        theme.applyStyle(R.style.Dark_RainbowCalendar, true)
-
-        return theme
-    }
-    override fun onCreate(savedInstanceState: Bundle?) {
+class MainActivity: AppCompatActivity(){
+    override fun onCreate(savedInstanceState: Bundle?){
+        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
+        val theme=sharedPrefs.getString("com.example.rainbowcalendar_pref","light")
+        ThemeManager[this]=theme
+        //todo: choose theme options!!!`
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -26,11 +23,10 @@ class MainActivity : AppCompatActivity() {
         val settingsFragment=SettingsFragment()
         val calendarFragment=CalendarFragment()
         val addFragment=AddFragment()
-        Log.v("gayt",theme.toString())
 
         makeCurrentFragment(homeFragment)
 
-        val bottomNav = findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottom_nav)
+        val bottomNav=findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottom_nav)
         bottomNav.setOnItemSelectedListener{
             when(it.itemId){
                 R.id.navMenu_home->makeCurrentFragment(homeFragment)
