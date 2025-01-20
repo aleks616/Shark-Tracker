@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Theme.RainbowCalendar"
+    android:background="?attr/colorPrimary"
     tools:context=".fragments.HomeFragment">
 
     <LinearLayout
@@ -13,6 +13,7 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/popUp"
             android:layout_width="match_parent"
             android:layout_height="120sp"

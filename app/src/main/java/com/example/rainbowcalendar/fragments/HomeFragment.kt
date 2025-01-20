@@ -146,7 +146,7 @@ class HomeFragment:Fragment() {
 
         testTextV.text=last+"\n"+next
 
-
+        
         val periodStartButton=view.findViewById<Button>(R.id.periodStartButton)
         periodStartButton.setOnClickListener {
             val formatter=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault())
