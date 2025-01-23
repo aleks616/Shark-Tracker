@@ -15,6 +15,9 @@
         <item>Francais</item>
         <item>Italiano</item>
         <item>Espanol</item>
+        <item>Português (Brasil)</item>
+        <item>Русский</item>
+        <item>українська</item>
     </string-array>
 
     <!--<string-array name="age_array">

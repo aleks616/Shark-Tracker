@@ -59,6 +59,7 @@ class LanguageSettingsActivity:AppCompatActivity(){
         val intent=Intent(this, MainActivity::class.java)
         startActivity(intent)
     }
+    //todo: fix portuguese
     private fun langToCode(lang: String): String{
         return when(lang){
             "English" -> "en"
@@ -66,6 +67,9 @@ class LanguageSettingsActivity:AppCompatActivity(){
             "Francais" -> "fr"
             "Italiano" -> "it"
             "Espanol" -> "es"
+            "Português (Brasil)" -> "pt-BR"
+            "Русский" -> "ru"
+            "українська" -> "uk"
             else ->{
                 "en"
             }

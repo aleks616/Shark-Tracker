@@ -7,9 +7,9 @@
     tools:context=".fragments.HomeFragment">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
 
         <TextView
@@ -30,7 +30,7 @@
                 android:layout_height="70sp"
                 android:layout_gravity="center"
                 android:layout_marginStart="30sp"
-                android:background="@color/royal_blue"
+                android:background="?attr/colorOutlineVariant"
                 android:gravity="center"
                 android:text="custom"
                 android:textAllCaps="false"
@@ -43,7 +43,7 @@
                 android:layout_height="70sp"
                 android:layout_gravity="center"
                 android:layout_marginStart="30sp"
-                android:background="@color/royal_blue"
+                android:background="?attr/colorOutlineVariant"
                 android:gravity="center"
                 android:text="reset password and recovery"
                 android:textAllCaps="false"
@@ -51,5 +51,31 @@
 
 
         </LinearLayout>
+
+        <Spinner
+            android:id="@+id/themeSpinner"
+            android:layout_width="300dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp" />
+
+        <Button
+            android:id="@+id/buttonRefresh"
+            android:layout_width="300dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:background="?attr/colorOutlineVariant"
+            android:text="Refresh"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/goToLanguageActivityButton"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:background="?attr/colorOutlineVariant"
+            android:text="change language" />
+
     </LinearLayout>
 </ScrollView>

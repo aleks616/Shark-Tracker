@@ -18,7 +18,9 @@ class SplashScreenActivity:AppCompatActivity(){
     override fun attachBaseContext(newBase:Context){
         //val sharedPreferences=newBase.getSharedPreferences(newBase.packageName,MODE_PRIVATE)
         val sharedPrefs=newBase.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
-        val locale=Locale(sharedPrefs.getString("lang","en")!!)
+        var locale=Locale(sharedPrefs.getString("lang","en")!!)
+        if(locale.toString()=="pt-br")
+            locale=Locale("pt","BR")
         Locale.setDefault(locale)
         val context=languageChange(newBase,locale)
         super.attachBaseContext(context)

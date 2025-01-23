@@ -85,7 +85,7 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/progressBarL"
-                    android:layout_width="401dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="visible">
 

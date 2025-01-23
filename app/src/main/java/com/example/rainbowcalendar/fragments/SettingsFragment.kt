@@ -7,7 +7,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.Spinner
+import com.example.rainbowcalendar.LanguageSettingsActivity
+import com.example.rainbowcalendar.MainActivity
 import com.example.rainbowcalendar.PeriodSettingsActivity
 import com.example.rainbowcalendar.R
 
@@ -21,6 +26,11 @@ class SettingsFragment : Fragment() {
 
         testButton.setOnClickListener {
             startActivity(Intent(requireContext(), PeriodSettingsActivity::class.java))
+        }
+
+        val goToLanguageActivityButton=view.findViewById<Button>(R.id.goToLanguageActivityButton)
+        goToLanguageActivityButton.setOnClickListener {
+            startActivity(Intent(requireContext(), LanguageSettingsActivity::class.java))
         }
 
         val sharedPrefs=requireActivity().getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
@@ -43,6 +53,29 @@ class SettingsFragment : Fragment() {
                 putBoolean("done",false)
                 apply()
             }
+        }
+
+
+
+        val spinner=view.findViewById<Spinner>(R.id.themeSpinner)
+        ArrayAdapter.createFromResource(requireContext(),R.array.themes_array,android.R.layout.simple_spinner_item)
+            .also {adapter->
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinner.adapter=adapter
+            }
+        var themeValue="Dark"
+        spinner.onItemSelectedListener=object:AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(parent:AdapterView<*>?,view:View?,position:Int,id:Long){
+                themeValue=parent?.getItemAtPosition(position).toString()
+
+            }
+            override fun onNothingSelected(parent:AdapterView<*>?){}
+        }
+
+        val buttonRefresh:Button=view.findViewById(R.id.buttonRefresh)
+        buttonRefresh.setOnClickListener {
+            sharedPrefs.edit().putString("theme",themeValue).apply()
+            startActivity(Intent(requireContext(), MainActivity::class.java))
         }
     }
 
