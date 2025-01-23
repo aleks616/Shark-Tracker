@@ -17,6 +17,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.example.rainbowcalendar.Cycle
 import com.example.rainbowcalendar.CycleDao
 import com.example.rainbowcalendar.CycleRoomDatabase
@@ -25,6 +26,7 @@ import com.example.rainbowcalendar.PasswordActivity
 import com.example.rainbowcalendar.PeriodSettingsActivity
 import com.example.rainbowcalendar.R
 import com.example.rainbowcalendar.RecoveryActivity
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -41,7 +43,7 @@ class HomeFragment:Fragment() {
 
         cycleDao=CycleRoomDatabase.getDatabase(requireContext()).cycleDao()
 
-
+        //requireActivity().deleteDatabase("RainbowCalendar.db")
         /*Thread {
             cycleDao.insert(Cycle(date="2025-01-14",cycleDay=1,overallMood=3))
         }.start()
@@ -58,10 +60,7 @@ class HomeFragment:Fragment() {
 
 
         val homeTitle=view.findViewById<TextView>(R.id.homeTitle)
-        val sharedPrefs=requireActivity().getSharedPreferences(
-            "com.example.rainbowcalendar_pref",
-            Context.MODE_PRIVATE
-        )
+        val sharedPrefs=requireActivity().getSharedPreferences("com.example.rainbowcalendar_pref",Context.MODE_PRIVATE)
         val name=sharedPrefs.getString("name","")
         homeTitle.text=name
 
@@ -71,10 +70,7 @@ class HomeFragment:Fragment() {
         //val popUpSpace=requireActivity().findViewById<Space>(R.id.popUpSpace)
 
         val passwordSet=sharedPrefs.getString("passwordValue","")!=""
-        val sharedPrefRecovery=requireActivity().getSharedPreferences(
-            "com.example.rainbowcalendar_recovery",
-            Context.MODE_PRIVATE
-        )
+        val sharedPrefRecovery=requireActivity().getSharedPreferences( "com.example.rainbowcalendar_recovery",Context.MODE_PRIVATE)
         val recoverySet=sharedPrefRecovery.getBoolean("done",false)
         val goToActivity=requireActivity().findViewById<Button>(R.id.goToActivityButton)
         val buttonClosePopup=requireActivity().findViewById<Button>(R.id.buttonClosePopup)
@@ -108,7 +104,7 @@ class HomeFragment:Fragment() {
         }
         //endregion
 
-        //todo: calculate and show progress always, not only when reopening the app
+        //todo: calculate and show progress always, not only when reopening the app, done??/
 
         val last=sharedPrefs.getString("lastPeriod","")
         val next=sharedPrefs.getString("nextPeriod","")
@@ -146,7 +142,7 @@ class HomeFragment:Fragment() {
 
         testTextV.text=last+"\n"+next
 
-        
+
         val periodStartButton=view.findViewById<Button>(R.id.periodStartButton)
         periodStartButton.setOnClickListener {
             val formatter=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault())

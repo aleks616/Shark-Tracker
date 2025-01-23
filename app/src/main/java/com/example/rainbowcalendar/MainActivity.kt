@@ -9,12 +9,15 @@ import com.example.rainbowcalendar.fragments.AddFragment
 import com.example.rainbowcalendar.fragments.CalendarFragment
 import com.example.rainbowcalendar.fragments.HomeFragment
 import com.example.rainbowcalendar.fragments.SettingsFragment
+import java.util.Locale
 
 class MainActivity: AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?){
         val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
-        val theme=sharedPrefs.getString("com.example.rainbowcalendar_pref","light")
+        val theme=sharedPrefs.getString("theme","Light")
         ThemeManager[this]=theme
+        val locale=Locale(sharedPrefs.getString("lang","en")!!)
+        Log.v("locale",locale.toString())
         //todo: choose theme options!!!`
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

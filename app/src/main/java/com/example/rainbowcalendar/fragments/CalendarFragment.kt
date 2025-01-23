@@ -21,6 +21,7 @@ class CalendarFragment : Fragment() {
         val today=formatter.format(calendar.time)
         val dateTextView=requireActivity().findViewById<TextView>(R.id.dateText)
 
+        dateTextView.text=today
 
 
     }

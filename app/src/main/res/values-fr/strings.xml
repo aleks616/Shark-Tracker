@@ -11,6 +11,7 @@
     <string-array name="themes_array">
         <item>Sombre</item>
         <item>Blanc</item>
+        <item>Beige</item>
     </string-array>
     <string name="intro2_ftmTl">I\'ve been on T for some time, I don\'t experience shark weeks anymore, I want shot reminders</string>
     <string name="choose_gender_mode">Choisis ton genre/mode, les détails s\'afficheront. Tu pourras le changer dans les paramètres.</string>
@@ -107,4 +108,77 @@
     <string name="cycle_length_question_f">How long does your cycle usually last?</string>
     <string name="cycle_length_question_m">How long does your blahaj cycle usually last?</string>
     <string name="last_start_question">How many days ago did it last start?</string>
+
+
+    <string name="metrics_crampLevelTitle">Niveau de crampes menstruelles</string>
+    <string name="metrics_crampLevel0">Pas de crampes</string>
+    <string name="metrics_crampLevel1">Quelques crampes</string>
+    <string name="metrics_crampLevel2">Crampes sévères</string>
+
+    <string name="metrics_headacheTitle">Mal de tête</string>
+    <string name="metrics_headache0">Pas de mal de tête</string>
+    <string name="metrics_headache1">Mal de tête léger</string>
+    <string name="metrics_headache2">Mal de tête modéré</string>
+    <string name="metrics_headache3">Mal de tête sévère</string>
+    <string name="metrics_headache4">Mal de tête handicapant</string>
+
+    <string name="metrics_energyLevelTitle">Niveau d\'énergie</string>
+    <string name="metrics_energyLevel0">Épuisé</string>
+    <string name="metrics_energyLevel1">Fatigué</string>
+    <string name="metrics_energyLevel2">Neutre</string>
+    <string name="metrics_energyLevel3">Énergique</string>
+    <string name="metrics_energyLevel4">Très énergique</string>
+
+    <string name="metrics_SleepQualityTitle">Qualité du sommeil</string>
+    <string name="metrics_sleepQuality0">Faible</string>
+    <string name="metrics_sleepQuality1">Correct</string>
+    <string name="metrics_sleepQuality2">Reposé</string>
+
+    <string name="metrics_CravingsTitle">Grignotages</string>
+    <string name="metrics_cravings0">Pas de grignotages</string>
+    <string name="metrics_cravings1">Quelques grignotages</string>
+    <string name="metrics_cravings2">Beaucoup de grignotages</string>
+
+    <string name="metrics_SkinConditionTitle">Peau</string>
+    <string name="metrics_skinCondition0">Peau claire</string>
+    <string name="metrics_skinCondition1">Acné modéré</string>
+    <string name="metrics_skinCondition2">Acné sévère</string>
+
+    <string name="metrics_DigestiveIssuesTitle">Problèmes de digestion</string>
+    <string name="metrics_digestiveIssues0">Pas de problèmes</string>
+    <string name="metrics_digestiveIssues1">Peu de problèmes</string>
+    <string name="metrics_digestiveIssues2">Quelques problèmes</string>
+    <string name="metrics_digestiveIssues3">Beaucoup de problèmes</string>
+
+    <string name="metrics_MoodSwingsTitle">Changement d\'humeur</string>
+    <string name="metrics_moodSwings0">Stable</string>
+    <string name="metrics_moodSwings1">Légers changements</string>
+    <string name="metrics_moodSwings2">Gros changements</string>
+
+    <string name="metrics_OverallMoodTitle">Humeur générale</string>
+    <string name="metrics_overallMood0">Horrible</string>
+    <string name="metrics_overallMood1">Mauvaise</string>
+    <string name="metrics_overallMood2">Ok</string>
+    <string name="metrics_overallMood3">Bonne</string>
+    <string name="metrics_overallMood4">Superbe</string>
+
+    <string name="metrics_DysphoriaTitle">Dysphorie</string>
+    <string name="metrics_dysphoria0">Aucune</string>
+    <string name="metrics_dysphoria1">Légère</string>
+    <string name="metrics_dysphoria2">Moyenne</string>
+    <string name="metrics_dysphoria3">Forte</string>
+    <string name="metrics_dysphoria4">Incapacitante</string>
+
+    <string name="metrics_BleedingTitle">Saignements</string>
+    <string name="metrics_bleeding0">Pas de saignements</string>
+    <string name="metrics_bleeding1">Très Légers</string>
+    <string name="metrics_bleeding2">Légers</string>
+    <string name="metrics_bleeding3">Normal</string>
+    <string name="metrics_bleeding4">Forts</string>
+
+    <string name="metrics_MusclePainTitle">Douleur musculaire</string>
+    <string name="metrics_musclePain0">Pas de douleur</string>
+    <string name="metrics_musclePain1">Douleur modérée</string>
+    <string name="metrics_musclePain2">Douleur sévère</string>
+
 </resources>

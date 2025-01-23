@@ -35,10 +35,12 @@ class IntroductionActivity : AppCompatActivity() {
             override fun onNothingSelected(parent:AdapterView<*>?){}
         }
         //themes here
+        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
+        sharedPrefs.edit().putString("theme",themeValue).apply()
 
         //TODO: do themes
 
-        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
+
         //doc:
         // gender:String m/f/n
         // tm:Boolean (is transmed)

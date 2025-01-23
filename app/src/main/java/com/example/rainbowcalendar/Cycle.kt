@@ -46,6 +46,14 @@ data class Cycle(
     @ColumnInfo(name="dysphoria")
     val dysphoria:Int?=null,
 
+    @ColumnInfo(name="bleeding")
+    val bleeding:Int?=null,
+
+    @ColumnInfo(name="musclePain")
+    val musclePain:Int?=null,
+
+    @ColumnInfo(name="weight")
+    val weight:Int?=null,
 
     @ColumnInfo(name="customColumn1")
     val customColumn1:Int?=null,

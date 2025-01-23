@@ -11,6 +11,7 @@
     <string-array name="themes_array">
         <item>Scuro</item>
         <item>Chiaro</item>
+        <item>Beige</item>
     </string-array>
     <string name="intro2_ftmTl">I\'ve been on T for some time, I don\'t experience shark weeks anymore, I want shot reminders</string>
     <string name="choose_gender_mode">Scegli il tuo genere/modalità, ci saranno modalità più dettagliate nella schermata successiva. Puoi sempre cambiare queste impostazioni.</string>

@@ -10,6 +10,7 @@
     <string-array name="themes_array">
         <item>Oscuro</item>
         <item>Ligera</item>
+        <item>Beige</item>
     </string-array>
     <string name="gender_mode_tm">Transmasculine mode, masculine terms will be used, and potentially triggering topics will be avoided. Pregnancy won\'t be ever mentioned.</string>
     <string name="gender_mode_m">Man mode, congrats gigachad, you unlocked real transmed man mode! You won\'t see inclusive tucute bullshit!</string>

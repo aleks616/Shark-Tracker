@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Rainbow Calendar</string>
+
+
+    <string name="metrics_crampLevelTitle">Спазмы</string>
+    <string name="metrics_crampLevel0">Нет спазмов</string>
+    <string name="metrics_crampLevel1">Небольшие спазмы</string>
+    <string name="metrics_crampLevel2">Тяжёлые спазмы</string>
+
+    <string name="metrics_headacheTitle">Головная боль</string>
+    <string name="metrics_headache0">Нет головной боли</string>
+    <string name="metrics_headache1">Небольшая головная боль</string>
+    <string name="metrics_headache2">Средняя головная боль</string>
+    <string name="metrics_headache3">Тяжёлая головная боль</string>
+    <string name="metrics_headache4">Невыносимая головная боль</string>
+
+    <string name="metrics_energyLevelTitle">Уровень энергии</string>
+    <string name="metrics_energyLevel0">Измождённый</string>
+    <string name="metrics_energyLevel1">Мало энергии</string>
+    <string name="metrics_energyLevel2">Нейтральный</string>
+    <string name="metrics_energyLevel3">Много энергии</string>
+    <string name="metrics_energyLevel4">Энергия через край</string>
+
+    <string name="metrics_SleepQualityTitle">Качество сна</string>
+    <string name="metrics_sleepQuality0">Плохое</string>
+    <string name="metrics_sleepQuality1">Среднее</string>
+    <string name="metrics_sleepQuality2">Хорошее</string>
+
+    <string name="metrics_CravingsTitle">Сильные желания</string>
+    <string name="metrics_cravings0">Нет желаний</string>
+    <string name="metrics_cravings1">Немного желаний</string>
+    <string name="metrics_cravings2">Много желаний</string>
+
+    <string name="metrics_SkinConditionTitle">Состояние кожи</string>
+    <string name="metrics_skinCondition0">Чистая кожа</string>
+    <string name="metrics_skinCondition1">Среднее акне</string>
+    <string name="metrics_skinCondition2">Сильное акне</string>
+
+    <string name="metrics_DigestiveIssuesTitle">Проблемы с перевариванием</string>
+    <string name="metrics_digestiveIssues0">Нет проблем</string>
+    <string name="metrics_digestiveIssues1">Небольшие проблемы</string>
+    <string name="metrics_digestiveIssues2">Средние проблемы</string>
+    <string name="metrics_digestiveIssues3">Тяжёлые проблемы</string>
+
+    <string name="metrics_MoodSwingsTitle">Колебания эмоций</string>
+    <string name="metrics_moodSwings0">Стабильное настроение</string>
+    <string name="metrics_moodSwings1">Небольшие колебания</string>
+    <string name="metrics_moodSwings2">Интенсивные колебания</string>
+
+    <string name="metrics_OverallMoodTitle">Настроение в целом</string>
+    <string name="metrics_overallMood0">Ужасное</string>
+    <string name="metrics_overallMood1">Плохое</string>
+    <string name="metrics_overallMood2">ОК</string>
+    <string name="metrics_overallMood3">Хорошее</string>
+    <string name="metrics_overallMood4">Отличное</string>
+
+    <string name="metrics_DysphoriaTitle">Дисфория</string>
+    <string name="metrics_dysphoria0">Нет дисфории</string>
+    <string name="metrics_dysphoria1">Небольшой дискомфорт</string>
+    <string name="metrics_dysphoria2">Дискомфорт</string>
+    <string name="metrics_dysphoria3">Сильная дисфория</string>
+    <string name="metrics_dysphoria4">Невыносимая дисфория</string>
+
+    <string name="metrics_BleedingTitle">Кровотечения</string>
+    <string name="metrics_bleeding0">Нет кровотечений</string>
+    <string name="metrics_bleeding1">Протекание</string>
+    <string name="metrics_bleeding2">Небольшие кровотечения</string>
+    <string name="metrics_bleeding3">Нормальные кровотечения</string>
+    <string name="metrics_bleeding4">Сильные кровотечения</string>
+
+    <string name="metrics_MusclePainTitle">Боль в мышщах</string>
+    <string name="metrics_musclePain0">Нет боли</string>
+    <string name="metrics_musclePain1">Небольшая боль</string>
+    <string name="metrics_musclePain2">Сильная боль</string>
+</resources>
