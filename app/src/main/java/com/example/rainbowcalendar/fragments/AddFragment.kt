@@ -1,7 +1,6 @@
 package com.example.rainbowcalendar.fragments
 
 import android.os.Bundle
-import android.text.BoringLayout
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater

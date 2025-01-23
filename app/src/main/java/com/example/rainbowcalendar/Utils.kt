@@ -1,13 +1,5 @@
 package com.example.rainbowcalendar
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
-import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.Space
-import android.widget.TextView
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 

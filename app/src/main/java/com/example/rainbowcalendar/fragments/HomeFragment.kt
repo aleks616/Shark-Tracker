@@ -3,7 +3,6 @@ package com.example.rainbowcalendar.fragments
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -23,10 +22,8 @@ import com.example.rainbowcalendar.CycleDao
 import com.example.rainbowcalendar.CycleRoomDatabase
 import com.example.rainbowcalendar.MainActivity
 import com.example.rainbowcalendar.PasswordActivity
-import com.example.rainbowcalendar.PeriodSettingsActivity
 import com.example.rainbowcalendar.R
 import com.example.rainbowcalendar.RecoveryActivity
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit

@@ -11,8 +11,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
-import com.example.rainbowcalendar.IntroductionActivity
-import com.example.rainbowcalendar.IntroductionActivity2
 import com.example.rainbowcalendar.LanguageSettingsActivity
 import com.example.rainbowcalendar.MainActivity
 import com.example.rainbowcalendar.PeriodSettingsActivity
