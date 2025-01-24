@@ -1,6 +1,7 @@
 package com.example.rainbowcalendar
 
 import android.content.Context
+import android.util.Log
 import android.util.TypedValue
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -114,7 +115,7 @@ fun createIcons():Map<String, List<Pair<Int, String>>>{
 @Composable
 fun ScrollableMetricsView(){
     val padding=12.dp
-
+    val selectedPositions=remember{mutableStateOf(MutableList(15){-1})}
     
     LazyColumn(modifier=Modifier.fillMaxSize()){
         item{
@@ -128,49 +129,49 @@ fun ScrollableMetricsView(){
             )
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_crampLevelTitle),metricName="crampLevel",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_crampLevelTitle),metricName="crampLevel",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[0],onSelectionChange={selectedPositions.value[0]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_headacheTitle),metricName="headache",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_headacheTitle),metricName="headache",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[1],onSelectionChange={selectedPositions.value[1]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_energyLevelTitle),metricName="energyLevel",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_energyLevelTitle),metricName="energyLevel",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[2],onSelectionChange={selectedPositions.value[2]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_SleepQualityTitle),metricName="sleepQuality",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_SleepQualityTitle),metricName="sleepQuality",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[3],onSelectionChange={selectedPositions.value[3]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_CravingsTitle),metricName="cravings",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_CravingsTitle),metricName="cravings",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[4],onSelectionChange={selectedPositions.value[4]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_SkinConditionTitle),metricName="skinCondition",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_SkinConditionTitle),metricName="skinCondition",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[5],onSelectionChange={selectedPositions.value[5]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_DigestiveIssuesTitle),metricName="digestiveIssues",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_DigestiveIssuesTitle),metricName="digestiveIssues",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[6],onSelectionChange={selectedPositions.value[6]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_MoodSwingsTitle),metricName="moodSwings",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_MoodSwingsTitle),metricName="moodSwings",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[7],onSelectionChange={selectedPositions.value[7]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_OverallMoodTitle),metricName="overallMood",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_OverallMoodTitle),metricName="overallMood",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[8],onSelectionChange={selectedPositions.value[8]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_DysphoriaTitle),metricName="dysphoria",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_DysphoriaTitle),metricName="dysphoria",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[9],onSelectionChange={selectedPositions.value[9]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_BleedingTitle),metricName="bleeding",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_BleedingTitle),metricName="bleeding",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[10],onSelectionChange={selectedPositions.value[10]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_MusclePainTitle),metricName="musclePain",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_MusclePainTitle),metricName="musclePain",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[11],onSelectionChange={selectedPositions.value[11]=it})
         }
         item{
-            MetricRow(title="*read custom name from shared pref*",metricName="customColumn1",modifier=Modifier.padding(padding))
+            MetricRow(title="*read custom name from shared pref*",metricName="customColumn1",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[12],onSelectionChange={selectedPositions.value[12]=it})
         }
         item{
-            MetricRow(title="*read custom name from shared pref*",metricName="customColumn2",modifier=Modifier.padding(padding))
+            MetricRow(title="*read custom name from shared pref*",metricName="customColumn2",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[13],onSelectionChange={selectedPositions.value[13]=it})
         }
         item{
-            MetricRow(title="*read custom name from shared pref*",metricName="customColumn3",modifier=Modifier.padding(padding))
+            MetricRow(title="*read custom name from shared pref*",metricName="customColumn3",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[14],onSelectionChange={selectedPositions.value[14]=it})
         }
         item{
             InputRow(title="Weight",modifier=Modifier.fillMaxWidth())
@@ -191,7 +192,9 @@ fun ScrollableMetricsView(){
                         .padding(all=20.dp)
                         .height(50.dp)
                         .width(200.dp),
-                    onClick={ /*todo*/}
+                    onClick={
+                        Log.v("metrics values",selectedPositions.value.joinToString(", "){if(it==-1) "NULL" else it.toString()})
+                    }
                 ){
                     Text(text="Save")
                 }
@@ -202,10 +205,10 @@ fun ScrollableMetricsView(){
 }
 
 @Composable
-fun MetricRow(title: String,metricName: String,modifier:Modifier=Modifier){
+fun MetricRow(title: String,metricName: String,modifier:Modifier=Modifier, selectedIndex1:Int, onSelectionChange:(Int)->Unit){
     //val icons=metricIcons[metricName]?:emptyList()
     val icons1=createIcons()[metricName]?:emptyList()
-    var selectedIndex by remember{mutableStateOf(-1)}
+    var selectedIndex by remember{mutableStateOf(selectedIndex1)}
 
     Column(modifier=modifier){
         Text(
@@ -226,7 +229,10 @@ fun MetricRow(title: String,metricName: String,modifier:Modifier=Modifier){
                         color=if(selectedIndex==index) Color.Black else Color.Transparent,
                         shape=CircleShape
                     )
-                    .clickable {selectedIndex=if(selectedIndex==index) -1 else index}
+                    .clickable{
+                        selectedIndex=if(selectedIndex==index) -1 else index
+                        onSelectionChange(selectedIndex)
+                    }
                 )
             }
         }
