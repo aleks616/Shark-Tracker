@@ -14,9 +14,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import com.example.rainbowcalendar.Cycle
 import com.example.rainbowcalendar.CycleDao
 import com.example.rainbowcalendar.CycleRoomDatabase
@@ -41,20 +39,21 @@ class HomeFragment:Fragment() {
         cycleDao=CycleRoomDatabase.getDatabase(requireContext()).cycleDao()
 
         //requireActivity().deleteDatabase("RainbowCalendar.db")
-        /*Thread {
+/*
+        Thread {
             cycleDao.insert(Cycle(date="2025-01-14",cycleDay=1,overallMood=3))
         }.start()
-*/
-       /* cycleDao.getAllCycles().observe(viewLifecycleOwner,Observer {cycles->
+        cycleDao.getAllCycles().observe(viewLifecycleOwner,Observer {cycles->
             cycles.forEach {
                 Log.v("TAG","Cycle: ${it.date}, Mood: ${it.overallMood}")
             }
-        })*/
+        })
 
-       /* Thread {
+        Thread {
             cycleDao.update(Cycle(date="2025-01-14",cycleDay=1,overallMood=1))
-        }.start()*/
+        }.start()
 
+*/
 
         val homeTitle=view.findViewById<TextView>(R.id.homeTitle)
         val sharedPrefs=requireActivity().getSharedPreferences("com.example.rainbowcalendar_pref",Context.MODE_PRIVATE)
