@@ -39,21 +39,20 @@ class HomeFragment:Fragment() {
         cycleDao=CycleRoomDatabase.getDatabase(requireContext()).cycleDao()
 
         //requireActivity().deleteDatabase("RainbowCalendar.db")
-/*
-        Thread {
-            cycleDao.insert(Cycle(date="2025-01-14",cycleDay=1,overallMood=3))
-        }.start()
-        cycleDao.getAllCycles().observe(viewLifecycleOwner,Observer {cycles->
+       /* Thread {
+            cycleDao.insert(Cycle(date="2025-01-25",overallMood=3, crampLevel=2, digestiveIssues=1))
+        }.start()*/
+
+        cycleDao.getAllCycles().observe(viewLifecycleOwner,Observer{cycles->
             cycles.forEach {
-                Log.v("TAG","Cycle: ${it.date}, Mood: ${it.overallMood}")
+                Log.v("all ROOM data","${it.date} ${it.crampLevel} ${it.headache} ${it.energyLevel} ${it.sleepQuality}")
             }
         })
 
-        Thread {
+        /*Thread{
             cycleDao.update(Cycle(date="2025-01-14",cycleDay=1,overallMood=1))
-        }.start()
+        }.start()*/
 
-*/
 
         val homeTitle=view.findViewById<TextView>(R.id.homeTitle)
         val sharedPrefs=requireActivity().getSharedPreferences("com.example.rainbowcalendar_pref",Context.MODE_PRIVATE)
@@ -126,7 +125,7 @@ class HomeFragment:Fragment() {
                 progressText.text="It should start today"
                 progressBar.progress=100
             }
-            else {
+            else{
                 progressBar.progress=progress.toInt()
                 //THIS WON'T BE USED I'M JUST TESTING
                 progressText.text=sharedPrefs.getString("possTDate","none")

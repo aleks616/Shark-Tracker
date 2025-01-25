@@ -4,7 +4,6 @@
     <string name="welcome_text">Hi! Bienvenue sur Rainbow Calendar</string>
     <string name="choose_language">Choisir la langue </string>
     <string name="welcome_back">Re-bonjour</string>
-    <string name="logo_desc">app logo</string>
     <string name="enter_name">Comment voudrais-tu être appelé?</string>
     <string name="enter_name_hint">Name</string>
     <string name="color_scheme">Quelle couleur préfères-tu?</string>
