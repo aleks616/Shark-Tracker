@@ -35,10 +35,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
@@ -47,7 +47,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -56,10 +55,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.sql.Date
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -128,7 +125,7 @@ fun ScrollableMetricsView(){
     val formatter=DateFormat.getDateInstance(DateFormat.LONG,appLocale)
     val calendar=Calendar.getInstance()
     val context=LocalContext.current
-    //var today=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(Calendar.getInstance().time)
+    var today=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(Calendar.getInstance().time)
 
     cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
     //val lifecycleOwner=LocalLifecycleOwner.current
@@ -168,9 +165,9 @@ fun ScrollableMetricsView(){
             }
         }
     }
-    //todo: 1. buttons to change date so it's just date not today
-    // 2: actually reading custom name from sharedpref
-    // 3 HARD showing/hiding and changing order of metrics
+    //todo:
+    // 1: actually reading custom name from sharedpref
+    // 2: HARD showing/hiding and changing order of metrics
     LazyColumn(modifier=Modifier.fillMaxSize()){
         item{
             Box(
@@ -192,7 +189,7 @@ fun ScrollableMetricsView(){
                         modifier=Modifier.fillMaxWidth(),
                         verticalAlignment=Alignment.CenterVertically
                     ){
-                        Button(
+                        Button( //doc: left button
                             onClick={changeDate(amount=-1)},
                             Modifier
                                 .height(45.dp)
@@ -219,13 +216,15 @@ fun ScrollableMetricsView(){
                                 .align(Alignment.CenterVertically)
                                 .weight(1f)
                         )
-                        Button(
+                        Button(//doc: right button
                             onClick={changeDate(amount=1)},
                             Modifier
                                 .height(45.dp)
                                 .width(80.dp)
                                 .align(Alignment.CenterVertically)
                                 .padding(end=10.dp)
+                                .alpha(if(usedDateState.value>=today)0f else 1f),
+                            enabled=usedDateState.value<today
                         ){
                             Image(
                                 modifier=Modifier
@@ -321,11 +320,16 @@ fun ScrollableMetricsView(){
 }
 
 fun changeDate(amount: Int){
-    val calendar=Calendar.getInstance().apply {
-        time=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).parse(usedDateState.value)!!
+    val formatter=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault())
+    val calendar=Calendar.getInstance()
+    val today=formatter.format(calendar.time)
+    calendar.apply{
+        time=formatter.parse(usedDateState.value)!!
         add(Calendar.DAY_OF_YEAR,amount)
     }
-    usedDateState.value=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(calendar.time)
+    if(calendar.time<=formatter.parse(today)){
+        usedDateState.value=formatter.format(calendar.time)
+    }
 }
 fun saveToDB(content:List<Int>,context:Context,weight:String,kcalBalance:String,notes:String){
     cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
