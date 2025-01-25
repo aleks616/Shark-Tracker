@@ -4,7 +4,6 @@
     <string name="welcome_text">Cześć! Witamy w tęczowym kalendarzu</string>
     <string name="choose_language">Wybierz język aplikacji</string>
     <string name="welcome_back">Witamy ponownie</string>
-    <string name="logo_desc">logo aplikacji</string>
     <string name="enter_name">Wprowadź imię/ksywę, tak będziemy się do Ciebie zwracać.</string>
     <string name="enter_name_hint">Imię</string>
     <string name="color_scheme">Który motyw preferujesz?</string>

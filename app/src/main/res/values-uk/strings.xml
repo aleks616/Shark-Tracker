@@ -17,6 +17,16 @@
     <string name="add_button_text">Add</string>
     <string name="calendar_button_text">Calendar</string>
 
+    <string name="period_settings_f">Menstrual cycle settings</string>
+    <string name="period_settings_m">Blahaj cycle settings</string>
+    <string name="period_regular_cb_f">Is your period regular?</string>
+    <string name="period_regular_cb_m">Is your blahaj week regular?</string>
+    <string name="period_length_question_f">How many days does your menstruation usually last?</string>
+    <string name="period_length_question_m">How many days does your blahaj week usually last?</string>
+    <string name="cycle_length_question_f">How long does your cycle usually last?</string>
+    <string name="cycle_length_question_m">How long does your blahaj cycle usually last?</string>
+    <string name="last_start_question">How many days ago did it last start?</string>
+
     <string name="intro2_header">Choose a most fitting option</string>
     <string name="intro2_young_n">I have recently started having blahaj weeks and I\'m not thinking about getting pregnant. (version for minors, adults choose the last option)</string>
     <string name="intro2_young_f">I have recently started having periods and I\'m not thinking about getting pregnant. (version for minors, adults choose the last option)</string>

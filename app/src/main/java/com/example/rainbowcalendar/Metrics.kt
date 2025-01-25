@@ -1,13 +1,16 @@
 package com.example.rainbowcalendar
 
 import android.content.Context
+import android.util.Log
 import android.util.TypedValue
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,24 +31,39 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.sql.Date
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import kotlin.math.sqrt
 
 @Composable
@@ -59,27 +77,6 @@ fun Context.getColorFromAttrs(attr: Int): TypedValue{
     }
 }
 
-/*val metricIcons=mapOf(
-    "crampLevel" to listOf(R.drawable.cramps_0,R.drawable.cramps_1,R.drawable.cramps_2),
-    "headache" to listOf(R.drawable.headache_n_0,R.drawable.headache_n_1,R.drawable.headache_n_2,R.drawable.headache_n_3,R.drawable.headache_n_4),
-    "energyLevel" to listOf(R.drawable.energy_0,R.drawable.energy_1,R.drawable.energy_2,R.drawable.energy_3,R.drawable.energy_4),
-    "sleepQuality" to listOf(R.drawable.sleep_0, R.drawable.sleep_1, R.drawable.sleep_2),
-    "cravings" to listOf(R.drawable.cravings_0, R.drawable.cravings_1, R.drawable.cravings_2),
-    "skinCondition" to listOf(R.drawable.acne_0, R.drawable.acne_1, R.drawable.acne_2),
-    "digestiveIssues" to listOf(R.drawable.digestive_0, R.drawable.digestive_1, R.drawable.digestive_2, R.drawable.digestive_3),
-    "moodSwings" to listOf(R.drawable.mood_swings_0, R.drawable.mood_swings_1, R.drawable.mood_swings_2),
-    "overallMood" to listOf(R.drawable.mood_0,R.drawable.mood_1,R.drawable.mood_2,R.drawable.mood_3,R.drawable.mood_4),
-    "dysphoria" to listOf(R.drawable.dysphoria_0,R.drawable.dysphoria_1,R.drawable.dysphoria_2,R.drawable.dysphoria_3,R.drawable.dysphoria_4),
-    "bleeding" to listOf(R.drawable.blood_0,R.drawable.blood_1,R.drawable.blood_2,R.drawable.blood_3,R.drawable.blood_4),
-    "musclePain" to listOf(R.drawable.muscle_pain_0, R.drawable.muscle_pain_1, R.drawable.muscle_pain_2),
-    "customColumn1" to listOf(R.drawable.customa_0,R.drawable.customa_1,R.drawable.customa_2,R.drawable.customa_3),
-    "customColumn2" to listOf(R.drawable.customb_0,R.drawable.customb_1,R.drawable.customb_2,R.drawable.customb_3,R.drawable.customb_4),
-    "customColumn3" to listOf(R.drawable.customc_0,R.drawable.customc_1,R.drawable.customc_2,R.drawable.customc_3, R.drawable.customc_4),
-
-    //kcalBalance
-    //weight
-    //notes
-)*/
 @Composable
 fun getLocal(id: Int): String{
     return LocalContext.current.getString(id)
@@ -109,77 +106,196 @@ fun createIcons():Map<String, List<Pair<Int, String>>>{
         //notes
     )
 }
-
-
+var usedDateState=mutableStateOf(SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(Calendar.getInstance().time))
+//var usedDate:String=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(Calendar.getInstance().time)
+private lateinit var cycleDao:CycleDao
 @Composable
 fun ScrollableMetricsView(){
     val padding=12.dp
+    val selectedPositions=remember{mutableStateOf(MutableList(15){-1})}
+    val weight=remember{mutableStateOf("")}
+    val kcalBalance=remember{mutableStateOf("")}
+    val notes=remember{mutableStateOf("")}
 
-    
+    val sharedPrefs=LocalContext.current.getSharedPreferences("com.example.rainbowcalendar_pref",Context.MODE_PRIVATE)
+    val lang=sharedPrefs.getString("lang","en")
+    val appLocale:Locale=if(lang=="pt-br")
+        Locale("pt","BR")
+    else
+        Locale(lang)
+    //val appLocale=Locale("ru")
+
+    val formatter=DateFormat.getDateInstance(DateFormat.LONG,appLocale)
+    val calendar=Calendar.getInstance()
+    val context=LocalContext.current
+    //var today=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(Calendar.getInstance().time)
+
+    cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
+    //val lifecycleOwner=LocalLifecycleOwner.current
+
+    LaunchedEffect(usedDateState.value){
+        withContext(Dispatchers.IO){
+            //val cycle=cycleDao.getCycleByDate(today)
+            val cycle=cycleDao.getCycleByDate(usedDateState.value)
+            if(cycle!=null){
+                selectedPositions.value=mutableListOf(
+                    cycle.crampLevel,
+                    cycle.headache,
+                    cycle.energyLevel,
+                    cycle.sleepQuality,
+                    cycle.cravings,
+                    cycle.skinCondition,
+                    cycle.digestiveIssues,
+                    cycle.moodSwings,
+                    cycle.overallMood,
+                    cycle.dysphoria,
+                    cycle.bleeding,
+                    cycle.musclePain,
+                    cycle.customColumn1,
+                    cycle.customColumn2,
+                    cycle.customColumn3
+                ).map {it ?: -1}.toMutableList()
+
+                weight.value=(cycle.weight ?: "").toString()
+                kcalBalance.value=(cycle.kcalBalance?:"").toString()
+                notes.value=cycle.notes?:""
+            }
+            else{
+                selectedPositions.value=List(15) {-1}.toMutableList()
+                weight.value=""
+                kcalBalance.value=""
+                notes.value=""
+            }
+        }
+    }
+    //todo: 1. buttons to change date so it's just date not today
+    // 2: actually reading custom name from sharedpref
+    // 3 HARD showing/hiding and changing order of metrics
     LazyColumn(modifier=Modifier.fillMaxSize()){
         item{
-            Text(
-                text="Metrics",
-                fontSize=35.sp,
-                fontWeight=FontWeight.W500,
+            Box(
+                contentAlignment=Alignment.Center,
                 modifier=Modifier
-                    .padding(start=20.dp, top=20.dp, bottom=5.dp)
+                    .fillMaxSize()
+                    .padding(bottom=20.dp)
+            ) {
+                Column(horizontalAlignment=Alignment.CenterHorizontally){
+                    Text(
+                        text="Metrics",
+                        fontSize=35.sp,
+                        textAlign=TextAlign.Center,
+                        fontWeight=FontWeight.W500,
+                        modifier=Modifier
+                            .padding(vertical=10.dp)
+                    )
+                    Row(
+                        modifier=Modifier.fillMaxWidth(),
+                        verticalAlignment=Alignment.CenterVertically
+                    ){
+                        Button(
+                            onClick={changeDate(amount=-1)},
+                            Modifier
+                                .height(45.dp)
+                                .width(80.dp)
+                                .align(Alignment.CenterVertically)
+                                .padding(start=10.dp)
+                        ){
+                            Image(
+                                modifier=Modifier
+                                    .fillMaxSize()
+                                    .scale(2.0f),
+                                painter=painterResource(id=R.drawable.icon_arrow_left_triangle),
+                                contentDescription=null,
+                                contentScale=ContentScale.FillHeight,
+                            )
+                        }
+                        Text(
+                            //text=today,
+                            text=usedDateState.value,
+                            fontSize=32.sp,
+                            textAlign=TextAlign.Center,
+                            modifier=Modifier
+                                .padding(vertical=10.dp)
+                                .align(Alignment.CenterVertically)
+                                .weight(1f)
+                        )
+                        Button(
+                            onClick={changeDate(amount=1)},
+                            Modifier
+                                .height(45.dp)
+                                .width(80.dp)
+                                .align(Alignment.CenterVertically)
+                                .padding(end=10.dp)
+                        ){
+                            Image(
+                                modifier=Modifier
+                                    .fillMaxSize()
+                                    .scale(2.0f),
+                                painter=painterResource(id=R.drawable.icon_arrow_right_triangle),
+                                contentDescription=null,
+                                contentScale=ContentScale.FillHeight,
+                            )
+                        }
+                    }
+                }
+            }
+        }
 
-            )
+        //region metric items
+        item{
+            MetricRow(title=getLocal(id=R.string.metrics_crampLevelTitle),metricName="crampLevel",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[0],onSelectionChange={selectedPositions.value[0]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_crampLevelTitle),metricName="crampLevel",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_headacheTitle),metricName="headache",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[1],onSelectionChange={selectedPositions.value[1]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_headacheTitle),metricName="headache",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_energyLevelTitle),metricName="energyLevel",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[2],onSelectionChange={selectedPositions.value[2]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_energyLevelTitle),metricName="energyLevel",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_SleepQualityTitle),metricName="sleepQuality",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[3],onSelectionChange={selectedPositions.value[3]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_SleepQualityTitle),metricName="sleepQuality",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_CravingsTitle),metricName="cravings",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[4],onSelectionChange={selectedPositions.value[4]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_CravingsTitle),metricName="cravings",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_SkinConditionTitle),metricName="skinCondition",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[5],onSelectionChange={selectedPositions.value[5]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_SkinConditionTitle),metricName="skinCondition",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_DigestiveIssuesTitle),metricName="digestiveIssues",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[6],onSelectionChange={selectedPositions.value[6]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_DigestiveIssuesTitle),metricName="digestiveIssues",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_MoodSwingsTitle),metricName="moodSwings",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[7],onSelectionChange={selectedPositions.value[7]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_MoodSwingsTitle),metricName="moodSwings",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_OverallMoodTitle),metricName="overallMood",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[8],onSelectionChange={selectedPositions.value[8]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_OverallMoodTitle),metricName="overallMood",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_DysphoriaTitle),metricName="dysphoria",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[9],onSelectionChange={selectedPositions.value[9]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_DysphoriaTitle),metricName="dysphoria",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_BleedingTitle),metricName="bleeding",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[10],onSelectionChange={selectedPositions.value[10]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_BleedingTitle),metricName="bleeding",modifier=Modifier.padding(padding))
+            MetricRow(title=getLocal(id=R.string.metrics_MusclePainTitle),metricName="musclePain",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[11],onSelectionChange={selectedPositions.value[11]=it})
         }
         item{
-            MetricRow(title=getLocal(id=R.string.metrics_MusclePainTitle),metricName="musclePain",modifier=Modifier.padding(padding))
+            MetricRow(title="*read custom name from shared pref*",metricName="customColumn1",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[12],onSelectionChange={selectedPositions.value[12]=it})
         }
         item{
-            MetricRow(title="*read custom name from shared pref*",metricName="customColumn1",modifier=Modifier.padding(padding))
+            MetricRow(title="*read custom name from shared pref*",metricName="customColumn2",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[13],onSelectionChange={selectedPositions.value[13]=it})
         }
         item{
-            MetricRow(title="*read custom name from shared pref*",metricName="customColumn2",modifier=Modifier.padding(padding))
+            MetricRow(title="*read custom name from shared pref*",metricName="customColumn3",modifier=Modifier.padding(padding),selectedIndex1=selectedPositions.value[14],onSelectionChange={selectedPositions.value[14]=it})
+        }
+        //endregion
+        item{
+            InputRow(title="Weight",modifier=Modifier.fillMaxWidth(),value=weight.value,onValueChange={weight.value=it})
         }
         item{
-            MetricRow(title="*read custom name from shared pref*",metricName="customColumn3",modifier=Modifier.padding(padding))
+            InputRow(title="Kcal Balance",modifier=Modifier.fillMaxWidth(),value=kcalBalance.value,onValueChange={kcalBalance.value=it})
         }
         item{
-            InputRow(title="Weight",modifier=Modifier.fillMaxWidth())
-        }
-        item{
-            InputRow(title="Kcal Balance",modifier=Modifier.fillMaxWidth())
-        }
-        item{
-            LongInputRow(title="Notes",modifier=Modifier.fillMaxWidth())
+            LongInputRow(title="Notes",modifier=Modifier.fillMaxWidth(),value=notes.value,onValueChange={notes.value=it})
         }
         item{
             Box(
@@ -191,7 +307,10 @@ fun ScrollableMetricsView(){
                         .padding(all=20.dp)
                         .height(50.dp)
                         .width(200.dp),
-                    onClick={ /*todo*/}
+                    onClick={
+                        Log.v("metrics values",selectedPositions.value.joinToString(", "){if(it==-1) "NULL" else it.toString()})
+                        saveToDB(content=selectedPositions.value,context,weight.value,kcalBalance.value,notes.value)
+                    }
                 ){
                     Text(text="Save")
                 }
@@ -201,12 +320,63 @@ fun ScrollableMetricsView(){
 
 }
 
+fun changeDate(amount: Int){
+    val calendar=Calendar.getInstance().apply {
+        time=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).parse(usedDateState.value)!!
+        add(Calendar.DAY_OF_YEAR,amount)
+    }
+    usedDateState.value=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(calendar.time)
+}
+fun saveToDB(content:List<Int>,context:Context,weight:String,kcalBalance:String,notes:String){
+    cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
+
+    //val today=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(Calendar.getInstance().time)
+    Thread{
+        //val existingCycle=cycleDao.getCycleByDate(today)
+        val existingCycle=cycleDao.getCycleByDate(usedDateState.value)
+        val newCycle=Cycle(
+            //date=today,
+            date=usedDateState.value,
+            crampLevel=content[0].takeIf {it!=-1},
+            headache=content[1].takeIf {it!=-1},
+            energyLevel=content[2].takeIf {it!=-1},
+            sleepQuality=content[3].takeIf {it!=-1},
+            cravings=content[4].takeIf {it!=-1},
+            skinCondition=content[5].takeIf {it!=-1},
+            digestiveIssues=content[6].takeIf {it!=-1},
+            moodSwings=content[7].takeIf {it!=-1},
+            overallMood=content[8].takeIf {it!=-1},
+            dysphoria=content[9].takeIf {it!=-1},
+            bleeding=content[10].takeIf {it!=-1},
+            musclePain=content[11].takeIf {it!=-1},
+            customColumn1=content[12].takeIf {it!=-1},
+            customColumn2=content[13].takeIf {it!=-1},
+            customColumn3=content[14].takeIf {it!=-1},
+            weight=weight.toIntOrNull(),
+            kcalBalance=kcalBalance.toIntOrNull(),
+            notes=notes.ifBlank{null}
+        )
+        if(existingCycle!=null){
+            cycleDao.update(newCycle)
+        }
+        else{
+            cycleDao.insert(newCycle)
+        }
+
+    }.start()
+}
+
 @Composable
-fun MetricRow(title: String,metricName: String,modifier:Modifier=Modifier){
+fun MetricRow(title: String,metricName: String,modifier:Modifier=Modifier, selectedIndex1:Int, onSelectionChange:(Int)->Unit){
     //val icons=metricIcons[metricName]?:emptyList()
     val icons1=createIcons()[metricName]?:emptyList()
-    var selectedIndex by remember{mutableStateOf(-1)}
+    var selectedIndex by remember{mutableStateOf(selectedIndex1)}
 
+    LaunchedEffect(selectedIndex1){
+        selectedIndex=selectedIndex1
+    }
+
+    //Log.v("selected index","$metricName ${selectedIndexState.value}")
     Column(modifier=modifier){
         Text(
             text=title,
@@ -217,7 +387,7 @@ fun MetricRow(title: String,metricName: String,modifier:Modifier=Modifier){
             )
         )
         LazyRow{
-            items(icons1){(iconResId,label)->
+            items(icons1,key={it.first}){(iconResId,label)->
                 val index=icons1.indexOfFirst{it.first==iconResId&&it.second==label}
                 IconItem(iconResId,label, modifier=Modifier
                     .padding(10.dp)
@@ -226,7 +396,10 @@ fun MetricRow(title: String,metricName: String,modifier:Modifier=Modifier){
                         color=if(selectedIndex==index) Color.Black else Color.Transparent,
                         shape=CircleShape
                     )
-                    .clickable {selectedIndex=if(selectedIndex==index) -1 else index}
+                    .clickable {
+                        selectedIndex=if(selectedIndex==index) -1 else index
+                        onSelectionChange(selectedIndex)
+                    }
                 )
             }
         }
@@ -234,7 +407,7 @@ fun MetricRow(title: String,metricName: String,modifier:Modifier=Modifier){
 }
 
 @Composable
-fun InputRow(title: String,modifier:Modifier=Modifier){
+fun InputRow(title: String,modifier:Modifier=Modifier,value:String,onValueChange:(String)->Unit){
     Column(
         modifier=modifier
             .fillMaxSize()
@@ -252,8 +425,8 @@ fun InputRow(title: String,modifier:Modifier=Modifier){
             modifier=modifier.padding(bottom=5.dp)
         )
         TextField(
-            value="",
-            onValueChange={},
+            value=value,
+            onValueChange=onValueChange,
             modifier=Modifier
                 .width(250.dp),
             shape=RoundedCornerShape(5.dp),
@@ -267,7 +440,7 @@ fun InputRow(title: String,modifier:Modifier=Modifier){
 }
 
 @Composable
-fun LongInputRow(title: String,modifier:Modifier=Modifier){
+fun LongInputRow(title: String,modifier:Modifier=Modifier,value:String, onValueChange:(String)->Unit){
     Column(
         modifier=modifier
             .fillMaxSize()
@@ -285,8 +458,8 @@ fun LongInputRow(title: String,modifier:Modifier=Modifier){
             modifier=modifier.padding(bottom=5.dp)
         )
         TextField(
-            value="",
-            onValueChange={},
+            value=value,
+            onValueChange=onValueChange,
             modifier=Modifier
                 .width(300.dp)
                 .height(100.dp),
@@ -302,9 +475,25 @@ fun LongInputRow(title: String,modifier:Modifier=Modifier){
 
 @Composable
 fun IconItem(iconResId:Int,label:String, modifier:Modifier=Modifier){
-    val color=getColor(color=com.google.android.material.R.attr.colorSecondary)
+    //val color=getColor(color=com.google.android.material.R.attr.colorSecondary)
     val imgSize=75.dp
     val circleSize=with(LocalDensity.current){(imgSize.toPx()*sqrt(2f))/density}.dp
+
+    val readyText=remember(label){
+        label.split(" ").fold(mutableListOf<String>()) {lines,word->
+            if(lines.isEmpty()){
+                lines.add(word)
+            }
+            else if(lines.last().length+word.length+1<=25){
+                lines[lines.size-1]="${lines.last()} $word"
+            }
+            else{
+                lines.add(word)
+            }
+            lines
+        }.joinToString("\n")
+    }
+
     Column(
         horizontalAlignment=Alignment.CenterHorizontally,
         verticalArrangement=Arrangement.Center,
@@ -316,8 +505,8 @@ fun IconItem(iconResId:Int,label:String, modifier:Modifier=Modifier){
                 .size(circleSize)
                 .clip(CircleShape)
                 .background(Color.LightGray)
-                //.background(color)
-                //.border(1.dp, Color.Black, shape=CircleShape)
+            //.background(color)
+            //.border(1.dp, Color.Black, shape=CircleShape)
         ){
             Icon(
                 painter=painterResource(id=iconResId),
@@ -332,11 +521,12 @@ fun IconItem(iconResId:Int,label:String, modifier:Modifier=Modifier){
             )
         }
         Text(
-            text=label,
+            text=readyText,
             textAlign=TextAlign.Center,
-            modifier=Modifier.widthIn(max=80.dp),
+            modifier=Modifier.widthIn(max=90.dp),
             overflow=TextOverflow.Clip,
-            softWrap=true
+            softWrap=true,
+            style=TextStyle(lineBreak=LineBreak.Simple)
             //todo: fix it so it doesn't cut word half through
         )
     }

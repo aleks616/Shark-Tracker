@@ -14,9 +14,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import com.example.rainbowcalendar.Cycle
 import com.example.rainbowcalendar.CycleDao
 import com.example.rainbowcalendar.CycleRoomDatabase
@@ -41,17 +39,17 @@ class HomeFragment:Fragment() {
         cycleDao=CycleRoomDatabase.getDatabase(requireContext()).cycleDao()
 
         //requireActivity().deleteDatabase("RainbowCalendar.db")
-        /*Thread {
-            cycleDao.insert(Cycle(date="2025-01-14",cycleDay=1,overallMood=3))
-        }.start()
-*/
-       /* cycleDao.getAllCycles().observe(viewLifecycleOwner,Observer {cycles->
-            cycles.forEach {
-                Log.v("TAG","Cycle: ${it.date}, Mood: ${it.overallMood}")
-            }
-        })*/
-
        /* Thread {
+            cycleDao.insert(Cycle(date="2025-01-25",overallMood=3, crampLevel=2, digestiveIssues=1))
+        }.start()*/
+
+        cycleDao.getAllCycles().observe(viewLifecycleOwner,Observer{cycles->
+            cycles.forEach {
+                Log.v("all ROOM data","${it.date} ${it.crampLevel} ${it.headache} ${it.energyLevel} ${it.sleepQuality}")
+            }
+        })
+
+        /*Thread{
             cycleDao.update(Cycle(date="2025-01-14",cycleDay=1,overallMood=1))
         }.start()*/
 
@@ -127,7 +125,7 @@ class HomeFragment:Fragment() {
                 progressText.text="It should start today"
                 progressBar.progress=100
             }
-            else {
+            else{
                 progressBar.progress=progress.toInt()
                 //THIS WON'T BE USED I'M JUST TESTING
                 progressText.text=sharedPrefs.getString("possTDate","none")
