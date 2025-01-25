@@ -41,7 +41,7 @@ interface CycleDao {
     fun getAllCycles():LiveData<List<Cycle>>
 
     @Query("SELECT * FROM cycle WHERE date=:date LIMIT 1")
-    fun getCycleByDate(date:String):LiveData<Cycle?>
+    fun getCycleByDate(date:String):Cycle?
 
     @Query("SELECT * FROM cycle WHERE cycleDay=:cycleDay")
     fun getCyclesByCycleDay(cycleDay:Int):LiveData<List<Cycle>>
