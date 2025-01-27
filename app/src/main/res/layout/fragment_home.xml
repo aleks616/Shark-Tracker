@@ -17,7 +17,7 @@
             android:id="@+id/popUp"
             android:layout_width="match_parent"
             android:layout_height="120sp"
-            android:background="?attr/colorOutlineVariant"
+            android:background="?attr/colorTertiary"
             android:weightSum="1">
 
             <LinearLayout
@@ -33,13 +33,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14sp"
                     android:layout_marginTop="6sp"
-                    android:textColor="@color/black"
+                    android:textColor="?attr/colorSecondary"
                     android:textSize="22sp"
                     tools:text="SAMPLE TEXT YEAHHH LOREM IPSUM" />
 
                 <Button
                     android:id="@+id/goToActivityButton"
                     android:layout_width="150sp"
+                    android:background="?attr/colorSecondary"
                     android:layout_height="40sp"
                     android:layout_marginStart="20sp"
                     android:layout_marginTop="15sp" />
@@ -67,6 +68,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:textColor="?attr/colorSecondary"
                     android:id="@+id/homeTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -102,6 +104,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
+                        android:textColor="?attr/colorSecondary"
                         android:id="@+id/progressText"
                         android:layout_width="200dp"
                         android:layout_height="100dp"
@@ -117,6 +120,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout> <!--progress circle-->
 
                 <Button
+                    android:textColor="?attr/colorQuaternary"
                     android:id="@+id/periodStartButton"
                     android:layout_width="150sp"
                     android:layout_height="wrap_content"
@@ -126,12 +130,6 @@
                     android:textAllCaps="false"
                     android:textSize="20sp"
                     android:visibility="visible" />
-
-
-                <!--<LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"></LinearLayout>-->
 
 
             </LinearLayout>

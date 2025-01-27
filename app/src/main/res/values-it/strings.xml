@@ -11,6 +11,8 @@
         <item>Scuro</item>
         <item>Chiaro</item>
         <item>Beige</item>
+        <item>Monochrome-Light</item>
+        <item>Monochrome-Dark</item>
     </string-array>
     <string name="intro2_ftmTl">I\'ve been on T for some time, I don\'t experience shark weeks anymore, I want shot reminders</string>
     <string name="choose_gender_mode">Scegli il tuo genere/modalità, ci saranno modalità più dettagliate nella schermata successiva. Puoi sempre cambiare queste impostazioni.</string>
@@ -180,4 +182,5 @@
     <string name="metrics_musclePain0">Sem Dor</string>
     <string name="metrics_musclePain1">Dor Moderada</string>
     <string name="metrics_musclePain2">Dor Intensa</string>
+    <string name="legal_adult">I\'m legally adult</string>
 </resources>

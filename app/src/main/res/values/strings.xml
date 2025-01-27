@@ -15,6 +15,8 @@
     <string name="attachment_summary_off" translatable="false">Only download attachments when manually requested</string>
 
     <string name="app_name">Rainbow Calendar</string>
+    <string name="app_name1" translatable="false">Shark Track</string>
+    <string name="stealth_app_name" translatable="false">Shark Idle 2</string>
     <string name="welcome_text">Hi! Welcome to Rainbow Calendar</string>
     <string name="choose_language">Choose the app language</string>
     <string name="welcome_back">Welcome back</string>
@@ -28,6 +30,12 @@
         <item>Dark</item>
         <item>Light</item>
         <item>Beige</item>
+        <item>Monochrome-Light</item>
+        <item>Monochrome-Dark</item>
+        <item>Blue</item>
+        <item>Navy Blue</item>
+        <item>Gray</item>
+        <item>Green</item>
     </string-array>
     <string name="gender_mode_tm">Transmasculine mode, masculine terms will be used, and potentially triggering topics will be avoided. Pregnancy won\'t be ever mentioned.</string>
     <string name="gender_mode_m">Man mode, congrats gigachad, you unlocked real transmed man mode! You won\'t see inclusive tucute bullshit!</string>
@@ -119,25 +127,25 @@
 
     <string-array name="recoveryQuestions">
         <item>Select a question.</item>
-        <item>What was your dream job as a child?</item>
+        <item>What was your childhood career?</item>
         <item>What is your grandmother’s maiden name?</item>
-        <item>Random phrase/sentence/thing you\'ll surely remember?</item>
-        <item>What was the first concert you attended?</item>
+        <item>What is a phrase you live by?</item>
+        <item>What was the first band you saw live?</item>
         <item>What brand was your first phone?</item>
-        <item>What was the name of the person you first kissed? </item>
-        <item>What was the size of your first shoes?</item>
-        <item>What time were you born at? (hour:minute format)</item>
-        <item>What is the name of the street where your best friend lived during childhood?</item>
+        <item>Who was the first person you kissed?</item>
+        <item>What was the size of your first shoe?</item>
+        <item>What time were you born at?</item>
+        <item>What street did your best friend live on during childhood?</item>
         <item>What was the first album you ever purchased?</item>
-        <item>What was the flavor of your favorite ice cream in middle school?</item>
-        <item>Who was won when you went to your first professional sports game?</item>
+        <item>What is the flavor of your favorite ice cream?</item>
+        <item>Who won when you went to your first sports game?</item>
         <item>Where did you have your first ever flight to?</item>
         <item>What was subject you hated the most in high school?</item>
-        <item>What was the title of your favorite video game as a teenager?</item>
+        <item>What was the name of your favorite video game as a teen?</item>
         <item>What was the color of your favorite childhood blanket?</item>
         <item>What was the title of the first book you read?</item>
         <item>Who was your first crush?</item>
-        <item>What was the first dish you learned to cook?</item>
+        <item>What was the first dish you learned?</item>
         <item>What was the name/nickname of your least favorite teacher?</item>
         <item>What is the middle name of your oldest cousin?</item>
         <item>In what city or town did your parents meet?</item>
@@ -223,5 +231,6 @@
     <string name="metrics_musclePain0">No Pain</string>
     <string name="metrics_musclePain1">Mild Pain</string>
     <string name="metrics_musclePain2">Severe Pain</string>
+    <string name="legal_adult">I\'m legally adult</string>
 
 </resources>

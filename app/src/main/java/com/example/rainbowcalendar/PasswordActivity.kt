@@ -20,9 +20,12 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.graphics.red
 
-class PasswordActivity : AppCompatActivity() {
+class PasswordActivity : AppCompatActivity(){
     @SuppressLint("ClickableViewAccessibility")
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?){
+        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
+        val theme=sharedPrefs.getString("theme","Light")
+        ThemeManager[this]=theme
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_password)
 
@@ -81,14 +84,13 @@ class PasswordActivity : AppCompatActivity() {
 
         //region password type
 
-        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
 
         //val sharedPrefPasswordType=applicationContext.getSharedPreferences("com.example.rainbowcalendar_passwordType", Context.MODE_PRIVATE)
         val sharedPrefTemp=applicationContext.getSharedPreferences("temp",Context.MODE_PRIVATE)
         var passwordType=0
         var pinButtonType=sharedPrefTemp.getInt("temp",0)
 
-        chooseTypeButton.setOnClickListener {
+        chooseTypeButton.setOnClickListener{
             if(noPasswordCb.isChecked)
                 startActivity(Intent(this,MainActivity::class.java))
 
@@ -145,14 +147,14 @@ class PasswordActivity : AppCompatActivity() {
         //doc: show password when tapping eye
         eyeShowPassword.setOnTouchListener{_, event->
             when(event.action){
-                MotionEvent.ACTION_DOWN -> {
+                MotionEvent.ACTION_DOWN ->{
                     if(passwordT.text.isNotEmpty()){
                         eyeShowPassword.setBackgroundResource(R.drawable.icon_eye)
                         passwordT.inputType=InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                     }
                     true
                 }
-                MotionEvent.ACTION_UP -> {
+                MotionEvent.ACTION_UP ->{
                     eyeShowPassword.setBackgroundResource(R.drawable.icon_eye_closed)
                     passwordT.inputType=InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                     true
@@ -210,7 +212,7 @@ class PasswordActivity : AppCompatActivity() {
         }
 
         //doc: creating passwords with error handling
-        createPasswordButton.setOnClickListener {
+        createPasswordButton.setOnClickListener{
             if(passwordT.text.toString()!=confirmPassword.text.toString())
                 errorText.text=getString(R.string.passwords_different_error)
             else{
@@ -305,14 +307,14 @@ class PasswordActivity : AppCompatActivity() {
         }
         //endregion
 
-        pinDelButton.setOnClickListener {
+        pinDelButton.setOnClickListener{
             pin=pin.dropLast(1)
             handler.post(removeDigitsIndicators)
         }
         //doc: on pin enter
         var pinToSave=""
         Log.v("GAY",pinButtonType.toString())
-        pinEnter.setOnClickListener {
+        pinEnter.setOnClickListener{
             if(!canExecute)
                 return@setOnClickListener
 

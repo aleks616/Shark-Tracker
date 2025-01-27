@@ -11,6 +11,8 @@
         <item>Ciemny</item>
         <item>Jasny</item>
         <item>Beżowy</item>
+        <item>Monochrome-Light</item>
+        <item>Monochrome-Dark</item>
     </string-array>
     <string name="intro2_ftmTl">Zażywam testosteron od jakiegoś czasu, nie mam już okresu, będę używać aplikacji dla śledzenia zastrzyków.</string>
     <string name="choose_gender_mode">Wybierz tryb/płeć, na następnym ekranie będzie więcej opcji. Możesz zmienić te ustawienia później.</string>
@@ -207,6 +209,7 @@
     <string name="metrics_musclePain0">No Pain</string>
     <string name="metrics_musclePain1">Mild Pain</string>
     <string name="metrics_musclePain2">Severe Pain</string>
+    <string name="legal_adult">I\'m legally adult</string>
 
 
 </resources>

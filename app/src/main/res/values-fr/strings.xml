@@ -11,6 +11,8 @@
         <item>Sombre</item>
         <item>Blanc</item>
         <item>Beige</item>
+        <item>Monochrome-Light</item>
+        <item>Monochrome-Dark</item>
     </string-array>
     <string name="intro2_ftmTl">I\'ve been on T for some time, I don\'t experience shark weeks anymore, I want shot reminders</string>
     <string name="choose_gender_mode">Choisis ton genre/mode, les détails s\'afficheront. Tu pourras le changer dans les paramètres.</string>
@@ -179,5 +181,6 @@
     <string name="metrics_musclePain0">Pas de douleur</string>
     <string name="metrics_musclePain1">Douleur modérée</string>
     <string name="metrics_musclePain2">Douleur sévère</string>
+    <string name="legal_adult">I\'m legally adult</string>
 
 </resources>

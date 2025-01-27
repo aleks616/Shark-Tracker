@@ -15,13 +15,16 @@ import java.util.Locale
 class LanguageSettingsActivity:AppCompatActivity(){
 
     override fun onCreate(savedInstanceState:Bundle?){
+        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
+        val theme=sharedPrefs.getString("theme","Light")
+        ThemeManager[this]=theme
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_language_settings)
 
         val spinner=findViewById<Spinner>(R.id.lang_spinner)
-        ArrayAdapter.createFromResource(this,R.array.lang_array,android.R.layout.simple_spinner_item)
+        ArrayAdapter.createFromResource(this,R.array.lang_array,R.layout.spinner_item)
             .also{adapter->
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                adapter.setDropDownViewResource(R.layout.simple_text)
                 spinner.adapter=adapter
             }
 

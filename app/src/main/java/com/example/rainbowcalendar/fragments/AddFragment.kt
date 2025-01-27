@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import com.example.rainbowcalendar.CycleDao
 import com.example.rainbowcalendar.CycleRoomDatabase
+import com.example.rainbowcalendar.MetricsView
 import com.example.rainbowcalendar.R
 import com.example.rainbowcalendar.ScrollableMetricsView
 
@@ -26,7 +27,7 @@ class AddFragment : Fragment() {
         super.onViewCreated(view,savedInstanceState)
         val composeView=requireActivity().findViewById<ComposeView>(R.id.composeView)
         composeView.setContent {
-            ScrollableMetricsView()
+            MetricsView()
         }
     }
 

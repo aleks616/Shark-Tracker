@@ -27,9 +27,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -106,8 +109,18 @@ fun createIcons():Map<String, List<Pair<Int, String>>>{
 var usedDateState=mutableStateOf(SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(Calendar.getInstance().time))
 //var usedDate:String=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(Calendar.getInstance().time)
 private lateinit var cycleDao:CycleDao
+
+@Composable
+fun MetricsView(){
+    ScrollableMetricsView()
+
+}
+
 @Composable
 fun ScrollableMetricsView(){
+    val colorSecondary=getColor(color=com.google.android.material.R.attr.colorSecondary)
+    val colorTertiary=getColor(color=com.google.android.material.R.attr.colorTertiary)
+    val colorQuaternary=getColor(color=com.google.android.material.R.attr.itemTextColor)
     val padding=12.dp
     val selectedPositions=remember{mutableStateOf(MutableList(15){-1})}
     val weight=remember{mutableStateOf("")}
@@ -128,11 +141,9 @@ fun ScrollableMetricsView(){
     var today=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(Calendar.getInstance().time)
 
     cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
-    //val lifecycleOwner=LocalLifecycleOwner.current
 
     LaunchedEffect(usedDateState.value){
         withContext(Dispatchers.IO){
-            //val cycle=cycleDao.getCycleByDate(today)
             val cycle=cycleDao.getCycleByDate(usedDateState.value)
             if(cycle!=null){
                 selectedPositions.value=mutableListOf(
@@ -178,6 +189,7 @@ fun ScrollableMetricsView(){
             ) {
                 Column(horizontalAlignment=Alignment.CenterHorizontally){
                     Text(
+                        color=colorSecondary,
                         text="Metrics",
                         fontSize=35.sp,
                         textAlign=TextAlign.Center,
@@ -195,7 +207,8 @@ fun ScrollableMetricsView(){
                                 .height(45.dp)
                                 .width(80.dp)
                                 .align(Alignment.CenterVertically)
-                                .padding(start=10.dp)
+                                .padding(start=10.dp),
+                            colors=buttonColors(backgroundColor=colorTertiary),
                         ){
                             Image(
                                 modifier=Modifier
@@ -207,7 +220,7 @@ fun ScrollableMetricsView(){
                             )
                         }
                         Text(
-                            //text=today,
+                            color=colorSecondary,
                             text=usedDateState.value,
                             fontSize=32.sp,
                             textAlign=TextAlign.Center,
@@ -223,8 +236,9 @@ fun ScrollableMetricsView(){
                                 .width(80.dp)
                                 .align(Alignment.CenterVertically)
                                 .padding(end=10.dp)
-                                .alpha(if(usedDateState.value>=today)0f else 1f),
-                            enabled=usedDateState.value<today
+                                .alpha(if(usedDateState.value>=today) 0f else 1f),
+                            enabled=usedDateState.value<today,
+                            colors=buttonColors(backgroundColor=colorTertiary),
                         ){
                             Image(
                                 modifier=Modifier
@@ -306,12 +320,10 @@ fun ScrollableMetricsView(){
                         .padding(all=20.dp)
                         .height(50.dp)
                         .width(200.dp),
-                    onClick={
-                        Log.v("metrics values",selectedPositions.value.joinToString(", "){if(it==-1) "NULL" else it.toString()})
-                        saveToDB(content=selectedPositions.value,context,weight.value,kcalBalance.value,notes.value)
-                    }
+                    onClick={saveToDB(content=selectedPositions.value,context,weight.value,kcalBalance.value,notes.value)},
+                    colors=buttonColors(backgroundColor=colorTertiary),
                 ){
-                    Text(text="Save")
+                    Text(text="Save",color=colorQuaternary) //todo: all strings from this file -> strings.xml
                 }
             }
         }
@@ -334,12 +346,9 @@ fun changeDate(amount: Int){
 fun saveToDB(content:List<Int>,context:Context,weight:String,kcalBalance:String,notes:String){
     cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
 
-    //val today=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(Calendar.getInstance().time)
     Thread{
-        //val existingCycle=cycleDao.getCycleByDate(today)
         val existingCycle=cycleDao.getCycleByDate(usedDateState.value)
         val newCycle=Cycle(
-            //date=today,
             date=usedDateState.value,
             crampLevel=content[0].takeIf {it!=-1},
             headache=content[1].takeIf {it!=-1},
@@ -372,7 +381,9 @@ fun saveToDB(content:List<Int>,context:Context,weight:String,kcalBalance:String,
 
 @Composable
 fun MetricRow(title: String,metricName: String,modifier:Modifier=Modifier, selectedIndex1:Int, onSelectionChange:(Int)->Unit){
-    //val icons=metricIcons[metricName]?:emptyList()
+    val colorSecondary=getColor(color=com.google.android.material.R.attr.colorSecondary)
+    val colorTertiary=getColor(color=com.google.android.material.R.attr.colorTertiary)
+
     val icons1=createIcons()[metricName]?:emptyList()
     var selectedIndex by remember{mutableStateOf(selectedIndex1)}
 
@@ -380,12 +391,11 @@ fun MetricRow(title: String,metricName: String,modifier:Modifier=Modifier, selec
         selectedIndex=selectedIndex1
     }
 
-    //Log.v("selected index","$metricName ${selectedIndexState.value}")
     Column(modifier=modifier){
         Text(
+            color=colorSecondary,
             text=title,
             fontSize=24.sp,
-            color=Color.Black, //todo: change so it's dynamic!!!
             modifier=Modifier.padding(
                 start=5.dp
             )
@@ -396,8 +406,8 @@ fun MetricRow(title: String,metricName: String,modifier:Modifier=Modifier, selec
                 IconItem(iconResId,label, modifier=Modifier
                     .padding(10.dp)
                     .border(
-                        width=if(selectedIndex==index) 2.dp else 0.dp,
-                        color=if(selectedIndex==index) Color.Black else Color.Transparent,
+                        width=if(selectedIndex==index) 4.dp else 0.dp,
+                        color=if(selectedIndex==index) colorSecondary else Color.Transparent,
                         shape=CircleShape
                     )
                     .clickable {
@@ -412,6 +422,7 @@ fun MetricRow(title: String,metricName: String,modifier:Modifier=Modifier, selec
 
 @Composable
 fun InputRow(title: String,modifier:Modifier=Modifier,value:String,onValueChange:(String)->Unit){
+    val colorSecondary=getColor(color=com.google.android.material.R.attr.colorSecondary)
     Column(
         modifier=modifier
             .fillMaxSize()
@@ -423,9 +434,9 @@ fun InputRow(title: String,modifier:Modifier=Modifier,value:String,onValueChange
             )
     ){
         Text(
+            color=colorSecondary,
             text=title,
             fontSize=24.sp,
-            color=Color.Black,
             modifier=modifier.padding(bottom=5.dp)
         )
         TextField(
@@ -438,13 +449,15 @@ fun InputRow(title: String,modifier:Modifier=Modifier,value:String,onValueChange
                 keyboardType=KeyboardType.Number,
                 imeAction=androidx.compose.ui.text.input.ImeAction.Done
             ),
-            placeholder={Text(title)}
+            placeholder={Text(title, color=colorSecondary)},
+            colors=TextFieldDefaults.textFieldColors(textColor=colorSecondary)
         )
     }
 }
 
 @Composable
 fun LongInputRow(title: String,modifier:Modifier=Modifier,value:String, onValueChange:(String)->Unit){
+    val colorSecondary=getColor(color=com.google.android.material.R.attr.colorSecondary)
     Column(
         modifier=modifier
             .fillMaxSize()
@@ -456,9 +469,9 @@ fun LongInputRow(title: String,modifier:Modifier=Modifier,value:String, onValueC
             )
     ){
         Text(
+            color=colorSecondary,
             text=title,
             fontSize=24.sp,
-            color=Color.Black,
             modifier=modifier.padding(bottom=5.dp)
         )
         TextField(
@@ -472,14 +485,17 @@ fun LongInputRow(title: String,modifier:Modifier=Modifier,value:String, onValueC
                 keyboardType=KeyboardType.Text,
                 imeAction=androidx.compose.ui.text.input.ImeAction.Done
             ),
-            placeholder={Text(title)}
+            placeholder={Text(title, color=colorSecondary)},
+            colors=TextFieldDefaults.textFieldColors(textColor=colorSecondary),
+            maxLines=5
         )
     }
 }
 
 @Composable
 fun IconItem(iconResId:Int,label:String, modifier:Modifier=Modifier){
-    //val color=getColor(color=com.google.android.material.R.attr.colorSecondary)
+    val colorSecondary=getColor(color=com.google.android.material.R.attr.colorSecondary)
+    val colorTertiary=getColor(color=com.google.android.material.R.attr.colorTertiary)
     val imgSize=75.dp
     val circleSize=with(LocalDensity.current){(imgSize.toPx()*sqrt(2f))/density}.dp
 
@@ -508,9 +524,7 @@ fun IconItem(iconResId:Int,label:String, modifier:Modifier=Modifier){
             modifier=modifier
                 .size(circleSize)
                 .clip(CircleShape)
-                .background(Color.LightGray)
-            //.background(color)
-            //.border(1.dp, Color.Black, shape=CircleShape)
+                .background(colorTertiary)
         ){
             Icon(
                 painter=painterResource(id=iconResId),
@@ -525,6 +539,7 @@ fun IconItem(iconResId:Int,label:String, modifier:Modifier=Modifier){
             )
         }
         Text(
+            color=colorSecondary,
             text=readyText,
             textAlign=TextAlign.Center,
             modifier=Modifier.widthIn(max=90.dp),

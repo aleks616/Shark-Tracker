@@ -176,5 +176,6 @@
     <string name="metrics_musclePain0">немає болю</string>
     <string name="metrics_musclePain1">невеликий біль</string>
     <string name="metrics_musclePain2">сильний біль</string>
+    <string name="legal_adult">I\'m legally adult</string>
 
 </resources>

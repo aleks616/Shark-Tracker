@@ -13,6 +13,7 @@
 
 
         <TextView
+            android:textColor="?attr/colorSecondary"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/settings" />
@@ -25,12 +26,14 @@
             android:orientation="horizontal">
 
             <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:textColor="?attr/colorQuaternary"
                 android:id="@+id/testButton"
                 android:layout_width="150sp"
                 android:layout_height="70sp"
                 android:layout_gravity="center"
                 android:layout_marginStart="30sp"
-                android:background="?attr/colorOutlineVariant"
+                android:background="?attr/colorTertiary"
                 android:gravity="center"
                 android:text="custom"
                 android:textAllCaps="false"
@@ -38,12 +41,14 @@
 
 
             <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:textColor="?attr/colorQuaternary"
                 android:id="@+id/testButton2"
                 android:layout_width="150sp"
                 android:layout_height="70sp"
                 android:layout_gravity="center"
                 android:layout_marginStart="30sp"
-                android:background="?attr/colorOutlineVariant"
+                android:background="?attr/colorTertiary"
                 android:gravity="center"
                 android:text="reset password and recovery"
                 android:textAllCaps="false"
@@ -53,6 +58,7 @@
         </LinearLayout>
 
         <Spinner
+            android:textColor="?attr/colorSecondary"
             android:id="@+id/themeSpinner"
             android:layout_width="300dp"
             android:layout_height="48dp"
@@ -60,22 +66,34 @@
             android:layout_marginTop="20dp" />
 
         <Button
+            android:textColor="?attr/colorQuaternary"
             android:id="@+id/buttonRefresh"
             android:layout_width="300dp"
             android:layout_height="48dp"
             android:layout_gravity="center"
-            android:background="?attr/colorOutlineVariant"
+            android:background="?attr/colorTertiary"
             android:text="Refresh"
             android:textAllCaps="false" />
 
         <Button
+            android:textColor="?attr/colorQuaternary"
             android:id="@+id/goToLanguageActivityButton"
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_margin="20dp"
-            android:background="?attr/colorOutlineVariant"
+            android:background="?attr/colorTertiary"
             android:text="change language" />
+
+        <Button
+            android:textColor="?attr/colorQuaternary"
+            android:id="@+id/stealthModeToggle"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:background="?attr/colorTertiary"
+            android:text="toggle stealth mode" />
 
     </LinearLayout>
 </ScrollView>

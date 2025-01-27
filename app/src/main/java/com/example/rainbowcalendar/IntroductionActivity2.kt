@@ -2,13 +2,17 @@ package com.example.rainbowcalendar
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Paint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CalendarView
 import android.widget.CheckBox
 import android.widget.DatePicker
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.NumberPicker
 import android.widget.RadioButton
@@ -16,10 +20,15 @@ import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.view.descendants
 import java.util.Calendar
 
-class IntroductionActivity2 : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+class IntroductionActivity2 : AppCompatActivity(){
+    override fun onCreate(savedInstanceState: Bundle?){
+        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
+        val theme=sharedPrefs.getString("theme","Light")
+        ThemeManager[this]=theme
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_introduction2)
 
@@ -64,7 +73,6 @@ class IntroductionActivity2 : AppCompatActivity() {
         val m8FtmtL=findViewById<RadioButton>(R.id.m8_ftm_tL)
 
         val sexCb=findViewById<CheckBox>(R.id.sexCb)
-        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
 
         val gender: String?=sharedPrefs.getString("gender","n")
         val tM:Boolean=sharedPrefs.getBoolean("tm", false) //todo: transmed
@@ -126,6 +134,9 @@ class IntroductionActivity2 : AppCompatActivity() {
         val errorText=findViewById<TextView>(R.id.errorText)
 
         dpBirthday.maxDate=System.currentTimeMillis()
+
+
+
         var sex:Boolean?=null
         //doc:
         // gender:String        m/f/n
@@ -380,6 +391,5 @@ class IntroductionActivity2 : AppCompatActivity() {
 
         }
     }
-
     //endregion
 }

@@ -16,6 +16,9 @@ import android.widget.TextView
 
 class RecoveryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
+        val theme=sharedPrefs.getString("theme","Light")
+        ThemeManager[this]=theme
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recovery)
 
@@ -64,9 +67,9 @@ class RecoveryActivity : AppCompatActivity() {
         }
 
         //region creation
-        ArrayAdapter.createFromResource(this,R.array.recoveryQuestions,android.R.layout.simple_spinner_item)
+        ArrayAdapter.createFromResource(this,R.array.recoveryQuestions,R.layout.spinner_item)
             .also{adapter->
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                adapter.setDropDownViewResource(R.layout.simple_text)
                 recoverySpinner1.adapter=adapter
                 recoverySpinner2.adapter=adapter
                 recoverySpinner3.adapter=adapter

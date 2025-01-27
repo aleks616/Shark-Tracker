@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimary">
 
     <LinearLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -16,6 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10sp"
             android:text="@string/intro2_header"
+            android:textColor="?attr/colorSecondary"
             android:textSize="30sp" /> <!-- change to "additional settings"-->
 
         <RadioGroup
@@ -31,6 +32,7 @@
                 android:layout_margin="10sp"
                 android:minHeight="48dp"
                 android:text="@string/intro2_young_n"
+                android:textColor="?attr/colorSecondary"
                 android:textSize="16sp"
                 android:visibility="gone" />
 
@@ -41,6 +43,7 @@
                 android:layout_margin="10sp"
                 android:minHeight="48dp"
                 android:text="@string/intro2_gay"
+                android:textColor="?attr/colorSecondary"
                 android:textSize="16sp"
                 android:visibility="gone" />
 
@@ -51,6 +54,7 @@
                 android:layout_margin="10sp"
                 android:minHeight="48dp"
                 android:text="@string/intro2_ftm"
+                android:textColor="?attr/colorSecondary"
                 android:textSize="16sp"
                 android:visibility="gone" />
 
@@ -61,6 +65,7 @@
                 android:layout_margin="10sp"
                 android:minHeight="48dp"
                 android:text="@string/intro2_ftmT"
+                android:textColor="?attr/colorSecondary"
                 android:textSize="16sp"
                 android:visibility="gone" />
 
@@ -71,8 +76,9 @@
                 android:layout_margin="10sp"
                 android:minHeight="48dp"
                 android:text="@string/intro2_ftmTl"
+                android:textColor="?attr/colorSecondary"
                 android:textSize="16sp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <RadioButton
                 android:id="@+id/m5_gnc"
@@ -81,6 +87,7 @@
                 android:layout_margin="10sp"
                 android:minHeight="48dp"
                 android:text="@string/intro2_gnc"
+                android:textColor="?attr/colorSecondary"
                 android:textSize="16sp"
                 android:visibility="gone" />
 
@@ -91,6 +98,7 @@
                 android:layout_margin="10sp"
                 android:minHeight="48dp"
                 android:text="@string/intro2_nb"
+                android:textColor="?attr/colorSecondary"
                 android:textSize="16sp"
                 android:visibility="gone" />
 
@@ -101,18 +109,20 @@
                 android:layout_margin="10sp"
                 android:minHeight="48dp"
                 android:text="@string/intro2_ace"
+                android:textColor="?attr/colorSecondary"
                 android:textSize="16sp"
                 android:visibility="gone" />
 
         </RadioGroup> <!-- mode-->
 
         <CheckBox
+            android:minHeight="48dp"
             android:id="@+id/adultCb"
             android:layout_width="match_parent"
-            android:layout_marginStart="40sp"
             android:layout_height="50dp"
-            android:text="I'm legally adult"
-            />
+            android:layout_marginStart="40sp"
+            android:text="@string/legal_adult"
+            android:textColor="?attr/colorSecondary" />
 
 
         <LinearLayout
@@ -129,17 +139,21 @@
                 android:layout_margin="20sp"
                 android:text="@string/choose_birthday_n"
                 android:textAlignment="center"
+                android:textColor="?attr/colorSecondary"
                 android:textSize="20sp" />
 
             <CheckBox
                 android:id="@+id/skipBd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/no_birthday"
                 android:layout_gravity="center"
-                />
+                android:minHeight="48dp"
+                android:text="@string/no_birthday"
+                android:textColor="?attr/colorSecondary" />
 
             <DatePicker
+                style="@style/DatePicker"
+                android:theme="@style/DatePicker"
                 android:id="@+id/datePickerBirthday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -147,7 +161,9 @@
                 android:layout_margin="20sp"
                 android:calendarViewShown="false"
                 android:datePickerMode="spinner"
-                android:spinnersShown="true" />
+                android:spinnersShown="true"
+                android:textColor="?attr/colorSecondary" />
+
         </LinearLayout> <!-- birthday-->
 
         <LinearLayout
@@ -163,16 +179,19 @@
                 android:layout_margin="10sp"
                 android:gravity="center"
                 android:text="@string/t_start_when"
+                android:textColor="?attr/colorSecondary"
                 android:textSize="18sp" />
 
             <DatePicker
+                android:theme="@style/DatePicker"
                 android:id="@+id/tStartDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:calendarViewShown="false"
                 android:datePickerMode="spinner"
                 android:minDate="01-01-2000"
-                android:spinnersShown="true" />
+                android:spinnersShown="true"
+                android:textColor="?attr/colorSecondary" />
             <!--mm-dd-yyyy-->
 
             <TextView
@@ -182,6 +201,7 @@
                 android:layout_marginVertical="10sp"
                 android:gravity="center"
                 android:text="@string/last_t_dose_n"
+                android:textColor="?attr/colorSecondary"
                 android:textSize="20sp" />
 
             <CheckBox
@@ -190,43 +210,53 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20sp"
                 android:minHeight="48dp"
-                android:text="@string/show_calendar" />
+                android:text="@string/show_calendar"
+                android:textColor="?attr/colorSecondary" />
 
             <CalendarView
+                android:theme="@style/DatePicker"
                 android:id="@+id/helperCalendar"
-                android:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20sp" />
+                android:layout_marginHorizontal="20sp"
+                android:textColor="?attr/colorSecondary"
+                android:visibility="gone" />
 
             <NumberPicker
+                android:theme="@style/DatePicker"
                 android:id="@+id/daysSinceT"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:textColor="?attr/colorSecondary" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/t_how_often"
+                android:textColor="?attr/colorSecondary"
                 android:textSize="20sp" />
 
 
             <NumberPicker
+                android:theme="@style/DatePicker"
                 android:id="@+id/TInterval"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:textColor="?attr/colorSecondary"
                 android:visibility="visible" />
 
             <CheckBox
+
                 android:id="@+id/gelCB"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:minHeight="48dp"
-                android:text="@string/t_gel" />
+                android:text="@string/t_gel"
+                android:textColor="?attr/colorSecondary" />
 
             <TextView
                 android:id="@+id/timeText"
@@ -234,16 +264,19 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/what_time"
+                android:textColor="?attr/colorSecondary"
                 android:textSize="20sp"
                 android:visibility="gone" />
 
             <TimePicker
+                android:theme="@style/DatePicker"
                 android:id="@+id/tTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:textColor="?attr/colorSecondary"
                 android:timePickerMode="spinner"
-                android:visibility="visible"/>
+                android:visibility="visible" />
 
             <CheckBox
                 android:id="@+id/notifCB"
@@ -251,7 +284,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:minHeight="48dp"
-                android:text="@string/t_notif" /> <!--make string better-->
+                android:text="@string/t_notif"
+                android:textColor="?attr/colorSecondary" /> <!--make string better-->
         </LinearLayout> <!-- t options -->
 
         <LinearLayout
@@ -266,6 +300,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10sp"
                 android:text="@string/approx_t_start"
+                android:textColor="?attr/colorSecondary"
                 android:textSize="18sp" />
 
             <LinearLayout
@@ -276,14 +311,18 @@
                 android:orientation="horizontal">
 
                 <NumberPicker
+                    android:theme="@style/DatePicker"
                     android:id="@+id/TDatePickerMonth"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/colorSecondary" />
 
                 <NumberPicker
+                    android:theme="@style/DatePicker"
                     android:id="@+id/TDatePickerYear"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/colorSecondary" />
 
             </LinearLayout>
         </LinearLayout> <!--approx start date picker-->
@@ -301,6 +340,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="15sp"
                 android:text="@string/sexually_active_question_n"
+                android:textColor="?attr/colorSecondary"
                 android:textSize="18sp" />
 
             <RadioGroup
@@ -313,36 +353,39 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="48dp"
-                    android:text="@string/yes" />
+                    android:text="@string/yes"
+                    android:textColor="?attr/colorSecondary" />
 
                 <RadioButton
                     android:id="@+id/sexNo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="48dp"
-                    android:text="@string/no" />
+                    android:text="@string/no"
+                    android:textColor="?attr/colorSecondary" />
             </RadioGroup>
 
         </LinearLayout> <!--sex-->
 
         <CheckBox
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_marginHorizontal="20sp"
-            android:textSize="18sp"
-            android:layout_height="wrap_content"
             android:id="@+id/sexCb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20sp"
             android:text="@string/sexually_active_question_n"
-            />
-
+            android:textColor="?attr/colorSecondary"
+            android:textSize="18sp"
+            android:visibility="gone" />
+        <!--todo: error text color? why isn't it visible?-->
         <TextView
+            android:textAllCaps="true"
             android:id="@+id/errorText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10sp"
-            android:text=""
-            android:textColor="@color/orange_red"
-            android:textSize="20sp" /> <!--error text-->
+            android:textColor="?attr/colorSecondary"
+            android:textSize="20sp"
+            tools:text="test" /> <!--error text-->
 
         <Button
             android:id="@+id/buttonNext"
@@ -351,11 +394,12 @@
             android:layout_gravity="end"
             android:layout_marginTop="40sp"
             android:layout_marginEnd="20sp"
-            android:background="@color/dark_goldenrod"
+            android:background="?attr/colorTertiary"
             android:drawableEnd="@drawable/icon_arrow_right_triangle"
-            android:drawableTint="@color/dark_blue"
+            android:drawableTint="?attr/colorSecondary"
             android:text="@string/next"
-            android:textAlignment="textEnd" /> <!--button-->
+            android:textAlignment="textEnd"
+            android:textColor="?attr/colorQuaternary" /> <!--button-->
 
         <Button
             android:id="@+id/buttonNext1"
@@ -365,11 +409,12 @@
             android:layout_marginTop="40sp"
             android:layout_marginEnd="20sp"
             android:layout_marginBottom="20sp"
-            android:background="@color/teal"
+            android:background="?attr/colorTertiary"
             android:drawableEnd="@drawable/icon_arrow_right_triangle"
-            android:drawableTint="@color/dark_blue"
+            android:drawableTint="?attr/colorSecondary"
             android:text="@string/next"
             android:textAlignment="textEnd"
+            android:textColor="?attr/colorQuaternary"
             android:visibility="gone" /> <!--button1-->
     </LinearLayout>
 </ScrollView>
