@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import com.example.rainbowcalendar.CycleDao
 import com.example.rainbowcalendar.CycleRoomDatabase
-import com.example.rainbowcalendar.MetricsView
 import com.example.rainbowcalendar.R
 import com.example.rainbowcalendar.ScrollableMetricsView
 
@@ -26,8 +25,8 @@ class AddFragment : Fragment() {
     override fun onViewCreated(view:View,savedInstanceState:Bundle?) {
         super.onViewCreated(view,savedInstanceState)
         val composeView=requireActivity().findViewById<ComposeView>(R.id.composeView)
-        composeView.setContent {
-            MetricsView()
+        composeView.setContent{
+            ScrollableMetricsView()
         }
     }
 
@@ -38,7 +37,7 @@ class AddFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_add, container, false)
     }
 
-    fun showAll(){
+    private fun showAll(){
         cycleDao.getAllCycles().observe(this) {cycles->
             cycles.forEach {
                 Log.v("TAG","Cycle: ${it.date}, Mood: ${it.overallMood} Cramp level: ${it.crampLevel}, Headache: ${it.headache}")

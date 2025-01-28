@@ -9,7 +9,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
-import android.widget.Toast
 import java.util.Locale
 
 class LanguageSettingsActivity:AppCompatActivity(){
@@ -53,15 +52,16 @@ class LanguageSettingsActivity:AppCompatActivity(){
         Locale.setDefault(locale)
         config.setLocale(locale)
         createConfigurationContext(config)
-        resources.updateConfiguration(config, resources.displayMetrics)
+        resources.updateConfiguration(config,resources.displayMetrics)
+        //todo: check if this is necessary
 
         val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
         sharedPrefs.edit().putString("lang",lang).apply()
     }
-    private fun toMainScreen(){
+   /* private fun toMainScreen(){
         val intent=Intent(this, MainActivity::class.java)
         startActivity(intent)
-    }
+    }*/
     private fun langToCode(lang: String): String{
         return when(lang){
             "English" -> "en"

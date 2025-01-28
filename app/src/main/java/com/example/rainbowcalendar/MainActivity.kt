@@ -3,7 +3,6 @@ package com.example.rainbowcalendar
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import com.example.rainbowcalendar.fragments.AddFragment
 import com.example.rainbowcalendar.fragments.CalendarFragment
@@ -16,9 +15,11 @@ class MainActivity: AppCompatActivity(){
         val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
         val theme=sharedPrefs.getString("theme","Light")
         ThemeManager[this]=theme
-        val locale=Locale(sharedPrefs.getString("lang","en")!!)
-        Log.v("locale",locale.toString())
-        //todo: choose theme options!!!`
+        val lang=sharedPrefs.getString("lang","en")!!
+        if(lang=="pt-br")
+            Locale("pt","BR")
+        else
+            Locale(lang)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 

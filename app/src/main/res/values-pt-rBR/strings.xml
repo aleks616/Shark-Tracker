@@ -69,43 +69,44 @@
     <string name="intro2_ftm_m">I\'m a pre-T trans guy (trans masculine-leaning person) planning on taking T someday.</string>
     <string name="minor_consent">By selecting this option, I confirm that I am of legal age to discuss sexual activity according to the laws of my country or state.</string>
     <string name="error_minor_consent">You didn\'t confirm you are of legal age, age option automatically has been switched to \'minor\'</string>
-    <string name="pin_length_error">Wrong pin length</string>
-    <string name="password">password</string>
-    <string name="enter_pin">Enter pin</string>
-    <string name="pin_circle_description">circle indicating if digit has been set</string>
-    <string name="enter_password">Enter password</string>
-    <string name="pin_delete_description">delete pin character</string>
-    <string name="pin_enter_description">enter pin and proceed</string>
-    <string name="recovery_setup_title">Set up recovery questions</string>
-    <string name="answer_recovery_questions">Answer recovery questions</string>
-    <string name="enter_answer">enter answer</string>
-    <string name="enter">Enter</string>
-    <string name="recovery_noquestion_error">If you don\'t see a question, there has been an error</string>
-    <string name="password_type_title">Choose password type</string>
-    <string name="password_text_password">Text password</string>
-    <string name="password_pin_password">Pin password</string>
-    <string name="password_confirm_type">Confirm password type</string>
-    <string name="password_warning">Remember this password!\nApp isn\'t connected to cloud, if you forget it, you\'ll lose all data!</string>
-    <string name="password_show">temporarily show password</string>
     <string name="enter_the_app">Enter the app</string>
-    <string name="password_repeat">Enter same password again</string>
-    <string name="recovery_answer_empty">Answers can\'t be empty</string>
-    <string name="recovery_wrong_answer">"Wrong answer to question  "</string>
-    <string name="recovery_questions_repeat">Questions can\'t repeat</string>
-    <string name="recovery_choose_all">Choose all 3 questions</string>
-    <string name="recovery_answer_all">Answer all 3 questions</string>
-    <string name="create_pin">Create a pin</string>
-    <string name="enter_pin_again">Enter pin again</string>
-    <string name="wrong_password">Wrong password</string>
-    <string name="create_password">Create a password</string>
-    <string name="passwords_different_error">Passwords aren\'t the same</string>
-    <string name="password_length_error">This is for your safety, password has to be at least 6 characters.</string>
-    <string name="password_digit_error">Oh come on, if you want a digit only password, set a pin instead</string>
-    <string name="wrong_pin_try_again">Wrong pin, try again</string>
-    <string name="pins_different_error">Pins are different, try again</string>
     <string name="no_birthday">I don\'t want to enter my birthday</string>
     <string name="settings">settings</string>
     <string name="tReminderText">"It's T time innit"</string>
+
+    <string name="create_pin">Criar um PIN</string>
+    <string name="enter_pin_again">Insira o PIN novamente</string>
+    <string name="wrong_password">Senha incorreta</string>
+    <string name="create_password">Criar uma senha</string>
+    <string name="passwords_different_error">As senhas estão incorretas</string>
+    <string name="password_length_error">Para sua segurança, a senha deve ter no mínimo 6 caracteres.</string>
+    <string name="password_digit_error">Ah, qual é, se tu quer apenas um dígito na senha, use um PIN</string>
+    <string name="wrong_pin_try_again">PIN errado, tente novamente</string>
+    <string name="pins_different_error">PINs diferentes, tente novamente</string>
+    <string name="pin_length_error">Tamanho de pin incorreto</string>
+    <string name="password">senha</string>
+    <string name="enter_pin">Informe o pin</string>
+    <string name="pin_circle_description">Círculo indicando se o dígito foi informado</string>
+    <string name="enter_password">Informe a senha</string>
+    <string name="pin_delete_description">Deletar caracter de senha</string>
+    <string name="pin_enter_description">Informe o PIN e prossiga</string>
+    <string name="recovery_setup_title">Criar perguntas de segurança</string>
+    <string name="answer_recovery_questions">Responder perguntas de segurança</string>
+    <string name="enter_answer">inserir resposta</string>
+    <string name="enter">Inserir</string>
+    <string name="recovery_noquestion_error">Se tu não ver uma pergunta, um erro ocorreu</string>
+    <string name="password_type_title">Escolha o tipo de senha</string>
+    <string name="password_text_password">Senha alfanumérica</string>
+    <string name="password_pin_password">Senha PIN</string>
+    <string name="password_confirm_type">Confirmar tipo de senha</string>
+    <string name="password_warning">Lembre-se desta senha!\nO aplicativo não é conectado à nuvem, se esquecer dela, perderá todos os seus dados!</string>
+    <string name="password_show">exibir senha temporariamente</string>
+    <string name="password_repeat">Informe a senha novamente</string>
+    <string name="recovery_answer_empty">Respostas não podem ficar em branco</string>
+    <string name="recovery_wrong_answer">Resposta errada</string>
+    <string name="recovery_questions_repeat">Perguntas não podem ser repetidas</string>
+    <string name="recovery_choose_all">Escolha as 3 perguntas</string>
+    <string name="recovery_answer_all">Reponda as 3 perguntas</string>
 
 
     <string name="metrics_crampLevelTitle">Nível de Cólicas</string>
@@ -178,5 +179,43 @@
     <string name="metrics_musclePain0">Sem Dor</string>
     <string name="metrics_musclePain1">Dor Moderada</string>
     <string name="metrics_musclePain2">Dor Intensa</string>
-    <string name="legal_adult">I\'m legally adult</string>
+
+    <string name="save">Salvar</string>
+    <string name="weight">Peso</string>
+    <string name="notes">Notas</string>
+    <string name="kcal_balance">Calorias Líquidas</string>
+    <string name="metrics">Unidades de Medida</string>
+    <string name="stealth_mode">Ativar Modo Furtivo</string>
+    <string name="dont_want_password">I don\'t want to use password</string>
+    <string name="close_popup">close popup</string>
+    <string name="it_started">It started</string>
+    <string name="wrong_password_wait">Wrong password 3 times, wait 30 seconds before next attempt</string>
+
+    <string-array name="recoveryQuestions">
+        <item>Selecione uma pergunta.</item>
+        <item>Qual era tua carreira dos sonhos quando criança?</item>
+        <item>Qual era o sobrenome de solteira de tua avó?</item>
+        <item>Qual é a frase que tu mais segue na vida?</item>
+        <item>Qual a primeira banda que tu viu ao vivo?</item>
+        <item>Qual era a marca do teu primeiro celular?</item>
+        <item>Quem foi a primeira pessoa a te beijar?</item>
+        <item>Qual era o tamanho do teu primeiro par de tênis?</item>
+        <item>Qual foi o horário do teu nascimento?</item>
+        <item>Em qual rua teu melhor amigo de infância morava?</item>
+        <item>Qual foi o primeiro álbum que tu comprou?</item>
+        <item>Qual o teu sabor de sorvete favorito?</item>
+        <item>Quem ganhou quando tu foi assistir esportes pela primeira vez?</item>
+        <item>Para onde foi tua primeira viagem de avião?</item>
+        <item>Qual matéria tu mais odiava na escola?</item>
+        <item>Qual era o nome do teu vídeo game favorito na infância?</item>
+        <item>Qual era a cor do teu cobertor de infância?</item>
+        <item>Qual o nome do primeiro livro que tu leu?</item>
+        <item>Quem foi teu primeiro crush?</item>
+        <item>Qual o primeiro prato que tu aprendeu a cozinhar?</item>
+        <item>Qual era o nome/apelido do professor(a) que tu menos gostava?</item>
+        <item>Qual o nome do meio do teu sobrinho mais velho?</item>
+        <item> Em que cidade teus pais se conheceram? </item>
+    </string-array>
+
+
 </resources>

@@ -82,7 +82,6 @@ class SettingsFragment : Fragment() {
         spinner.onItemSelectedListener=object:AdapterView.OnItemSelectedListener{
             override fun onItemSelected(parent:AdapterView<*>?,view:View?,position:Int,id:Long){
                 themeValue=parent?.getItemAtPosition(position).toString()
-
             }
             override fun onNothingSelected(parent:AdapterView<*>?){}
         }
@@ -94,10 +93,6 @@ class SettingsFragment : Fragment() {
         }
     }
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -71,7 +71,7 @@ class PeriodSettingsActivity : AppCompatActivity() {
         }
 
 
-        //doc:
+        //:
         // cycleLength: Int
         // periodLength: Int
         // periodRegular: Boolean

@@ -53,7 +53,7 @@
                 android:layout_height="40sp"
                 android:layout_weight="0.1"
                 android:background="@drawable/icon_x"
-                android:contentDescription="close popup" />
+                android:contentDescription="@string/close_popup" />
 
 
         </LinearLayout> <!-- popup-->
@@ -126,7 +126,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="?attr/colorTertiary"
-                    android:text="It started"
+                    android:text="@string/it_started"
                     android:textAllCaps="false"
                     android:textSize="20sp"
                     android:visibility="visible" />

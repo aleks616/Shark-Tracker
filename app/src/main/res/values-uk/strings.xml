@@ -177,5 +177,9 @@
     <string name="metrics_musclePain1">невеликий біль</string>
     <string name="metrics_musclePain2">сильний біль</string>
     <string name="legal_adult">I\'m legally adult</string>
+    <string name="dont_want_password">I don\'t want to use password</string>
+    <string name="close_popup">close popup</string>
+    <string name="it_started">It started</string>
+    <string name="wrong_password_wait">Wrong password 3 times, wait 30 seconds before next attempt</string>
 
 </resources>

@@ -18,7 +18,6 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.graphics.red
 
 class PasswordActivity : AppCompatActivity(){
     @SuppressLint("ClickableViewAccessibility")
@@ -38,7 +37,7 @@ class PasswordActivity : AppCompatActivity(){
         val rbPasswordPin=findViewById<RadioButton>(R.id.radioButtonPinCode)
         val chooseTypeButton=findViewById<Button>(R.id.chooseType)
 
-        //doc
+
         // 0 -> normal
         // 1 -> create 1st
         // 2- > create 2nd
@@ -51,7 +50,6 @@ class PasswordActivity : AppCompatActivity(){
         val createPasswordHeader2=findViewById<TextView>(R.id.createPasswordHeader2)
 
         val pinCodeLayout=findViewById<LinearLayout>(R.id.pinCodeL)
-        val pinDigitsLayout=findViewById<LinearLayout>(R.id.pinDigitsL)
         val pinDigit1=findViewById<ImageView>(R.id.pinDigit1)
         val pinDigit2=findViewById<ImageView>(R.id.pinDigit2)
         val pinDigit3=findViewById<ImageView>(R.id.pinDigit3)
@@ -110,12 +108,11 @@ class PasswordActivity : AppCompatActivity(){
             this.recreate()
         }
 
-        if(pinButtonType==1)
-            pinMainText.text=getString(R.string.create_pin)
-        else if(pinButtonType==2)
-            pinMainText.text= getString(R.string.enter_pin_again)
-        else if(pinButtonType==0)
-            pinMainText.text=getString(R.string.enter_pin)
+        when(pinButtonType) {
+            1->pinMainText.text=getString(R.string.create_pin)
+            2->pinMainText.text= getString(R.string.enter_pin_again)
+            0->pinMainText.text=getString(R.string.enter_pin)
+        }
 
 
         //passwordType=sharedPrefPasswordType.getInt("com.example.rainbowcalendar_passwordType", 0)
@@ -144,7 +141,7 @@ class PasswordActivity : AppCompatActivity(){
         var failedAttemptsCount=sharedPrefs.getInt("failedAttempts",0)
 
         //region text password
-        //doc: show password when tapping eye
+        //show password when tapping eye
         eyeShowPassword.setOnTouchListener{_, event->
             when(event.action){
                 MotionEvent.ACTION_DOWN ->{
@@ -165,7 +162,7 @@ class PasswordActivity : AppCompatActivity(){
         val sharedPrefRecovery=applicationContext.getSharedPreferences("com.example.rainbowcalendar_recovery", Context.MODE_PRIVATE)
         val recoverySet=sharedPrefRecovery.getBoolean("done",false)
         var canExecute=true
-        //doc: password handling
+        //password handling
         passwordEnterButton.setOnClickListener{
             if(passwordT.text.toString()==passwordValue){
                 errorText.text=""
@@ -176,7 +173,7 @@ class PasswordActivity : AppCompatActivity(){
                 failedAttemptsCount++
                 sharedPrefs.edit().putInt("failedAttempts",failedAttemptsCount).apply()
                 if(failedAttemptsCount in 3..4){
-                    errorText.text="Wrong password 3 times, wait 30 seconds before next attempt"
+                    errorText.text=getString(R.string.wrong_password_wait)
                     canExecute=false
                     Handler(Looper.getMainLooper()).postDelayed({
                         canExecute=true
@@ -190,9 +187,9 @@ class PasswordActivity : AppCompatActivity(){
             }
 
         }
-        //doc: switching version of activity
+        //switching version of activity
         if(passwordValue.isNullOrEmpty()&&passwordType==1){
-            //doc: password not created
+            //password not created
             eyeShowPassword.visibility=View.INVISIBLE
             passwordHeader.text= getString(R.string.create_password)
             passwordEnterButton.visibility=View.GONE
@@ -211,7 +208,7 @@ class PasswordActivity : AppCompatActivity(){
             createPasswordHeader2.visibility=View.GONE
         }
 
-        //doc: creating passwords with error handling
+        //creating passwords with error handling
         createPasswordButton.setOnClickListener{
             if(passwordT.text.toString()!=confirmPassword.text.toString())
                 errorText.text=getString(R.string.passwords_different_error)
@@ -237,10 +234,10 @@ class PasswordActivity : AppCompatActivity(){
 
         //endregion
         //region pin
-        //doc general functioning
+        //general functioning
         var digitsEntered=0
         var pin=""
-        val handler = Handler(Looper.getMainLooper())
+        val handler=Handler(Looper.getMainLooper())
         val setDigitsIndicators=Runnable{
             if(canExecute){
                 when(digitsEntered){
@@ -311,14 +308,13 @@ class PasswordActivity : AppCompatActivity(){
             pin=pin.dropLast(1)
             handler.post(removeDigitsIndicators)
         }
-        //doc: on pin enter
-        var pinToSave=""
+        //on pin enter
+        var pinToSave: String
         Log.v("GAY",pinButtonType.toString())
         pinEnter.setOnClickListener{
             if(!canExecute)
                 return@setOnClickListener
 
-            Log.v("GAY",pinButtonType.toString())
             val pinToSave1=sharedPrefTemp.getString("temp1","")
             if(!pinToSave1.isNullOrEmpty())
                 Log.w("gay read pin to save as ", pinToSave1)
@@ -338,7 +334,7 @@ class PasswordActivity : AppCompatActivity(){
                         pinDigit1.setBackgroundResource(R.drawable.rounded_button)
 
                         if(failedAttemptsCount in 3..4){
-                            errorText.text="Wrong password 3 times, wait 30 seconds before next attempt"
+                            errorText.text=getString(R.string.wrong_password_wait)
                             canExecute=false
                             Handler(Looper.getMainLooper()).postDelayed({
                                 canExecute=true

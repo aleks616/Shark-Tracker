@@ -36,7 +36,6 @@
         android:text="@string/color_scheme"
         android:textColor="?attr/colorSecondary" />
 
-    <!--    todo: check if it actually works-->
     <Spinner
         android:id="@+id/themeSpinner"
         android:layout_width="wrap_content"

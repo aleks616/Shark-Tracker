@@ -34,6 +34,7 @@
             android:textColor="?attr/colorSecondary" />
 
         <EditText
+            android:hint="@string/enter_answer"
             android:id="@+id/recoverySetupET1"
             android:layout_width="match_parent"
             android:layout_height="48sp"
@@ -52,6 +53,7 @@
             android:textColor="?attr/colorSecondary" />
 
         <EditText
+            android:hint="@string/enter_answer"
             android:id="@+id/recoverySetupET2"
             android:layout_width="match_parent"
             android:layout_height="48sp"
@@ -70,6 +72,7 @@
             android:textColor="?attr/colorSecondary" />
 
         <EditText
+            android:hint="@string/enter_answer"
             android:id="@+id/recoverySetupET3"
             android:layout_width="match_parent"
             android:layout_height="48sp"

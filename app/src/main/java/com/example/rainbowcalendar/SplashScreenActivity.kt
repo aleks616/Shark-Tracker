@@ -73,17 +73,18 @@ class SplashScreenActivity:AppCompatActivity(){
             }, delay)
         }
         else{
+            welcomeTextView.text=welcomeBackText
             if(!sharedPrefs.getString("passwordValue","").isNullOrEmpty()){ //there is password
                 startActivity(Intent(this,PasswordActivity::class.java))
             }
-            welcomeTextView.text=welcomeBackText
-            // rest of the Not-FirstTime Logic here
-            delay=500
-            val intent=Intent(this, MainActivity::class.java)
-            Handler(Looper.getMainLooper()).postDelayed({
-                startActivity(intent)
-                finish()
-            }, delay)
+            else{
+                delay=500
+                val intent=Intent(this, MainActivity::class.java)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    startActivity(intent)
+                    finish()
+                }, delay)
+            }
         }
     }
     private fun createNotificationChannel(context: Context){
