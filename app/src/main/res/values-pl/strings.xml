@@ -215,5 +215,10 @@
     <string name="it_started">It started</string>
     <string name="wrong_password_wait">Wrong password 3 times, wait 30 seconds before next attempt</string>
 
-
+    <string name="save">Save</string>
+    <string name="weight">Weight</string>
+    <string name="notes">Notes</string>
+    <string name="kcal_balance">Kcal Balance</string>
+    <string name="metrics">Metrics</string>
+    <string name="stealth_mode">Toggle stealth mode</string>
 </resources>

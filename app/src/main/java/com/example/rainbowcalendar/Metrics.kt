@@ -132,8 +132,7 @@ data class MetricPersistence(
     val visible: Boolean
 )
 
-//UNRELATED TODO: 2 CALENDAR DOESN'T SHOW IN INTRODUCTION
-// TODO: 3: THEMES IN INTRODUCTION DON'T WORK
+//UNRELATED TODO: CALENDAR DOESN'T SHOW IN INTRODUCTION
 @Composable
 fun ScrollableMetricsView(){
     val colorSecondary=getColor(color=com.google.android.material.R.attr.colorSecondary)
@@ -395,7 +394,7 @@ fun ScrollableMetricsView(){
                         onClick={saveToDB(content=selectedPositions.value,context,weight.value,kcalBalance.value,notes.value)},
                         colors=buttonColors(backgroundColor=colorTertiary),
                     ){
-                        Text(text=getLocal(id=R.string.save),color=colorQuaternary) //todo: MAKE WEIGHT FLOAT
+                        Text(text=getLocal(id=R.string.save),color=colorQuaternary) //todo: MAKE WEIGHT FLOAT IMPORTANT!!!!
                     }
                 }
             }

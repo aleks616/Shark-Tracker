@@ -1,5 +1,6 @@
 package com.example.rainbowcalendar
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.ComponentName
@@ -18,6 +19,7 @@ import android.util.Log
 import android.widget.TextView
 import java.util.Locale
 
+@SuppressLint("CustomSplashScreen")
 class SplashScreenActivity:AppCompatActivity(){
 
     override fun attachBaseContext(newBase:Context){
