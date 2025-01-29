@@ -160,7 +160,7 @@ class RecoveryActivity : AppCompatActivity() {
         }
 
     }
-    private fun simplify(string: String?):String?{
+    fun simplify(string: String?):String?{
         return string?.lowercase()?.replace(" ","")
     }
 

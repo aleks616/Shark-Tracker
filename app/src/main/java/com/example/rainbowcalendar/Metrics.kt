@@ -92,7 +92,7 @@ fun getLocal(id: Int): String{
     return LocalContext.current.getString(id)
 }
 @Composable
-fun createIcons1():Map<String, List<Pair<Int, String>>>{
+fun createIcons():Map<String, List<Pair<Int, String>>>{
     return mapOf(
         "crampLevel" to listOf(R.drawable.cramps_0 to getLocal(R.string.metrics_crampLevel0),R.drawable.cramps_1 to getLocal(R.string.metrics_crampLevel1),R.drawable.cramps_2 to getLocal(R.string.metrics_crampLevel2)),
         "headache" to listOf(R.drawable.headache_n_0 to getLocal(R.string.metrics_headache0),R.drawable.headache_n_1 to getLocal(R.string.metrics_headache1),R.drawable.headache_n_2 to getLocal(R.string.metrics_headache2),R.drawable.headache_n_3 to getLocal(R.string.metrics_headache3),R.drawable.headache_n_4 to getLocal(R.string.metrics_headache4)),
@@ -115,9 +115,8 @@ fun createIcons1():Map<String, List<Pair<Int, String>>>{
         //notes
     )
 }
-//var usedDate:String=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(Calendar.getInstance().time)
 var usedDateState=mutableStateOf(SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(Calendar.getInstance().time))
-private lateinit var cycleDao:CycleDao
+lateinit var cycleDao:CycleDao
 
 data class MetricRowData(
     val title:String,
@@ -258,7 +257,7 @@ fun ScrollableMetricsView(){
                         modifier=Modifier.fillMaxWidth(),
                         verticalAlignment=Alignment.CenterVertically
                     ){
-                        Button( //doc: left button
+                        Button( //left button
                             onClick={changeDate(amount=-1)},
                             Modifier
                                 .height(45.dp)
@@ -286,7 +285,7 @@ fun ScrollableMetricsView(){
                                 .align(Alignment.CenterVertically)
                                 .weight(1f)
                         )
-                        Button(//doc: right button
+                        Button(// right button
                             onClick={changeDate(amount=1)},
                             Modifier
                                 .height(45.dp)
@@ -455,7 +454,7 @@ fun MetricRow(title: String,metricName: String,modifier:Modifier=Modifier,visibl
     val colorSecondary=getColor(color=com.google.android.material.R.attr.colorSecondary)
     /*val colorTertiary=getColor(color=com.google.android.material.R.attr.colorTertiary)*/
 
-    val icons1=createIcons1()[metricName]?:emptyList()
+    val icons1=createIcons()[metricName]?:emptyList()
     var selectedIndex by remember{mutableStateOf(selectedIndex1)}
 
     LaunchedEffect(selectedIndex1){
@@ -619,7 +618,6 @@ fun IconItem(iconResId:Int,label:String, modifier:Modifier=Modifier){
             softWrap=true,
             fontSize=14.sp,
             style=TextStyle(lineBreak=LineBreak.Simple)
-            //todo: fix it so it doesn't cut word half through
         )
     }
 }

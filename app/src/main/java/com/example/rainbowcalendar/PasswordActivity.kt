@@ -398,7 +398,7 @@ class PasswordActivity : AppCompatActivity(){
         //todo: **if pin/password wasn't created show choose type screen**
 
     }
-    private fun isNumeric(word:String):Boolean{
+    fun isNumeric(word:String):Boolean{
         return word.all{char->char.isDigit()}
     }
 }
