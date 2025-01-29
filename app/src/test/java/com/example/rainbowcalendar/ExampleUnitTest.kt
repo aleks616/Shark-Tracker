@@ -6,21 +6,20 @@ import android.content.Context
 import android.content.SharedPreferences
 import org.junit.Assert.assertTrue
 import org.junit.Assert.assertFalse
-import androidx.activity.compose.setContent
-import androidx.compose.ui.test.*
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.google.gson.Gson
 import org.junit.Assert.*
-import org.junit.Before
-import org.junit.Rule
-import org.junit.runner.RunWith
 import org.mockito.Mockito.*
-import org.junit.Assert.*
-import org.mockito.kotlin.whenever
-import java.text.SimpleDateFormat
-import java.util.*
+//import androidx.activity.compose.setContent
+//import androidx.compose.ui.test.*
+//import androidx.compose.ui.test.junit4.createAndroidComposeRule
+//import androidx.test.core.app.ApplicationProvider
+//import androidx.test.ext.junit.runners.AndroidJUnit4
+//import com.google.gson.Gson
+//import org.junit.Before
+//import org.junit.Rule
+//import org.junit.runner.RunWith
+//import org.mockito.kotlin.whenever
+//import java.text.SimpleDateFormat
+//import java.util.*
 
 
 /**
@@ -29,9 +28,9 @@ import java.util.*
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest{
-    private val mockContext=mock<Context>()
-    private val mockPrefs=mock<SharedPreferences>()
-    private val mockEditor=mock<SharedPreferences.Editor>()
+//    private val mockContext=mock<Context>()
+//    private val mockPrefs=mock<SharedPreferences>()
+//    private val mockEditor=mock<SharedPreferences.Editor>()
     @Test
     fun addition_isCorrect(){
         assertEquals(4, 2 + 2)
