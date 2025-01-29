@@ -11,6 +11,8 @@
         <item>Ciemny</item>
         <item>Jasny</item>
         <item>Beżowy</item>
+        <item>Monochrome-Light</item>
+        <item>Monochrome-Dark</item>
     </string-array>
     <string name="intro2_ftmTl">Zażywam testosteron od jakiegoś czasu, nie mam już okresu, będę używać aplikacji dla śledzenia zastrzyków.</string>
     <string name="choose_gender_mode">Wybierz tryb/płeć, na następnym ekranie będzie więcej opcji. Możesz zmienić te ustawienia później.</string>
@@ -207,6 +209,16 @@
     <string name="metrics_musclePain0">No Pain</string>
     <string name="metrics_musclePain1">Mild Pain</string>
     <string name="metrics_musclePain2">Severe Pain</string>
+    <string name="legal_adult">I\'m legally adult</string>
+    <string name="dont_want_password">I don\'t want to use password</string>
+    <string name="close_popup">close popup</string>
+    <string name="it_started">It started</string>
+    <string name="wrong_password_wait">Wrong password 3 times, wait 30 seconds before next attempt</string>
 
-
+    <string name="save">Save</string>
+    <string name="weight">Weight</string>
+    <string name="notes">Notes</string>
+    <string name="kcal_balance">Kcal Balance</string>
+    <string name="metrics">Metrics</string>
+    <string name="stealth_mode">Toggle stealth mode</string>
 </resources>

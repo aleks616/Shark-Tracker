@@ -11,14 +11,15 @@
         android:orientation="vertical">
 
         <TextView
+            android:textColor="?attr/colorSecondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="calendar fragment" />
+            tools:text="calendar fragment" />
 
         <TextView
+            android:textColor="?attr/colorSecondary"
             android:id="@+id/dateText"
             tools:text="1970-01-01"
-            android:textColor="@color/black"
             android:textSize="24sp"
             android:gravity="center"
             android:layout_width="match_parent"

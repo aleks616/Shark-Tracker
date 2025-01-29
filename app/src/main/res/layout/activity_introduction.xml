@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorPrimary"
     android:orientation="vertical"
     tools:context=".IntroductionActivity">
 
@@ -11,7 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16sp"
         android:layout_marginTop="25sp"
-        android:text="@string/enter_name" />
+        android:text="@string/enter_name"
+        android:textColor="?attr/colorSecondary" />
 
     <EditText
         android:id="@+id/nameET"
@@ -22,26 +24,31 @@
         android:autofillHints="username"
         android:hint="@string/enter_name_hint"
         android:inputType="textPersonName"
-        android:minHeight="48dp" />
+        android:minHeight="48dp"
+        android:textColor="?attr/colorSecondary"
+        android:textColorHint="?attr/colorSecondary" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16sp"
         android:layout_marginTop="25sp"
-        android:text="@string/color_scheme" />
+        android:text="@string/color_scheme"
+        android:textColor="?attr/colorSecondary" />
 
     <Spinner
         android:id="@+id/themeSpinner"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:layout_marginStart="16sp" />
+        android:layout_marginStart="16sp"
+        android:textColor="?attr/colorSecondary" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15sp"
         android:text="@string/choose_gender_mode"
+        android:textColor="?attr/colorSecondary"
         android:textSize="20sp" />
 
     <RadioGroup
@@ -52,54 +59,57 @@
 
         <RadioButton
             android:id="@+id/genderMale"
-            android:textSize="16sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10sp"
             android:minHeight="48dp"
-            android:text="@string/gender_mode_tm" />
+            android:text="@string/gender_mode_tm"
+            android:textColor="?attr/colorSecondary"
+            android:textSize="16sp" />
 
         <RadioButton
             android:id="@+id/genderFemale"
-            android:textSize="16sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10sp"
             android:minHeight="48dp"
-            android:text="@string/gender_mode_f" />
+            android:text="@string/gender_mode_f"
+            android:textColor="?attr/colorSecondary"
+            android:textSize="16sp" />
 
         <RadioButton
             android:id="@+id/genderNeutral"
-            android:textSize="16sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10sp"
             android:minHeight="48dp"
-            android:text="@string/gender_mode_n" />
+            android:text="@string/gender_mode_n"
+            android:textColor="?attr/colorSecondary"
+            android:textSize="16sp" />
     </RadioGroup>
 
     <TextView
+        android:textAllCaps="true"
+        android:id="@+id/errorText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/errorText"
-        android:textSize="20sp"
-        android:textColor="@color/orange_red"
         android:layout_margin="10sp"
-        android:text=""
-        />
+        android:textColor="?attr/colorSecondary"
+        android:textSize="22sp"
+        tools:text="aaaaaaaa" />
 
     <Button
         android:id="@+id/buttonNext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="end"
         android:layout_marginTop="40sp"
         android:layout_marginEnd="20sp"
-        android:background="@color/dark_goldenrod"
+        android:background="?attr/colorTertiary"
         android:drawableEnd="@drawable/icon_arrow_right_triangle"
-        android:drawableTint="@color/dark_blue"
-        android:layout_gravity="end"
+        android:drawableTint="?attr/colorSecondary"
         android:text="@string/next"
         android:textAlignment="textEnd"
-        />
+        android:textColor="?attr/colorQuaternary" />
 
 </LinearLayout>

@@ -25,7 +25,7 @@ class AddFragment : Fragment() {
     override fun onViewCreated(view:View,savedInstanceState:Bundle?) {
         super.onViewCreated(view,savedInstanceState)
         val composeView=requireActivity().findViewById<ComposeView>(R.id.composeView)
-        composeView.setContent {
+        composeView.setContent{
             ScrollableMetricsView()
         }
     }
@@ -37,7 +37,7 @@ class AddFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_add, container, false)
     }
 
-    fun showAll(){
+    private fun showAll(){
         cycleDao.getAllCycles().observe(this) {cycles->
             cycles.forEach {
                 Log.v("TAG","Cycle: ${it.date}, Mood: ${it.overallMood} Cramp level: ${it.crampLevel}, Headache: ${it.headache}")

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Theme">
+        <attr name="colorPrimary" format="color"/>
+        <attr name="colorSecondary" format="color"/>
+        <attr name="colorTertiary" format="color"/>
+        <attr name="colorQuaternary" format="color"/>
+
+    </declare-styleable>
+</resources>

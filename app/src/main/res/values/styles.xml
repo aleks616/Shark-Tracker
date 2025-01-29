@@ -15,4 +15,9 @@
         <item name="android:layout_marginHorizontal">8sp</item>
     </style>
 
+
+    <style name="DatePicker" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:textColorPrimary">?attr/colorSecondary</item>
+        <item name="colorControlNormal">?attr/colorSecondary</item>
+    </style>
 </resources>

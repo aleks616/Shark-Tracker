@@ -13,34 +13,30 @@ import android.widget.RadioButton
 import android.widget.Spinner
 import android.widget.TextView
 
-class IntroductionActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+class IntroductionActivity: AppCompatActivity(){
+    override fun onCreate(savedInstanceState: Bundle?){
+        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
+        val theme=sharedPrefs.getString("theme","Light")
+        ThemeManager[this]=theme
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_introduction)
 
-        //reg: themes
+        //themes
         val spinner=findViewById<Spinner>(R.id.themeSpinner)
-        ArrayAdapter.createFromResource(this,R.array.themes_array,android.R.layout.simple_spinner_item)
-            .also {adapter->
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        ArrayAdapter.createFromResource(this,R.array.themes_array,R.layout.spinner_item)
+            .also{adapter->
+                adapter.setDropDownViewResource(R.layout.simple_text)
                 spinner.adapter=adapter
             }
-        var themeValue=""
-        spinner.onItemSelectedListener=object:
-            AdapterView.OnItemSelectedListener{
+        var themeValue="Dark"
+        spinner.onItemSelectedListener=object:AdapterView.OnItemSelectedListener{
             override fun onItemSelected(parent:AdapterView<*>?,view:View?,position:Int,id:Long){
                 themeValue=parent?.getItemAtPosition(position).toString()
             }
             override fun onNothingSelected(parent:AdapterView<*>?){}
         }
-        //themes here
-        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
-        sharedPrefs.edit().putString("theme",themeValue).apply()
-
-        //TODO: do themes
 
 
-        //doc:
         // gender:String m/f/n
         // tm:Boolean (is transmed)
         // name:String
@@ -70,6 +66,7 @@ class IntroductionActivity : AppCompatActivity() {
 
         val button=findViewById<Button>(R.id.buttonNext)
         button.setOnClickListener{
+            sharedPrefs.edit().putString("theme",themeValue).apply()
             val errorText=findViewById<TextView>(R.id.errorText)
             //val nameText=findViewById<TextView>(R.id.nameET)
             var name=nameText.text.toString()

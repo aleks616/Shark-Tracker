@@ -9,19 +9,21 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
-import android.widget.Toast
 import java.util.Locale
 
 class LanguageSettingsActivity:AppCompatActivity(){
 
     override fun onCreate(savedInstanceState:Bundle?){
+        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
+        val theme=sharedPrefs.getString("theme","Light")
+        ThemeManager[this]=theme
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_language_settings)
 
         val spinner=findViewById<Spinner>(R.id.lang_spinner)
-        ArrayAdapter.createFromResource(this,R.array.lang_array,android.R.layout.simple_spinner_item)
+        ArrayAdapter.createFromResource(this,R.array.lang_array,R.layout.spinner_item)
             .also{adapter->
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                adapter.setDropDownViewResource(R.layout.simple_text)
                 spinner.adapter=adapter
             }
 
@@ -50,15 +52,16 @@ class LanguageSettingsActivity:AppCompatActivity(){
         Locale.setDefault(locale)
         config.setLocale(locale)
         createConfigurationContext(config)
-        resources.updateConfiguration(config, resources.displayMetrics)
+        resources.updateConfiguration(config,resources.displayMetrics)
+        //todo: check if this is necessary
 
         val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
         sharedPrefs.edit().putString("lang",lang).apply()
     }
-    private fun toMainScreen(){
+   /* private fun toMainScreen(){
         val intent=Intent(this, MainActivity::class.java)
         startActivity(intent)
-    }
+    }*/
     private fun langToCode(lang: String): String{
         return when(lang){
             "English" -> "en"

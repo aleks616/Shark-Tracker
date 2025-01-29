@@ -18,15 +18,17 @@ import android.widget.TimePicker
 import android.widget.Toast
 import java.util.Calendar
 
-class IntroductionActivity2 : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+class IntroductionActivity2 : AppCompatActivity(){
+    override fun onCreate(savedInstanceState: Bundle?){
+        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
+        val theme=sharedPrefs.getString("theme","Light")
+        ThemeManager[this]=theme
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_introduction2)
 
         //TODO:
         // 1. if year is same as now skip year but still send birthday notifications
-        // 2. UI modes ||woah it's hard
-        // 3. period options menu
+        // 3. period options menu AFTER this one
 
         val adultCb=findViewById<CheckBox>(R.id.adultCb)
         var adult=false
@@ -64,7 +66,6 @@ class IntroductionActivity2 : AppCompatActivity() {
         val m8FtmtL=findViewById<RadioButton>(R.id.m8_ftm_tL)
 
         val sexCb=findViewById<CheckBox>(R.id.sexCb)
-        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
 
         val gender: String?=sharedPrefs.getString("gender","n")
         val tM:Boolean=sharedPrefs.getBoolean("tm", false) //todo: transmed
@@ -126,8 +127,11 @@ class IntroductionActivity2 : AppCompatActivity() {
         val errorText=findViewById<TextView>(R.id.errorText)
 
         dpBirthday.maxDate=System.currentTimeMillis()
+
+
+
         var sex:Boolean?=null
-        //doc:
+        //document
         // gender:String        m/f/n
         // tm:Boolean           (is transmed)
         // name:String          name to refer user
@@ -170,14 +174,14 @@ class IntroductionActivity2 : AppCompatActivity() {
         val gelCb=findViewById<CheckBox>(R.id.gelCB)
 
 
-        //doc: gel switch
+        //gel switch
         gelCb.setOnCheckedChangeListener{_, isChecked ->
             if(isChecked){
                 tIntervalInput.visibility=View.GONE
                 daysSinceTInput.visibility=View.GONE
                 timeText.visibility=View.VISIBLE
                 lastDoseText.visibility=View.GONE
-                showCalendarCB.visibility=View.GONE //doc: calendar isn't needed for daily dose
+                showCalendarCB.visibility=View.GONE //calendar isn't needed for daily dose
             }
             else{
                 tIntervalInput.visibility=View.VISIBLE
@@ -266,14 +270,14 @@ class IntroductionActivity2 : AppCompatActivity() {
                 }
             }
 
-            //doc: change header text and hide options
+            //change header text and hide options
             introHeader.text= getString(R.string.additional_options)
             modesRadioGroup.visibility=View.GONE
             button.visibility=View.GONE
             button1.visibility=View.VISIBLE
             adultCb.visibility=View.GONE
             layoutBirthday.visibility=View.VISIBLE
-            //doc: show sex active choice if it's not obvious and if adult
+            //show sex active choice if it's not obvious and if adult
 
             if(sex==null&&adult){
                 sexCb.visibility=View.VISIBLE
@@ -281,9 +285,9 @@ class IntroductionActivity2 : AppCompatActivity() {
             sharedPrefs.edit().putBoolean("adult",adult).apply()
 
 
-            //doc: if is planning to start T, enter approx date
+            //if is planning to start T, enter approx date
             if(m3Ftm.isChecked) startDatePicker.visibility=View.VISIBLE
-            //doc: if on T, show start date
+            //if on T, show start date
             if(m4FtmT.isChecked||m8FtmtL.isChecked){
                 tStartDateLayout.visibility=View.VISIBLE
             }
@@ -294,18 +298,18 @@ class IntroductionActivity2 : AppCompatActivity() {
 
         //region BUTTON2
         button1.setOnClickListener{
-            //doc: possible t start, show on main screen when it's close
+            //todo: possible t start, show on main screen when it's close
             if(mode==3){
                 val stringDate:String=tDatePickerYear.value.toString()+"-"+tDatePickerMonth.value.toString().padStart(2,'0')+"-01"
                 sharedPrefs.edit().putString("possTDate",stringDate).apply()
             }
-            //reg: MEN ON T
-            //doc: actual t day if started T, remind of anniversary and ask about last shot and shot frequency later
+            //MEN ON T
+            //actual t day if started T, remind of anniversary and ask about last shot and shot frequency later
             if(mode==4||mode==8){
                 val tDate:String=tStartDate.dayOfMonth.toString()+"/"+tStartDate.month.toString()+"/"+tStartDate.year
                 tStartDate.maxDate=System.currentTimeMillis()
                 sharedPrefs.edit().putString("tStartDate",tDate).apply()
-                if(!gelCb.isChecked){ //doc: normal T
+                if(!gelCb.isChecked){ //normal T
                     val daysSinceT: Int=daysSinceTInput.value
                     val tInterval: Int=tIntervalInput.value
                     val daysTillShot=tInterval-daysSinceT
@@ -316,7 +320,7 @@ class IntroductionActivity2 : AppCompatActivity() {
 
                     sharedPrefs.edit().putInt("tInterval",tInterval).apply()
                 }
-                else{ //doc: gel
+                else{ //gel
                     val alarm=Alarm(this)
                     alarm.schedulePushNotifications(tTime.hour,tTime.minute,1,0)
 
@@ -327,22 +331,22 @@ class IntroductionActivity2 : AppCompatActivity() {
                 //val nextTDate=
             }
 
-            //reg: BIRTHDAY
+            //BIRTHDAY
             if(dpBirthday.visibility==View.VISIBLE){
-                //doc: birthday dd-mm-yyyy
+                //birthday dd-mm-yyyy
                 val birthday: String=dpBirthday.dayOfMonth.toString()+"/"+dpBirthday.month.toString()+"/"+dpBirthday.year
                 if(year-dpBirthday.year > 9){
                     errorText.text=""
                     sharedPrefs.edit().putString("birthday",birthday).apply()
                 }
-                //doc: show too young if younger than 10, and error if date is today
+                //todo: show too young if younger than 10, and error if date is today, AND STOP USER FROM GOING FURTHER
                 else if(year-dpBirthday.year==0 && month-dpBirthday.month==0)
                     errorText.text=getString(R.string.date_error)
                 else if(year-dpBirthday.year in 0..9){
                     errorText.text=tooYoungError
                 }
             }
-            //doc: if adult and it's unknown if sexually active or not, hide sex options for inactive, show the tick for active somewhere close
+            //todo: if adult and it's unknown if sexually active or not, hide sex options for inactive, show the tick for active somewhere close
             sexCb.setOnCheckedChangeListener{_, isChecked->
                 if(sex==false)
                     sharedPrefs.edit().putBoolean("sex",false).apply()
@@ -350,7 +354,7 @@ class IntroductionActivity2 : AppCompatActivity() {
                     sharedPrefs.edit().putBoolean("sex",isChecked).apply()
             }
 
-            //reg: saving "settings done" + notifications
+            //reg: saving "settings done" + notifications FIX  THIS SHIT
             if(errorText.text!="Enter correct date"){
                 sharedPrefs.edit().putBoolean("setup",true).apply()
 
@@ -380,6 +384,5 @@ class IntroductionActivity2 : AppCompatActivity() {
 
         }
     }
-
     //endregion
 }

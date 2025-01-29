@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="?attr/colorPrimary"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -12,6 +12,7 @@
         tools:context=".PeriodSettingsActivity">
 
         <TextView
+            android:textColor="?attr/colorSecondary"
             android:id="@+id/periodTitle"
             android:text="@string/period_settings_f"
             android:textSize="32sp"
@@ -21,6 +22,7 @@
             android:layout_height="wrap_content"/>
 
         <CheckBox
+            android:textColor="?attr/colorSecondary"
             android:minHeight="48dp"
             android:layout_width="320sp"
             android:layout_height="wrap_content"
@@ -37,6 +39,7 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:textColor="?attr/colorSecondary"
                 android:id="@+id/cycleLengthText"
                 android:layout_margin="20sp"
                 android:textSize="20sp"
@@ -45,12 +48,14 @@
                 android:text="@string/cycle_length_question_f" />
 
             <NumberPicker
+                android:theme="@style/DatePicker"
                 android:id="@+id/cycleDaysPicker"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <TextView
+                android:textColor="?attr/colorSecondary"
                 android:id="@+id/periodLengthText"
                 android:layout_margin="20sp"
                 android:textSize="20sp"
@@ -59,6 +64,7 @@
                 android:text="@string/period_length_question_f"/>
 
             <NumberPicker
+                android:theme="@style/DatePicker"
                 android:id="@+id/periodDaysPicker"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
@@ -67,6 +73,7 @@
         </LinearLayout>
 
         <TextView
+            android:textColor="?attr/colorSecondary"
             android:layout_margin="20sp"
             android:textSize="20sp"
             android:layout_width="match_parent"
@@ -74,6 +81,7 @@
             android:text="@string/last_start_question"/>
 
         <NumberPicker
+            android:theme="@style/DatePicker"
             android:layout_marginBottom="20sp"
             android:id="@+id/lastStartPicker"
             android:layout_gravity="center"
@@ -82,15 +90,16 @@
 
 
         <Button
+            android:textColor="?attr/colorQuaternary"
             android:id="@+id/buttonNext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginTop="40sp"
             android:layout_marginEnd="20sp"
-            android:background="?attr/colorSecondary"
+            android:background="?attr/colorTertiary"
             android:drawableEnd="@drawable/icon_arrow_right_triangle"
-            android:drawableTint="@color/dark_blue"
+            android:drawableTint="?attr/colorSecondary"
             android:text="@string/next"
             android:textAlignment="textEnd" />
 

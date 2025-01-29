@@ -1,7 +1,9 @@
 package com.example.rainbowcalendar.fragments
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -33,6 +35,19 @@ class SettingsFragment : Fragment() {
             startActivity(Intent(requireContext(), LanguageSettingsActivity::class.java))
         }
 
+        val stealthModeToggle=view.findViewById<Button>(R.id.stealthModeToggle)
+
+        stealthModeToggle.setOnClickListener{
+            val packageManager=requireContext().packageManager
+            val stealth=ComponentName(requireContext(),"com.example.rainbowcalendar.SplashScreenActivityStealth")
+            val default=ComponentName(requireContext(),"com.example.rainbowcalendar.SplashScreenActivity")
+
+            val stealthMode=packageManager.getComponentEnabledSetting(stealth)==PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+            packageManager.setComponentEnabledSetting((if(stealthMode) default else stealth),PackageManager.COMPONENT_ENABLED_STATE_ENABLED,PackageManager.DONT_KILL_APP)
+            packageManager.setComponentEnabledSetting((if(stealthMode) stealth else default),PackageManager.COMPONENT_ENABLED_STATE_DISABLED,PackageManager.DONT_KILL_APP)
+        }
+
+
         val sharedPrefs=requireActivity().getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
         testButton2?.setOnClickListener {
             sharedPrefs.edit().putString("passwordValue","").apply()
@@ -58,16 +73,15 @@ class SettingsFragment : Fragment() {
 
 
         val spinner=view.findViewById<Spinner>(R.id.themeSpinner)
-        ArrayAdapter.createFromResource(requireContext(),R.array.themes_array,android.R.layout.simple_spinner_item)
+        ArrayAdapter.createFromResource(requireContext(),R.array.themes_array,R.layout.spinner_item)
             .also {adapter->
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                adapter.setDropDownViewResource(R.layout.simple_text)
                 spinner.adapter=adapter
             }
         var themeValue="Dark"
         spinner.onItemSelectedListener=object:AdapterView.OnItemSelectedListener{
             override fun onItemSelected(parent:AdapterView<*>?,view:View?,position:Int,id:Long){
                 themeValue=parent?.getItemAtPosition(position).toString()
-
             }
             override fun onNothingSelected(parent:AdapterView<*>?){}
         }
@@ -79,10 +93,6 @@ class SettingsFragment : Fragment() {
         }
     }
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

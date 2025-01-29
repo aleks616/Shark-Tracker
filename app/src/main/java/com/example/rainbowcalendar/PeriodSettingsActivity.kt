@@ -17,9 +17,11 @@ import java.util.Locale
 
 class PeriodSettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
+        val theme=sharedPrefs.getString("theme","Light")
+        ThemeManager[this]=theme
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_period_settings)
-        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
         val gender=sharedPrefs.getString("gender","")
         val periodRegularL=findViewById<LinearLayout>(R.id.periodRegularL)
 
@@ -69,7 +71,7 @@ class PeriodSettingsActivity : AppCompatActivity() {
         }
 
 
-        //doc:
+        //:
         // cycleLength: Int
         // periodLength: Int
         // periodRegular: Boolean

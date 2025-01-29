@@ -11,6 +11,8 @@
         <item>Scuro</item>
         <item>Chiaro</item>
         <item>Beige</item>
+        <item>Monochrome-Light</item>
+        <item>Monochrome-Dark</item>
     </string-array>
     <string name="intro2_ftmTl">I\'ve been on T for some time, I don\'t experience shark weeks anymore, I want shot reminders</string>
     <string name="choose_gender_mode">Scegli il tuo genere/modalità, ci saranno modalità più dettagliate nella schermata successiva. Puoi sempre cambiare queste impostazioni.</string>
@@ -180,4 +182,16 @@
     <string name="metrics_musclePain0">Sem Dor</string>
     <string name="metrics_musclePain1">Dor Moderada</string>
     <string name="metrics_musclePain2">Dor Intensa</string>
+    <string name="legal_adult">I\'m legally adult</string>
+    <string name="dont_want_password">I don\'t want to use password</string>
+    <string name="close_popup">close popup</string>
+    <string name="it_started">It started</string>
+    <string name="wrong_password_wait">Wrong password 3 times, wait 30 seconds before next attempt</string>
+
+    <string name="save">Save</string>
+    <string name="weight">Weight</string>
+    <string name="notes">Notes</string>
+    <string name="kcal_balance">Kcal Balance</string>
+    <string name="metrics">Metrics</string>
+    <string name="stealth_mode">Toggle stealth mode</string>
 </resources>

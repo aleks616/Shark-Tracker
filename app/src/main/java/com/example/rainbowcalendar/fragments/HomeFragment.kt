@@ -14,8 +14,6 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import com.example.rainbowcalendar.Cycle
 import com.example.rainbowcalendar.CycleDao
 import com.example.rainbowcalendar.CycleRoomDatabase
 import com.example.rainbowcalendar.MainActivity
@@ -34,7 +32,7 @@ class HomeFragment:Fragment() {
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view:View,savedInstanceState:Bundle?) {
         super.onViewCreated(view,savedInstanceState)
-        //Log.v("gayt",requireContext().theme.toString())
+        //Log.v("theme",requireContext().theme.toString())
 
         cycleDao=CycleRoomDatabase.getDatabase(requireContext()).cycleDao()
 
@@ -43,11 +41,11 @@ class HomeFragment:Fragment() {
             cycleDao.insert(Cycle(date="2025-01-25",overallMood=3, crampLevel=2, digestiveIssues=1))
         }.start()*/
 
-        cycleDao.getAllCycles().observe(viewLifecycleOwner,Observer{cycles->
+        cycleDao.getAllCycles().observe(viewLifecycleOwner){cycles->
             cycles.forEach {
-                Log.v("all ROOM data","${it.date} ${it.crampLevel} ${it.headache} ${it.energyLevel} ${it.sleepQuality}")
+                Log.v("all ROOM data","${it.date} ${it.crampLevel} ${it.headache} ${it.energyLevel}")
             }
-        })
+        }
 
         /*Thread{
             cycleDao.update(Cycle(date="2025-01-14",cycleDay=1,overallMood=1))
@@ -168,11 +166,6 @@ class HomeFragment:Fragment() {
         val start=LocalDate.parse(date1)
         val end=LocalDate.parse(date2)
         return ChronoUnit.DAYS.between(start,end).toShort()
-    }
-
-    //region generated
-    override fun onCreate(savedInstanceState:Bundle?) {
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
