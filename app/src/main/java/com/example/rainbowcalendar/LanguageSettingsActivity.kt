@@ -36,7 +36,7 @@ class LanguageSettingsActivity:AppCompatActivity(){
             AdapterView.OnItemSelectedListener{
                 override fun onItemSelected(parent: AdapterView<*>?,view:View?,position:Int,id:Long){
                     val lang:String=parent?.getItemAtPosition(position).toString()
-                    changeLanguage(langToCode(lang))
+                    changeLanguage(Utils.langToCode(lang))
                     //Toast.makeText(this@LanguageSettingsActivity,langToCode(lang),Toast.LENGTH_SHORT).show()
                 }
 
@@ -53,7 +53,6 @@ class LanguageSettingsActivity:AppCompatActivity(){
         config.setLocale(locale)
         createConfigurationContext(config)
         resources.updateConfiguration(config,resources.displayMetrics)
-        //todo: check if this is necessary
 
         val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
         sharedPrefs.edit().putString("lang",lang).apply()
@@ -62,19 +61,4 @@ class LanguageSettingsActivity:AppCompatActivity(){
         val intent=Intent(this, MainActivity::class.java)
         startActivity(intent)
     }*/
-    private fun langToCode(lang: String): String{
-        return when(lang){
-            "English" -> "en"
-            "Polski" -> "pl"
-            "Francais" -> "fr"
-            "Italiano" -> "it"
-            "Espanol" -> "es"
-            "Português (Brasil)" -> "pt-BR"
-            "Русский" -> "ru"
-            "українська" -> "uk"
-            else ->{
-                "en"
-            }
-        }
-    }
 }
