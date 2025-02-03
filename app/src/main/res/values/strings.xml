@@ -17,7 +17,7 @@
     <string name="app_name">Rainbow Calendar</string>
     <string name="app_name1" translatable="false">Shark Track</string>
     <string name="stealth_app_name" translatable="false">Shark Idle 2</string>
-    <string name="welcome_text">Hi! Welcome to Rainbow Calendar</string>
+    <string name="welcome_text">Welcome to Shark Tracker</string>
     <string name="choose_language">Choose the app language</string>
     <string name="welcome_back">Welcome back</string>
     <string name="english" translatable="false">English</string>
@@ -26,18 +26,15 @@
     <string name="enter_name">Enter your (nick)name, how do you want to be addressed.</string>
     <string name="enter_name_hint">Name</string>
     <string name="color_scheme">Which theme do you prefer?</string>
-    <string-array name="themes_array">
-        <item>Dark</item>
-        <item>Light</item>
-        <item>Beige</item>
-        <item>Monochrome-Light</item>
-        <item>Monochrome-Dark</item>
+    <string-array name="themes_array" translatable="false">
+        <item>White</item>
+        <item>Gray</item>
+        <item>Black</item>
         <item>Blue</item>
         <item>Navy Blue</item>
-        <item>Gray</item>
         <item>Green</item>
         <item>Dark Purple</item>
-        <item>Khaki/Camo</item>
+        <item>Khaki</item>
         <item>Purple</item>
         <item>Beige</item>
     </string-array>
@@ -249,5 +246,23 @@
     <string name="close_popup">close popup</string>
     <string name="it_started">It started</string>
     <string name="wrong_password_wait">Wrong password 3 times, wait 30 seconds before next attempt</string>
+    <string name="title_activity_theme">ThemeActivity</string>
+
+
+    <string name="langEnglishLocal" translatable="false">English</string> <!--local-non translatable -->
+    <string name="langFrenchLocal" translatable="false">Français</string>
+    <string name="langPortugueseBRLocal" translatable="false">Português</string>
+    <string name="langRussianLocal" translatable="false">Русский</string>
+    <string name="langUkrainianLocal" translatable="false">українська</string>
+    <string name="langPolishLocal" translatable="false">Polski</string>
+    <string name="language">Language</string>
+
+
+    <string name="langEnglish">English</string>
+    <string name="langFrench">French</string>
+    <string name="langPortugueseBR">Portuguese(BR)</string>
+    <string name="langRussian">Russian</string>
+    <string name="langUkrainian">Ukrainian</string>
+    <string name="langPolish">Polish</string>
 
 </resources>

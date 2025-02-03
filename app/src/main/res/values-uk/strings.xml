@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Rainbow Calendar</string>
     <string name="welcome_text">Hi! Welcome to Rainbow Calendar</string>
-    <string name="choose_language">Choose the app language</string>
+    <string name="choose_language">Виберіть мову програми</string>
     <string name="welcome_back">Welcome back</string>
     <string name="enter_name">Enter your (nick)name, how do you want to be addressed.</string>
     <string name="enter_name_hint">Name</string>
@@ -188,4 +188,11 @@
     <string name="kcal_balance">Kcal Balance</string>
     <string name="metrics">Metrics</string>
     <string name="stealth_mode">Toggle stealth mode</string>
+    <string name="language">Мову</string>
+    <string name="langEnglish">англійська</string>
+    <string name="langFrench">французька</string>
+    <string name="langPortugueseBR">португальська (Бр)</string>
+    <string name="langRussian">російська</string>
+    <string name="langUkrainian">українська</string>
+    <string name="langPolish">польська</string>
 </resources>

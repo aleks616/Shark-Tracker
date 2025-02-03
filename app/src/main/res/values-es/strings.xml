@@ -6,13 +6,6 @@
     <string name="enter_name">Ingresa tu (apodo), ¿cómo quieres que te llamen?</string>
     <string name="enter_name_hint">Nombre</string>
     <string name="color_scheme">¿Qué tema prefieres?</string>
-    <string-array name="themes_array">
-        <item>Oscuro</item>
-        <item>Ligera</item>
-        <item>Beige</item>
-        <item>Monochrome-Light</item>
-        <item>Monochrome-Dark</item>
-    </string-array>
     <string name="gender_mode_tm">Transmasculine mode, masculine terms will be used, and potentially triggering topics will be avoided. Pregnancy won\'t be ever mentioned.</string>
     <string name="gender_mode_m">Man mode, congrats gigachad, you unlocked real transmed man mode! You won\'t see inclusive tucute bullshit!</string>
     <string name="gender_mode_f">Woman mode, Feminine terms will be used.</string>
@@ -219,5 +212,7 @@
     <string name="kcal_balance">Kcal Balance</string>
     <string name="metrics">Metrics</string>
     <string name="stealth_mode">Toggle stealth mode</string>
+    <string name="language">Idioma</string>
+    <string name="langEnglish">Inglés</string>
 
 </resources>
