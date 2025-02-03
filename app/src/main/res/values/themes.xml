@@ -1,21 +1,29 @@
 <resources>
-
-    <style name="Monochrome.White.RainbowCalendar" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/white</item>
-        <item name="colorSecondary">@color/very_dark_gray</item>
-        <item name="colorTertiary">@color/dark_gray</item>
-        <item name="colorQuaternary">@color/very_dark_gray</item>
-        <item name="itemTextColor">@color/very_dark_gray</item>
-        <!-- rest will be the same but i need it anyway-->
+    <style name="Base.Theme.RainbowCalendar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/gray13</item>
+        <item name="colorSecondary">@color/gray3</item>
+        <item name="colorTertiary">@color/gray11</item>
+        <item name="colorQuaternary">@color/gray2A</item>
+        <item name="itemTextColor">@color/gray2A</item>
+        <item name="colorOutline">@color/black</item>
     </style>
 
-    <style name="Monochrome.Black.RainbowCalendar" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Black.RainbowCalendar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/very_dark_gray</item>
         <item name="colorSecondary">@color/white</item>
-        <item name="colorTertiary">@color/gray</item>
+        <item name="colorTertiary">@color/gray4D</item>
         <item name="colorQuaternary">@color/white</item>
         <item name="itemTextColor">@color/white</item>
-        <!-- rest will be the same but i need it anyway-->
+        <item name="colorOutline">@color/black</item>
+    </style>
+
+    <style name="Gray.RainbowCalendar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/gray6</item>
+        <item name="colorSecondary">@color/grayE3</item>
+        <item name="colorTertiary">@color/gray90</item>
+        <item name="colorQuaternary">@color/grayE3</item>
+        <item name="itemTextColor">@color/grayE3</item>
+        <item name="colorOutline">@color/black</item>
     </style>
 
     <style name="Blue.RainbowCalendar" parent="Theme.AppCompat.Light.NoActionBar">
@@ -24,49 +32,53 @@
         <item name="colorTertiary">@color/gladeye_gray</item>
         <item name="colorQuaternary">@color/dark_eclipse</item>
         <item name="itemTextColor">@color/dark_eclipse</item>
+        <item name="colorOutline">@color/black</item>
     </style>
 
     <style name="Navy.Blue.RainbowCalendar" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/hadopelagic_water_black</item>
+        <item name="colorPrimary">@color/dark_knight_blue</item>
         <item name="colorSecondary">@color/light_periwinkle</item>
-        <item name="colorTertiary">@color/flood_blue</item>
+        <item name="colorTertiary">@color/iris_blue</item>
         <item name="colorQuaternary">@color/light_periwinkle</item>
         <item name="itemTextColor">@color/light_periwinkle</item>
+        <item name="colorOutline">@color/black</item>
     </style>
 
-    <style name="Gray.RainbowCalendar" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/gray6</item>
+    <style name="Dark.Purple.RainbowCalendar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/violet</item>
         <item name="colorSecondary">@color/gray13</item>
-        <item name="colorTertiary">@color/gray90</item>
-        <item name="colorQuaternary">@color/gray13</item>
-        <item name="itemTextColor">@color/gray13</item>
+        <item name="colorTertiary">@color/mulberry_purple</item>
+        <item name="colorQuaternary">@color/light_periwinkle</item>
+        <item name="itemTextColor">@color/light_periwinkle</item>
+        <item name="colorOutline">@color/black</item>
     </style>
+
+    <style name="Light.Purple.RainbowCalendar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/lilac</item>
+        <item name="colorSecondary">@color/black</item>
+        <item name="colorTertiary">@color/light_violet</item>
+        <item name="colorQuaternary">@color/black</item>
+        <item name="itemTextColor">@color/black</item>
+        <item name="colorOutline">@color/black</item>
+    </style>
+
 
     <style name="Green.RainbowCalendar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/underworld_green</item>
         <item name="colorSecondary">@color/mint_cream_white</item>
-        <item name="colorTertiary">@color/caterpillar_green</item>
+        <item name="colorTertiary">@color/pine_needle</item>
         <item name="colorQuaternary">@color/greenish_white</item>
         <item name="itemTextColor">@color/greenish_white</item>
+        <item name="colorOutline">@color/black</item>
     </style>
 
-
-    <style name="Base.Theme.RainbowCalendar" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/white_smoke</item>
-        <item name="colorSecondary">@color/dodger_blue</item>
-        <item name="colorTertiary">@color/medium_turquoise</item>
-        <item name="colorQuaternary">@color/dodger_blue</item>
-        <item name="itemTextColor">@color/dodger_blue</item>
-       <!-- ITEMTEXTCOLOR==COLORQUATERNARY-->
-    </style>
-
-
-    <style name="Dark.Theme.RainbowCalendar" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/dim_gray</item>
-        <item name="colorSecondary">@color/dodger_blue</item>
-        <item name="colorTertiary">@color/medium_turquoise</item>
-        <item name="colorQuaternary">@color/dodger_blue</item>
-        <item name="itemTextColor">@color/dodger_blue</item>
+    <style name="Khaki.RainbowCalendar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/madras_khaki</item>
+        <item name="colorSecondary">@color/mint_cream_white</item>
+        <item name="colorTertiary">@color/siam_khaki</item>
+        <item name="colorQuaternary">@color/greenish_white</item>
+        <item name="itemTextColor">@color/greenish_white</item>
+        <item name="colorOutline">@color/black</item>
     </style>
 
 
@@ -76,5 +88,6 @@
         <item name="colorTertiary">@color/medium_turquoise</item>
         <item name="colorQuaternary">@color/dodger_blue</item>
         <item name="itemTextColor">@color/dodger_blue</item>
+        <item name="colorOutline">@color/black</item>
     </style>
 </resources>

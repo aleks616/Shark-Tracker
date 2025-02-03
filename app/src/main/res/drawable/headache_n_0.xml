@@ -7,35 +7,35 @@
       android:pathData="M41.68,10.05l-1.66,1.65l-2,3l-3,4l-2,4l-1,4l0,12l-2,3l0,2.31l0,3l1,1l0,2l5,6l0,4.32l1,2l3,5l0,13l-1,4l-4,2l-10,4l-6,2l-8,4l-5,4l-5,8l1,12l54,0l54,0l1,-12l-5,-8l-5,-4l-8,-4l-6,-2l-10,-4l-4,-2l-1,-4l0,-13l3,-5l1,-2l0,-4.32l5,-6l0,-2l1,-1l0,-3.31l0,-0.87"
       android:strokeWidth="2"
       android:fillColor="#00000000"
-      android:strokeColor="#000"/>
+      android:strokeColor="?attr/colorOutline"/>
   <path
       android:pathData="M72.31,68.01l-8,6l-6,2l-7,-1l-4,-2l-7,-5"
       android:strokeWidth="2"
       android:fillColor="#00000000"
-      android:strokeColor="#000"/>
+      android:strokeColor="?attr/colorOutline"/>
   <path
       android:pathData="M41.52,11.51l1.5,-6.5l6,-3l7,-1l6,1l8,3l7,7l3,6l2,9l0,6.82"
       android:strokeWidth="2"
       android:fillColor="#00000000"
-      android:strokeColor="#000"/>
+      android:strokeColor="?attr/colorOutline"/>
   <path
       android:pathData="M40.63,10.53l3.18,0.8l4,1l4,3l2,5l2,6l1,4l2,4l3,3l4,2l3.71,0"
       android:strokeWidth="2"
       android:fillColor="#00000000"
-      android:strokeColor="#000"/>
+      android:strokeColor="?attr/colorOutline"/>
   <path
       android:pathData="M40.63,10.9"
       android:strokeWidth="2"
       android:fillColor="#fff"
-      android:strokeColor="#000"/>
+      android:strokeColor="?attr/colorOutline"/>
   <path
       android:pathData="M39.81,10.7"
       android:strokeWidth="2"
       android:fillColor="#fff"
-      android:strokeColor="#000"/>
+      android:strokeColor="?attr/colorOutline"/>
   <path
       android:pathData="M72.31,34.01l2,3l2,2l3,1"
       android:strokeWidth="2"
       android:fillColor="#00000000"
-      android:strokeColor="#000"/>
+      android:strokeColor="?attr/colorOutline"/>
 </vector>
