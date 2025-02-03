@@ -107,7 +107,7 @@
         android:layout_marginEnd="20sp"
         android:background="?attr/colorTertiary"
         android:drawableEnd="@drawable/icon_arrow_right_triangle"
-        android:drawableTint="?attr/colorSecondary"
+        android:drawableTint="?attr/colorQuaternary"
         android:text="@string/next"
         android:textAlignment="textEnd"
         android:textColor="?attr/colorQuaternary" />

@@ -50,13 +50,13 @@ class SplashScreenActivity:AppCompatActivity(){
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
-
+/*
         Thread{
             val shortcutManager=getSystemService(ShortcutManager::class.java)
             val shortcut=ShortcutInfo.Builder(this,"id_1").setShortLabel("Shark Tracker").setIcon(Icon.createWithResource(this,R.drawable.icon_shark_trans))
                 .setIntent(Intent(Intent.ACTION_MAIN).setComponent(ComponentName(this, SplashScreenActivity::class.java))).build()
             shortcutManager?.dynamicShortcuts=listOf(shortcut)
-        }.start()
+        }.start()*/
 
         val welcomeTextView=findViewById<TextView>(R.id.welcome)
         val setupDone=sharedPrefs.getBoolean("setup",false)

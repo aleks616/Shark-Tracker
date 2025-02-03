@@ -17,6 +17,7 @@ import com.example.rainbowcalendar.LanguageSettingsActivity
 import com.example.rainbowcalendar.MainActivity
 import com.example.rainbowcalendar.PeriodSettingsActivity
 import com.example.rainbowcalendar.R
+import com.example.rainbowcalendar.ThemesActivity
 
 class SettingsFragment : Fragment() {
 
@@ -91,13 +92,15 @@ class SettingsFragment : Fragment() {
             sharedPrefs.edit().putString("theme",themeValue).apply()
             startActivity(Intent(requireContext(), MainActivity::class.java))
         }
+
+        val custom2:Button=view.findViewById(R.id.custom2)
+        custom2.setOnClickListener{
+            startActivity(Intent(requireContext(), ThemesActivity::class.java))
+        }
     }
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?):View?{
         return inflater.inflate(R.layout.fragment_settings, container, false)
     }
 

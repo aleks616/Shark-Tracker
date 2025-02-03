@@ -190,22 +190,24 @@ class PasswordActivity : AppCompatActivity(){
         //switching version of activity
         if(passwordValue.isNullOrEmpty()&&passwordType==1){
             //password not created
+            passwordHeader.text=getString(R.string.create_password)
+            createPasswordHeader2.visibility=View.VISIBLE
             eyeShowPassword.visibility=View.INVISIBLE
-            passwordHeader.text= getString(R.string.create_password)
             passwordEnterButton.visibility=View.GONE
+
+            repeatPasswordHeader.visibility=View.VISIBLE
             confirmPassword.visibility=View.VISIBLE
             createPasswordButton.visibility=View.VISIBLE
-            repeatPasswordHeader.visibility=View.VISIBLE
-            createPasswordHeader2.visibility=View.VISIBLE
         }
         else{
-            eyeShowPassword.visibility=View.VISIBLE
             passwordHeader.text=getString(R.string.enter_password)
+            createPasswordHeader2.visibility=View.GONE
+            eyeShowPassword.visibility=View.VISIBLE
             passwordEnterButton.visibility=View.VISIBLE
+
+            repeatPasswordHeader.visibility=View.GONE
             confirmPassword.visibility=View.GONE
             createPasswordButton.visibility=View.GONE
-            repeatPasswordHeader.visibility=View.GONE
-            createPasswordHeader2.visibility=View.GONE
         }
 
         //creating passwords with error handling
@@ -233,6 +235,8 @@ class PasswordActivity : AppCompatActivity(){
         confirmPassword.text.clear()
 
         //endregion
+
+
         //region pin
         //general functioning
         var digitsEntered=0
@@ -241,10 +245,10 @@ class PasswordActivity : AppCompatActivity(){
         val setDigitsIndicators=Runnable{
             if(canExecute){
                 when(digitsEntered){
-                    0->{ pinDigit1.setBackgroundResource(R.drawable.rounded_button_filled) }
-                    1->{ pinDigit2.setBackgroundResource(R.drawable.rounded_button_filled) }
-                    2->{ pinDigit3.setBackgroundResource(R.drawable.rounded_button_filled) }
-                    3->{ pinDigit4.setBackgroundResource(R.drawable.rounded_button_filled) }
+                    0->{pinDigit1.setBackgroundResource(R.drawable.rounded_button_filled) }
+                    1->{pinDigit2.setBackgroundResource(R.drawable.rounded_button_filled) }
+                    2->{pinDigit3.setBackgroundResource(R.drawable.rounded_button_filled) }
+                    3->{pinDigit4.setBackgroundResource(R.drawable.rounded_button_filled) }
                 }
                 digitsEntered++
             }
@@ -395,6 +399,8 @@ class PasswordActivity : AppCompatActivity(){
             }
         }
         //endregion
+
+
         //todo: **if pin/password wasn't created show choose type screen**
 
     }
