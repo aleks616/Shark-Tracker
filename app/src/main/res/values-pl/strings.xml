@@ -7,13 +7,6 @@
     <string name="enter_name">Wprowadź imię/ksywę, tak będziemy się do Ciebie zwracać.</string>
     <string name="enter_name_hint">Imię</string>
     <string name="color_scheme">Który motyw preferujesz?</string>
-    <string-array name="themes_array">
-        <item>Ciemny</item>
-        <item>Jasny</item>
-        <item>Beżowy</item>
-        <item>Monochrome-Light</item>
-        <item>Monochrome-Dark</item>
-    </string-array>
     <string name="intro2_ftmTl">Zażywam testosteron od jakiegoś czasu, nie mam już okresu, będę używać aplikacji dla śledzenia zastrzyków.</string>
     <string name="choose_gender_mode">Wybierz tryb/płeć, na następnym ekranie będzie więcej opcji. Możesz zmienić te ustawienia później.</string>
     <string name="gender_mode_tm">Tryb transmęski, będziemy używać męskich zwrotów, i postaramy się unikać triggerujących tematów.</string>
@@ -221,4 +214,11 @@
     <string name="kcal_balance">Kcal Balance</string>
     <string name="metrics">Metrics</string>
     <string name="stealth_mode">Toggle stealth mode</string>
+    <string name="language">Język</string>
+    <string name="langEnglish">Angielski</string>
+    <string name="langFrench">Francuski</string>
+    <string name="langPortugueseBR">Portugalski (BR)</string>
+    <string name="langRussian">Rosyjski</string>
+    <string name="langUkrainian">Ukraiński</string>
+    <string name="langPolish">Polski</string>
 </resources>

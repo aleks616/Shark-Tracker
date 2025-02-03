@@ -32,6 +32,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.material.Checkbox
+import androidx.compose.material.CheckboxColors
+import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
@@ -127,13 +129,14 @@ data class MetricRowData(
 
 data class MetricPersistence(
     val metricName: String,
-    val order: Int,
+    var order: Int,
     val visible: Boolean
 )
 
 //UNRELATED TODO: CALENDAR DOESN'T SHOW IN INTRODUCTION
 @Composable
 fun ScrollableMetricsView(){
+    val colorPrimary=getColor(color=com.google.android.material.R.attr.colorPrimary)
     val colorSecondary=getColor(color=com.google.android.material.R.attr.colorSecondary)
     val colorTertiary=getColor(color=com.google.android.material.R.attr.colorTertiary)
     val colorQuaternary=getColor(color=com.google.android.material.R.attr.itemTextColor)
@@ -157,9 +160,9 @@ fun ScrollableMetricsView(){
     cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
 
 
-    val customName1=sharedPrefs.getString("customMetric1","custom metric name would be here")!!
-    val customName2=sharedPrefs.getString("customMetric2","custom metric name2 would be here")!!
-    val customName3=sharedPrefs.getString("customMetric3","custom metric name3 would be here")!!
+    val customName1=sharedPrefs.getString("customMetric1","custom1-missing")!!
+    val customName2=sharedPrefs.getString("customMetric2","custom2-missing")!!
+    val customName3=sharedPrefs.getString("customMetric3","custom3-missing")!!
 
     val metricRows=listOf(
         MetricRowData(context.getString(R.string.metrics_crampLevelTitle),"crampLevel",selectedPositions.value[0]),
@@ -234,8 +237,19 @@ fun ScrollableMetricsView(){
             }
         }
     }
+    if(customName1=="custom1-missing"){
+        metricRowsState.value[12].visible=false
+    }
+    if(customName2=="custom2-missing"){
+        metricRowsState.value[13].visible=false
+    }
+    if(customName3=="custom3-missing"){
+        metricRowsState.value[14].visible=false
+    }
     val showReorderView=remember{mutableStateOf(false)}
-    LazyColumn(modifier=Modifier.fillMaxSize()){
+    LazyColumn(modifier=Modifier
+        .fillMaxSize()
+        .background(colorPrimary)){
         item{
             Box(
                 contentAlignment=Alignment.Center,
@@ -340,8 +354,6 @@ fun ScrollableMetricsView(){
             item{
 
             }
-
-
             item{
                 Box(modifier=Modifier
                     .fillMaxWidth()
@@ -370,6 +382,7 @@ fun ScrollableMetricsView(){
 
                     }
                 )
+
             }
             item{
                 InputRow(title=getLocal(id=R.string.weight),modifier=Modifier.fillMaxWidth(),value=weight.value,onValueChange={weight.value=it})
@@ -387,7 +400,7 @@ fun ScrollableMetricsView(){
                 ){
                     Button(
                         modifier=Modifier
-                            .padding(all=20.dp)
+                            .padding(bottom=25.dp,top=20.dp,start=20.dp,end=20.dp)
                             .height(50.dp)
                             .width(200.dp),
                         onClick={saveToDB(content=selectedPositions.value,context,weight.value,kcalBalance.value,notes.value)},
@@ -486,6 +499,7 @@ fun MetricRow(title: String,metricName: String,modifier:Modifier=Modifier,visibl
                             onSelectionChange(selectedIndex)
                         }
                     )
+
                 }
             }
         }
@@ -634,6 +648,7 @@ fun MetricReorderView(metricRows:MutableState<List<MetricRowData>>,onOrderChange
     }
     val colorPrimary=getColor(color=com.google.android.material.R.attr.colorPrimary)
     val colorSecondary=getColor(color=com.google.android.material.R.attr.colorSecondary)
+    val colorTertiary=getColor(color=com.google.android.material.R.attr.colorTertiary)
     /*val colorTertiary=getColor(color=com.google.android.material.R.attr.colorTertiary)
     val colorQuaternary=getColor(color=com.google.android.material.R.attr.itemTextColor)*/
     val context=LocalContext.current
@@ -645,7 +660,7 @@ fun MetricReorderView(metricRows:MutableState<List<MetricRowData>>,onOrderChange
                 Surface(elevation=elevation){
                     Row(
                         modifier=Modifier
-                            .border(1.dp,colorSecondary,RectangleShape)
+                            .border(0.5.dp,colorSecondary,RectangleShape)
                             .fillMaxWidth()
                             .background(color=colorPrimary)
                     ){
@@ -660,7 +675,8 @@ fun MetricReorderView(metricRows:MutableState<List<MetricRowData>>,onOrderChange
                                 metricRows.value=updatedList.toList()
                                 saveMetricsJson(context, updatedList)
                                 onOrderChanged(updatedList)
-                            }
+                            },
+                            colors=CheckboxDefaults.colors(checkedColor=colorTertiary)
                         )
                         Text(
                             color=colorSecondary,

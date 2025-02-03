@@ -3,7 +3,7 @@
     <string name="app_name">Rainbow Calendar</string>
 
     <string name="welcome_text">Hi! Welcome to Rainbow Calendar</string>
-    <string name="choose_language">Choose the app language</string>
+    <string name="choose_language">" Escolha o idioma do aplicativo"</string>
     <string name="welcome_back">Welcome back</string>
     <string name="enter_name">Enter your (nick)name, how do you want to be addressed.</string>
     <string name="enter_name_hint">Name</string>
@@ -180,6 +180,7 @@
     <string name="metrics_musclePain1">Dor Moderada</string>
     <string name="metrics_musclePain2">Dor Intensa</string>
 
+    <string name="legal_adult">I\'m legally adult</string>
     <string name="save">Salvar</string>
     <string name="weight">Peso</string>
     <string name="notes">Notas</string>
@@ -216,6 +217,13 @@
         <item>Qual o nome do meio do teu sobrinho mais velho?</item>
         <item> Em que cidade teus pais se conheceram? </item>
     </string-array>
+    <string name="language">Idioma</string>
+    <string name="langEnglish">Inglesa</string>
+    <string name="langFrench">Francesa</string>
+    <string name="langPortugueseBR">Português (BR)</string>
+    <string name="langRussian">Russa</string>
+    <string name="langUkrainian">Ucraniana</string>
+    <string name="langPolish">Polonês</string>
 
 
 </resources>
