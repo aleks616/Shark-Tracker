@@ -97,7 +97,6 @@ class HomeFragment:Fragment() {
         }
         //endregion
 
-        //todo: calculate and show progress always, not only when reopening the app, done??/
 
         val last=sharedPrefs.getString("lastPeriod","")
         val next=sharedPrefs.getString("nextPeriod","")
@@ -151,8 +150,6 @@ class HomeFragment:Fragment() {
             startActivity(Intent(requireContext(),MainActivity::class.java))
         }
 
-
-        //todo: in recovery questions make it multiline so whole question is visible! +move this todo
 
     }
 

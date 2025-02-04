@@ -12,6 +12,9 @@ import com.google.gson.Gson
 import java.util.Locale
 
 object Utils{
+    fun simplify(string: String?):String?{
+        return string?.lowercase()?.replace(" ","")
+    }
     fun langToCode(lang: String): String{
         return when(lang){
             "English" -> "en"

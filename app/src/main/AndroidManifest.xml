@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
-
-    <!--A spectre is haunting Europe—the spectre of Communism. All the Powers of old Europe have entered into a holy alliance to exorcise this spectre: Pope and Czar, Metternich and Guizot, French Radicals and German police-spies.
+    <!--
+A spectre is haunting Europe—the spectre of Communism. All the Powers of old Europe have entered into a holy alliance to exorcise this spectre: Pope and Czar, Metternich and Guizot, French Radicals and German police-spies.
 Where is the party in opposition that has not been decried as Communistic by its opponents in power? Where is the Opposition that has not hurled back the branding reproach of Communism, against the more advanced opposition parties, as well as against its reactionary adversaries?
 Two things result from this fact.
 I. Communism is already acknowledged by all European Powers to be itself a Power.
 II. It is high time that Communists should openly, in the face of the whole world, publish their views, their aims, their tendencies, and meet this nursery tale of the Spectre of Communism with a Manifesto of the party itself.
-To this end, Communists of various nationalities have assembled in London, and sketched the following Manifesto, to be published in the English, French, German, Italian, Flemish and Danish languages.-->
-
+To this end, Communists of various nationalities have assembled in London, and sketched the following Manifesto, to be published in the English, French, German, Italian, Flemish and Danish languages.
+    -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -20,8 +20,11 @@ To this end, Communists of various nationalities have assembled in London, and s
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Monochrome.Black.RainbowCalendar"
+        android:theme="@style/Black.RainbowCalendar"
         tools:targetApi="s">
+        <activity
+            android:name=".ThemesActivity"
+            android:exported="false" />
         <activity
             android:name=".PeriodSettingsActivity"
             android:exported="false" />
@@ -43,25 +46,29 @@ To this end, Communists of various nationalities have assembled in London, and s
         <activity
             android:name=".SplashScreenActivity"
             android:enabled="true"
+            android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:enabled="true"
             android:exported="true"
             android:icon="@drawable/icon_shark_trans"
-            android:label="@string/app_name1">
+            android:label="@string/app_name1" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-
         <activity-alias
-            android:name=".SplashScreenActivityStealth"
+            android:name=".MainActivityStealth"
             android:enabled="false"
             android:exported="true"
             android:icon="@drawable/icon_shark_normal"
             android:label="@string/stealth_app_name"
-            android:targetActivity=".SplashScreenActivity">
+            android:targetActivity=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -69,26 +76,7 @@ To this end, Communists of various nationalities have assembled in London, and s
         </activity-alias>
 
 
-        <activity
-            android:enabled="true"
-            android:name=".MainActivity"
-            android:exported="true">
-        </activity>
 
-
-        <!--       <activity-alias
-                   android:enabled="true"
-                   android:name=".SplashScreenActivityStealth"
-                   android:targetActivity=".SplashScreenActivity"
-                   android:icon="@drawable/calendar_icon"
-                   android:label="@string/stealth_app_name"
-                   android:exported="true">
-                   <intent-filter>
-                       <action android:name="android.intent.action.MAIN" />
-                       <category android:name="android.intent.category.LAUNCHER" />
-                   </intent-filter>
-               </activity-alias>
-       -->
         <receiver
             android:name=".AlarmReceiver"
             android:enabled="true" />
