@@ -4,10 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
 import android.util.Log
-import androidx.compose.ui.text.toLowerCase
-import com.example.rainbowcalendar.MetricPersistence
-import com.example.rainbowcalendar.MetricRowData
-import com.example.rainbowcalendar.R
 import com.google.gson.Gson
 import java.util.Locale
 
