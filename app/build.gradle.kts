@@ -6,7 +6,6 @@ plugins {
 android {
     namespace="com.example.rainbowcalendar"
     compileSdk=34
-
     androidResources {
         generateLocaleConfig=true
     }
@@ -63,6 +62,9 @@ android {
         }
     }
 }
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
 
 dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
@@ -71,6 +73,7 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material3:material3:1.3.1")
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation("androidx.navigation:navigation-compose:2.8.6")
     androidTestImplementation("org.junit.jupiter:junit-jupiter:5.8.1")

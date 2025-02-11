@@ -5,9 +5,63 @@ import android.content.Context
 import android.content.res.Configuration
 import android.util.Log
 import com.google.gson.Gson
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 
+enum class TIMEUNIT{
+    ERROR,
+    DAYS,
+    WEEKS,
+    MONTHS,
+    YEARS
+}
+data class MilestoneDate(
+    var days:Int,
+    var amount:Int,
+    var timeUnit:TIMEUNIT
+)
 object Utils{
+    fun timeSinceDate(start:String):MilestoneDate{
+        val today=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(Calendar.getInstance().time)
+        val dateFormat=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault())
+        dateFormat.isLenient=false
+
+        try{
+            val startDate=dateFormat.parse(start)
+            val todayDate=dateFormat.parse(today)
+            val timeSinceStart=todayDate.time-startDate.time
+            val daysSinceStart=timeSinceStart/(24*60*60*1000)
+
+            if(daysSinceStart>1095){//>36 months -> years
+                return MilestoneDate(daysSinceStart.toInt(),(daysSinceStart/365.25).toInt(),TIMEUNIT.YEARS)
+                //todo: next date? in another function?
+            }
+            if(daysSinceStart>168){ //>24 weeks -> months
+                return MilestoneDate(daysSinceStart.toInt(),(daysSinceStart/30.437).toInt(),TIMEUNIT.MONTHS)
+            }
+            if(daysSinceStart>35){//>5 weeks -> in weeks
+                return MilestoneDate(daysSinceStart.toInt(),(daysSinceStart/7).toInt(),TIMEUNIT.WEEKS)
+            }
+            return MilestoneDate(daysSinceStart.toInt(),daysSinceStart.toInt(),TIMEUNIT.DAYS)
+        }
+        catch(e:ParseException){
+            return MilestoneDate(-1,-1,TIMEUNIT.ERROR)
+        }
+    }
+
+
+    fun addNewCycleType(cycleName:String,correctInterval:Int){
+
+    }
+    fun changeCycleName(oldCycleName:String,newCycleName:String){
+
+    }
+    fun changeCycleCorrectInterval(cycleName:String,newCorrectInterval:Int){
+
+    }
+
     fun simplify(string: String?):String?{
         return string?.lowercase()?.replace(" ","")
     }

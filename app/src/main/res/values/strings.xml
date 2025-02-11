@@ -98,7 +98,7 @@
     <string name="pin_enter_description">enter pin and proceed</string>
     <string name="recovery_setup_title">Set up recovery questions</string>
     <string name="answer_recovery_questions">Answer recovery questions</string>
-    <string name="enter_answer">enter answer</string>
+    <string name="enter_answer">Enter answer</string>
     <string name="enter">Enter</string>
     <string name="recovery_noquestion_error">If you don\'t see a question, there has been an error</string>
     <string name="password_type_title">Choose password type</string>
@@ -264,5 +264,19 @@
     <string name="langRussian">Russian</string>
     <string name="langUkrainian">Ukrainian</string>
     <string name="langPolish">Polish</string>
+
+    <string name="genderTransMan">Trans man</string>
+    <string name="genderNB">Non binary</string>
+    <string name="genderWoman">Woman</string>
+    <string name="tmanDescription">including masculine-leaning non-binary people that are transitioning/are planning to</string>
+    <string name="nbDescription">non-binary, agender, other, prefers neutral terms</string>
+    <string name="yourIdentityHeader">Your identity</string>
+    <string name="chooseMostFittingOption">Choose the most fitting option</string>
+    <string name="useStealthModeQuestion">Use "stealth mode"?</string>
+    <string name="stealthModeDescription">App will appear as "Shark Idle 2" and notifications will be discreet.</string>
+    <string name="censorPeriodQuestion">Do you want to use term "shark week" instead of period?"</string>
+    <string name="usePeriod">Use "period"</string>
+    <string name="useCensorPeriod">Use shark week</string>
+    <string name="errorUnknown">Something went wrong sorry</string>
 
 </resources>
