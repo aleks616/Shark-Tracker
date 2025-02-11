@@ -16,6 +16,7 @@ internal object ThemeManager{
             "Dark Purple"->themeRecourseID=R.style.Dark_Purple_RainbowCalendar
             "Khaki"->themeRecourseID=R.style.Khaki_RainbowCalendar
             "Purple"->themeRecourseID=R.style.Light_Purple_RainbowCalendar
+            "Pride"->themeRecourseID=R.style.Base_Theme_RainbowCalendar
             //light-deleted!
         }
 
