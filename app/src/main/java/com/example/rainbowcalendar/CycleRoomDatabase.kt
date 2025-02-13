@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities=[Cycle::class],version=1,exportSchema=false)
+@Database(entities=[Cycle::class,Cycles::class,DateCycle::class],version=1,exportSchema=false)
 abstract class CycleRoomDatabase:RoomDatabase() {
     abstract fun cycleDao():CycleDao
 

@@ -41,7 +41,7 @@ class HomeFragment:Fragment() {
             cycleDao.insert(Cycle(date="2025-01-25",overallMood=3, crampLevel=2, digestiveIssues=1))
         }.start()*/
 
-        cycleDao.getAllCycles().observe(viewLifecycleOwner){cycles->
+        cycleDao.getAllMetricData().observe(viewLifecycleOwner){cycles->
             cycles.forEach {
                 Log.v("all ROOM data","${it.date} ${it.crampLevel} ${it.headache} ${it.energyLevel}")
             }

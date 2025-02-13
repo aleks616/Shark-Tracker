@@ -8,13 +8,18 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +33,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -39,6 +45,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Card
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material.IconButton
 import androidx.compose.material.RadioButton
@@ -46,6 +53,8 @@ import androidx.compose.material.RadioButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
@@ -72,6 +81,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
@@ -87,6 +97,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.toSize
 import androidx.core.text.isDigitsOnly
 import com.example.rainbowcalendar.Constants
 import com.example.rainbowcalendar.MainActivity
@@ -99,6 +110,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.Date
 import java.util.Locale
+import androidx.compose.ui.geometry.Size
 
 object Screens{
     const val sWelcome="WelcomeScreen"
@@ -488,10 +500,11 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
     sharedPrefs.edit().putString(Constants.key_firstTestosteroneDate,firstDoseSelectedDate).apply()
     sharedPrefs.edit().putString(Constants.key_lastTestosteroneDate,lastDoseSelectedDate).apply()
     //todo IMPORTANT put testosterone name to db!
-    if(testosteroneInterval.isDigitsOnly()){
-        sharedPrefs.edit().putInt(Constants.key_testosteroneInterval,testosteroneInterval.toInt()).apply()
+    if(testosteroneInterval.isNotEmpty()){
+        if(testosteroneInterval.isDigitsOnly()){
+            sharedPrefs.edit().putInt(Constants.key_testosteroneInterval,testosteroneInterval.toInt()).apply()
+        }
     }
-
 
     LazyColumn(
         modifier=//if(theme=="Pride") //theme
@@ -528,6 +541,13 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
                 )
             }
             item{
+                AutoComplete(
+                    testosteroneName,
+                    placeholderText="testosterone",
+                    onValueChange={testosteroneName=it}
+                )
+            }
+            /*item{
                 Row(
                     modifier=Modifier
                         .padding(vertical=12.dp)
@@ -539,7 +559,7 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
                         placeholderText="it can be anything",
                     )
                 }
-            }
+            }*/
             item{
                 BetterHeader(
                     text="How often do you take it?",
@@ -638,9 +658,15 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
             item{
                 CheckmarkButtonRow(
                     onClick={
-                        onNavigate(Screens.sPeriodOptions)
-                        sharedPrefs.edit().putBoolean(Constants.key_testosteroneMenuComplete,true).apply()
-                    },
+                        if(testosteroneName.isNotEmpty()){
+                            Utils.addNewCycleType(context,testosteroneName,testosteroneInterval.toInt(),true)
+                            onNavigate(Screens.sPeriodOptions)
+                            sharedPrefs.edit().putBoolean(Constants.key_testosteroneMenuComplete,true).apply()
+                        }
+                        else{
+                            Log.e("error",testosteroneName)
+                        }
+                       },
                     rowModifier=Modifier.padding(bottom=50.dp)
                 )
             }
@@ -673,6 +699,166 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
     }
 }
 
+@Composable
+fun AutoComplete(testosteroneName:String,placeholderText:String,onValueChange:(String)->Unit){
+    val testosteroneVersions=listOf(
+        "Agovirin Depot",
+        "Andractim",
+        "Andriol",
+        "AndroGel",
+        "AndroPatch",
+        "Androderm",
+        "Androject",
+        "Andronaq",
+        "Aveed",
+        "Axiron",
+        "Delatestryl",
+        "Depo-Testosterone",
+        "Dianabol",
+        "Halotestin",
+        "Jatenzo",
+        "Metandren",
+        "Nebido",
+        "Omnadren",
+        "Ora-Testryl",
+        "Oreton Methyl",
+        "Perandren",
+        "Prolongatum",
+        "Proviron",
+        "Rektandron",
+        "Sterotate",
+        "Striant",
+        "Sustanon 100",
+        "Sustanon 250",
+        "Testim",
+        "TestoGel",
+        "TestoPatch",
+        "Testopel",
+        "Testoral",
+        "Testoviron",
+        "Testred",
+        "Ultandren",
+        "Virosterone",
+        "Xyosted"
+    )
+
+    var category by remember{mutableStateOf(testosteroneName)}
+    var textFieldSize by remember{mutableStateOf(Size.Zero)}
+    var expanded by remember{mutableStateOf(false)}
+    val interactionSource=remember{MutableInteractionSource()}
+
+    Column(
+        modifier=Modifier
+            .padding(vertical=10.dp)
+            .fillMaxWidth()
+            .clickable(
+                interactionSource=interactionSource,
+                indication=null,
+                onClick={
+                    expanded=false
+                }
+            )
+    ){
+        Row(
+            modifier=Modifier.fillMaxWidth()
+        ){
+            BetterTextField(
+                textFieldModifier=Modifier
+                    .fillMaxWidth()
+                    .onGloballyPositioned {coordinates->
+                        textFieldSize=coordinates.size.toSize()
+                    },
+                value=category,
+                onValueChange={value->
+                    category=value
+                    onValueChange(value)
+                    expanded=true
+                },
+                placeholderText=placeholderText,
+                placeholderTextModifier=Modifier.fillMaxWidth(),
+                trailingIcon={
+                    IconButton(
+                        onClick={
+                            expanded=!expanded
+                            category=""
+                        }
+                    ){
+                        Icon(
+                            modifier=Modifier
+                                .size(58.dp)
+                                .padding(end=10.dp),
+                            imageVector=Icons.Rounded.KeyboardArrowDown,
+                            contentDescription="",
+                            tint=colorSecondary()
+                        )
+                    }
+                }
+            )
+        }
+        AnimatedVisibility(
+            visible=expanded,
+            enter=fadeIn(animationSpec=tween(durationMillis=150))+expandVertically(),
+            exit=fadeOut(animationSpec=tween(durationMillis=150))+shrinkVertically()
+        ){
+            Card(
+                modifier=Modifier
+                    .padding(horizontal=15.dp)
+                    .fillMaxWidth(),
+                shape=RectangleShape
+            ){
+                LazyColumn(
+                    modifier=Modifier
+                        .heightIn(max=200.dp)
+                        .background(colorPrimary()),
+                ){
+                    if(category.isNotEmpty()){
+                        items(
+                            testosteroneVersions.filter{
+                                it.lowercase()
+                                    .contains(category.lowercase())||it.lowercase()
+                                    .contains("others")
+                            }.sorted()
+                        ){
+                            ItemsCategory(title=it){title->
+                                category=title
+                                expanded=false
+                            }
+                        }
+                    }
+                    else{
+                        items(
+                            testosteroneVersions.sorted()
+                        ){
+                            ItemsCategory(title=it){title->
+                                category=title
+                                onValueChange(title)
+                                expanded=false
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ItemsCategory(
+    title:String,
+    onSelect:(String)->Unit){
+    Row(
+        modifier=Modifier
+            .fillMaxWidth()
+            .clickable {
+                onSelect(title)
+            }
+            .padding(10.dp)
+    ){
+        Text(text=title,fontSize=18.sp,color=colorSecondary())
+    }
+    androidx.compose.material.Divider(color=colorTertiary())
+}
+
 
 @Composable
 fun PeriodOptionsScreen(onNavigate:(String) -> Unit){
@@ -687,8 +873,8 @@ fun PeriodOptionsScreen(onNavigate:(String) -> Unit){
     LazyColumn{
         item{
             YesNoRow(
-                onClickYes={ /*TODO*/},
-                onClickNo={ /*TODO*/},
+                onClickYes={onNavigate(Screens.sMain)},
+                onClickNo={/*TODO*/},
                 question="aaa")
         }
     }
@@ -702,7 +888,9 @@ fun ContraceptiveOptionsScreen(onNavigate:(String) -> Unit){
 //region MainActivity
 @Composable
 fun MainScreen(onNavigate:(String)->Unit){
-    onNavigate(Screens.sAgeConsentOptions)
+    val context=LocalContext.current
+   // Utils.addNewCycleType("period",28)
+    onNavigate(Screens.sTOptions)
     //val colorTertiary=getColor(color=com.google.android.material.R.attr.colorTertiary)
     //val colorSecondary=getColor(color=com.google.android.material.R.attr.colorSecondary)
     data class BottomNavItem(
@@ -728,7 +916,7 @@ fun MainScreen(onNavigate:(String)->Unit){
             Scaffold(
                 content={padding->
                     Box(modifier=Modifier.padding(padding)){
-                        when(currentFragment) {
+                        when(currentFragment){
                             "Home"->HomeScreen()
                             "Calendar"->CalendarScreen()
                             "Add"->AddScreen()
@@ -860,7 +1048,7 @@ fun WelcomeScreen(onNavigate:(String)->Unit){
     //sharedPrefs.edit().putBoolean(Constants.key_isSetupDone,false).apply()
     if(setupDone){
         SideEffect{
-            if(!sharedPrefs.getString(Constants.key_passwordValue,"").isNullOrEmpty()){ //there is password
+            if(!sharedPrefs.getString(Constants.key_passwordValue,"").isNullOrEmpty()){//there is password
                 onNavigate(Screens.sPassword)
             }
             else{
@@ -984,7 +1172,7 @@ fun PasswordScreen(onNavigate:(String)->Unit){
             }
             Row(modifier=Modifier.fillMaxWidth()){
                 IconButton(onClick={
-                    when(selectedOption) {
+                    when(selectedOption){
                         0->{
                             passwordScreenType=1 //text
 
@@ -1571,7 +1759,7 @@ fun RecoveryScreen(onNavigate:(String)->Unit){
         Row(modifier=Modifier.fillMaxWidth()){
             IconButton(onClick={
                 if(recoverySet){
-                    if(enteredAnswers.all {it.isNotEmpty()}){
+                    if(enteredAnswers.all{it.isNotEmpty()}){
                         showError=""
                         if(Utils.simplify(enteredAnswers[0])==correctAnswers[0]){
                             showError=""
@@ -1601,7 +1789,7 @@ fun RecoveryScreen(onNavigate:(String)->Unit){
                     //create
                     if(enteredAnswers[0]!=enteredAnswers[1]&&enteredAnswers[1]!=enteredAnswers[2]&&enteredAnswers[0]!=enteredAnswers[2]){
                         showError=""
-                        if(menuText.all {it!=questionsOptions[0]}){
+                        if(menuText.all{it!=questionsOptions[0]}){
                             showError=""
                             if(enteredAnswers.all{it.isNotEmpty()}){
                                 //good
@@ -1687,7 +1875,7 @@ fun toggleStealthMode(context:Context){
     packageManager.setComponentEnabledSetting((if(stealthMode) stealth else default),PackageManager.COMPONENT_ENABLED_STATE_DISABLED,PackageManager.DONT_KILL_APP)
 }
 
-fun isStealthModeOn(context:Context):Boolean {
+fun isStealthModeOn(context:Context):Boolean{
     val packageManager=context.packageManager
     val stealth=ComponentName(context,"com.example.rainbowcalendar.MainActivityStealth")
 
@@ -1720,10 +1908,10 @@ fun YesNoRow(
                 .padding(vertical=12.dp,horizontal=12.dp)
                 .fillMaxWidth(),
             Arrangement.SpaceAround
-        ) {
+        ){
             BetterButton(
                 onClick=onClickYes
-            ) {
+            ){
                 BetterText(
                     text=context.getString(R.string.yes),
                     fontSize=32.sp,
@@ -1732,7 +1920,7 @@ fun YesNoRow(
             }
             BetterButton(
                 onClick=onClickNo
-            ) {
+            ){
                 BetterText(
                     text=context.getString(R.string.no),
                     fontSize=32.sp,
@@ -1772,12 +1960,14 @@ fun BetterTextField(
     placeholderTextModifier:Modifier=Modifier,
     visualTransformation:VisualTransformation=VisualTransformation.None,
     keyboardType:KeyboardType=KeyboardType.Text,
-    imeAction:ImeAction=ImeAction.Default
-
+    imeAction:ImeAction=ImeAction.Default,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    onItemSelected: @Composable (() -> Unit)? = null
 ){
     TextField(
         value=value,
         onValueChange=onValueChange,
+
         modifier=textFieldModifier
             .padding(start=15.dp,end=10.dp),
         colors=TextFieldDefaults.textFieldColors(
@@ -1798,6 +1988,7 @@ fun BetterTextField(
         maxLines=1,
         visualTransformation=visualTransformation,
         keyboardOptions=KeyboardOptions.Default.copy(keyboardType=keyboardType),
+        trailingIcon=trailingIcon,
     )
 }
 
@@ -2080,7 +2271,7 @@ fun themeItem(name: String, imgResource:Int, selected:Boolean){
     val context=LocalContext.current
     val sharedPrefs=LocalContext.current.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
     val themeSetupDone=sharedPrefs.getBoolean(Constants.key_isThemeSetUp,false)
-    var isSelected by remember {mutableStateOf(selected)}
+    var isSelected by remember{mutableStateOf(selected)}
     Column(
         horizontalAlignment=Alignment.CenterHorizontally,
         modifier=Modifier.padding(all=10.dp)

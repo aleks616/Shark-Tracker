@@ -38,7 +38,7 @@ class AddFragment : Fragment() {
     }
 
     private fun showAll(){
-        cycleDao.getAllCycles().observe(this) {cycles->
+        cycleDao.getAllMetricData().observe(this) {cycles->
             cycles.forEach {
                 Log.v("TAG","Cycle: ${it.date}, Mood: ${it.overallMood} Cramp level: ${it.crampLevel}, Headache: ${it.headache}")
             }

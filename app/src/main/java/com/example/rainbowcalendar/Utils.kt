@@ -3,6 +3,7 @@ package com.example.rainbowcalendar
 import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
+import android.text.BoringLayout
 import android.util.Log
 import com.google.gson.Gson
 import java.text.ParseException
@@ -52,14 +53,46 @@ object Utils{
     }
 
 
-    fun addNewCycleType(cycleName:String,correctInterval:Int){
+    fun addNewCycleType(context:Context,cycleName:String,correctInterval:Int,active:Boolean=true):String{
+        cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
+        var canInsert=true
+        Thread{
+            cycleDao.getAllCyclesTypes()?.forEach{cycle->
+                Log.v("cycleData",cycle.cycleId.toString()+" "+cycle.cycleName+" "+cycle.correctLength+" "+cycle.isActive)
+                if(cycle.cycleName==cycleName){
+                    canInsert=false
+                }
+            }
+            if(canInsert)
+                cycleDao.addNewCycle(Cycles(0,cycleName,correctInterval,active));
+            else
+                Log.e("cycleData","cycle with name is already there")
 
+        }.start()
+        return if(canInsert) "" else "fail"
     }
-    fun changeCycleName(oldCycleName:String,newCycleName:String){
 
+    fun deleteAllCycleTypes(context:Context,areYouSure:Boolean){
+        if(areYouSure){
+            Thread{
+                cycleDao.deleteAllCycles()
+            }
+        }
     }
-    fun changeCycleCorrectInterval(cycleName:String,newCorrectInterval:Int){
 
+    fun changeCycleName(context:Context,oldCycleName:String,newCycleName:String){
+        cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
+        Thread{
+            val cycleData=cycleDao.getCycleDataByName(oldCycleName)
+            cycleDao.changeCycleTypeName(newCycleName,cycleData.cycleId)
+        }
+    }
+    fun changeCycleCorrectInterval(context:Context,cycleName:String,newCorrectInterval:Int){
+        cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
+        Thread{
+            val cycleData=cycleDao.getCycleDataByName(cycleName)
+            cycleDao.changeCycleTypeCorrectInterval(newCorrectInterval,cycleData.cycleId)
+        }
     }
 
     fun simplify(string: String?):String?{

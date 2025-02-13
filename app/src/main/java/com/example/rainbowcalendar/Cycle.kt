@@ -2,16 +2,18 @@ package com.example.rainbowcalendar
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName="cycle")
+@Entity(tableName="metrics")
 data class Cycle(
     @PrimaryKey
     @ColumnInfo(name="date")
     val date:String,
 
-    @ColumnInfo(name="cycleDay")
-    val cycleDay:Int?=null,
+/*    @ColumnInfo(name="cycleDay")
+    val cycleDay:Int?=null,*/
 
     @ColumnInfo(name="crampLevel")
     val crampLevel:Int?=null,
@@ -66,4 +68,41 @@ data class Cycle(
 
     @ColumnInfo(name="notes")
     val notes:String?=null
+)
+
+@Entity(tableName="Cycles")
+data class Cycles(
+    @PrimaryKey(autoGenerate=true)
+    @ColumnInfo(name="cycleId")
+    val cycleId:Int,
+    @ColumnInfo(name="cycleName")
+    val cycleName:String,
+    @ColumnInfo(name="correctLength")
+    val correctLength:Int,
+    @ColumnInfo(name="isActive")
+    val isActive:Boolean
+)
+
+@Entity(
+    primaryKeys=["date","cycleId"],
+    foreignKeys=[
+        ForeignKey(
+            entity=Cycle::class,
+            parentColumns=["date"],
+            childColumns=["date"],
+            onDelete=ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity=Cycles::class,
+            parentColumns=["cycleId"],
+            childColumns=["cycleId"],
+            onDelete=ForeignKey.CASCADE
+        ),
+    ],
+    indices=[Index("date"),Index("cycleId")]
+)
+data class DateCycle(
+    val date:String,
+    val cycleId:Int,
+    val cycleDay:Int
 )

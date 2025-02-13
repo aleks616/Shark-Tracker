@@ -133,7 +133,7 @@ data class MetricPersistence(
     val visible: Boolean
 )
 
-//UNRELATED TODO: CALENDAR DOESN'T SHOW IN INTRODUCTION
+//TODO: FIX ORDER NOT BEING SAVED!!!
 @Composable
 fun ScrollableMetricsView(){
     val colorPrimary=getColor(color=com.google.android.material.R.attr.colorPrimary)
