@@ -32,7 +32,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.material.Checkbox
-import androidx.compose.material.CheckboxColors
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -40,6 +39,8 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -59,12 +60,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.gson.Gson
@@ -90,24 +93,20 @@ fun Context.getColorFromAttrs(attr: Int):TypedValue {
 }
 
 @Composable
-fun getLocal(id: Int): String{
-    return LocalContext.current.getString(id)
-}
-@Composable
 fun createIcons():Map<String, List<Pair<Int, String>>>{
     return mapOf(
-        "crampLevel" to listOf(R.drawable.cramps_0 to getLocal(R.string.metrics_crampLevel0),R.drawable.cramps_1 to getLocal(R.string.metrics_crampLevel1),R.drawable.cramps_2 to getLocal(R.string.metrics_crampLevel2)),
-        "headache" to listOf(R.drawable.headache_n_0 to getLocal(R.string.metrics_headache0),R.drawable.headache_n_1 to getLocal(R.string.metrics_headache1),R.drawable.headache_n_2 to getLocal(R.string.metrics_headache2),R.drawable.headache_n_3 to getLocal(R.string.metrics_headache3),R.drawable.headache_n_4 to getLocal(R.string.metrics_headache4)),
-        "energyLevel" to listOf(R.drawable.energy_0 to getLocal(R.string.metrics_energyLevel0),R.drawable.energy_1 to getLocal(R.string.metrics_energyLevel1),R.drawable.energy_2 to getLocal(R.string.metrics_energyLevel2),R.drawable.energy_3 to getLocal(R.string.metrics_energyLevel3),R.drawable.energy_4 to getLocal(R.string.metrics_energyLevel4)),
-        "sleepQuality" to listOf(R.drawable.sleep_0 to getLocal(R.string.metrics_sleepQuality0), R.drawable.sleep_1 to getLocal(R.string.metrics_sleepQuality1), R.drawable.sleep_2 to getLocal(R.string.metrics_sleepQuality2)),
-        "cravings" to listOf(R.drawable.cravings_0 to getLocal(R.string.metrics_cravings0), R.drawable.cravings_1 to getLocal(R.string.metrics_cravings1), R.drawable.cravings_2 to getLocal(R.string.metrics_cravings2)),
-        "skinCondition" to listOf(R.drawable.acne_0 to getLocal(R.string.metrics_skinCondition0), R.drawable.acne_1  to getLocal(R.string.metrics_skinCondition1), R.drawable.acne_2 to getLocal(R.string.metrics_skinCondition2)),
-        "digestiveIssues" to listOf(R.drawable.digestive_0 to getLocal(R.string.metrics_digestiveIssues0), R.drawable.digestive_1 to getLocal(R.string.metrics_digestiveIssues1), R.drawable.digestive_2 to getLocal(R.string.metrics_digestiveIssues2), R.drawable.digestive_3 to getLocal(R.string.metrics_digestiveIssues3)),
-        "moodSwings" to listOf(R.drawable.mood_swings_0 to getLocal(R.string.metrics_moodSwings0), R.drawable.mood_swings_1 to  getLocal(R.string.metrics_moodSwings1), R.drawable.mood_swings_2 to  getLocal(R.string.metrics_moodSwings2)),
-        "overallMood" to listOf(R.drawable.mood_0 to getLocal(R.string.metrics_overallMood0),R.drawable.mood_1 to getLocal(R.string.metrics_overallMood1),R.drawable.mood_2 to getLocal(R.string.metrics_overallMood2),R.drawable.mood_3 to getLocal(R.string.metrics_overallMood3),R.drawable.mood_4 to getLocal(R.string.metrics_overallMood4)),
-        "dysphoria" to listOf(R.drawable.dysphoria_0 to getLocal(R.string.metrics_dysphoria0),R.drawable.dysphoria_1 to getLocal(R.string.metrics_dysphoria1),R.drawable.dysphoria_2 to getLocal(R.string.metrics_dysphoria2),R.drawable.dysphoria_3 to getLocal(R.string.metrics_dysphoria3),R.drawable.dysphoria_4 to getLocal(R.string.metrics_dysphoria4)),
-        "bleeding" to listOf(R.drawable.blood_0 to getLocal(R.string.metrics_bleeding0),R.drawable.blood_1 to getLocal(R.string.metrics_bleeding1),R.drawable.blood_2 to getLocal(R.string.metrics_bleeding2),R.drawable.blood_3 to getLocal(R.string.metrics_bleeding3),R.drawable.blood_4 to getLocal(R.string.metrics_bleeding4)),
-        "musclePain" to listOf(R.drawable.muscle_pain_0 to getLocal(R.string.metrics_musclePain0), R.drawable.muscle_pain_1 to getLocal(R.string.metrics_musclePain1), R.drawable.muscle_pain_2 to getLocal(R.string.metrics_musclePain2)),
+        "crampLevel" to listOf(R.drawable.cramps_0 to stringResource(R.string.metrics_crampLevel0),R.drawable.cramps_1 to stringResource(R.string.metrics_crampLevel1),R.drawable.cramps_2 to stringResource(R.string.metrics_crampLevel2)),
+        "headache" to listOf(R.drawable.headache_n_0 to stringResource(R.string.metrics_headache0),R.drawable.headache_n_1 to stringResource(R.string.metrics_headache1),R.drawable.headache_n_2 to stringResource(R.string.metrics_headache2),R.drawable.headache_n_3 to stringResource(R.string.metrics_headache3),R.drawable.headache_n_4 to stringResource(R.string.metrics_headache4)),
+        "energyLevel" to listOf(R.drawable.energy_0 to stringResource(R.string.metrics_energyLevel0),R.drawable.energy_1 to stringResource(R.string.metrics_energyLevel1),R.drawable.energy_2 to stringResource(R.string.metrics_energyLevel2),R.drawable.energy_3 to stringResource(R.string.metrics_energyLevel3),R.drawable.energy_4 to stringResource(R.string.metrics_energyLevel4)),
+        "sleepQuality" to listOf(R.drawable.sleep_0 to stringResource(R.string.metrics_sleepQuality0), R.drawable.sleep_1 to stringResource(R.string.metrics_sleepQuality1), R.drawable.sleep_2 to stringResource(R.string.metrics_sleepQuality2)),
+        "cravings" to listOf(R.drawable.cravings_0 to stringResource(R.string.metrics_cravings0), R.drawable.cravings_1 to stringResource(R.string.metrics_cravings1), R.drawable.cravings_2 to stringResource(R.string.metrics_cravings2)),
+        "skinCondition" to listOf(R.drawable.acne_0 to stringResource(R.string.metrics_skinCondition0), R.drawable.acne_1  to stringResource(R.string.metrics_skinCondition1), R.drawable.acne_2 to stringResource(R.string.metrics_skinCondition2)),
+        "digestiveIssues" to listOf(R.drawable.digestive_0 to stringResource(R.string.metrics_digestiveIssues0), R.drawable.digestive_1 to stringResource(R.string.metrics_digestiveIssues1), R.drawable.digestive_2 to stringResource(R.string.metrics_digestiveIssues2), R.drawable.digestive_3 to stringResource(R.string.metrics_digestiveIssues3)),
+        "moodSwings" to listOf(R.drawable.mood_swings_0 to stringResource(R.string.metrics_moodSwings0), R.drawable.mood_swings_1 to  stringResource(R.string.metrics_moodSwings1), R.drawable.mood_swings_2 to  stringResource(R.string.metrics_moodSwings2)),
+        "overallMood" to listOf(R.drawable.mood_0 to stringResource(R.string.metrics_overallMood0),R.drawable.mood_1 to stringResource(R.string.metrics_overallMood1),R.drawable.mood_2 to stringResource(R.string.metrics_overallMood2),R.drawable.mood_3 to stringResource(R.string.metrics_overallMood3),R.drawable.mood_4 to stringResource(R.string.metrics_overallMood4)),
+        "dysphoria" to listOf(R.drawable.dysphoria_0 to stringResource(R.string.metrics_dysphoria0),R.drawable.dysphoria_1 to stringResource(R.string.metrics_dysphoria1),R.drawable.dysphoria_2 to stringResource(R.string.metrics_dysphoria2),R.drawable.dysphoria_3 to stringResource(R.string.metrics_dysphoria3),R.drawable.dysphoria_4 to stringResource(R.string.metrics_dysphoria4)),
+        "bleeding" to listOf(R.drawable.blood_0 to stringResource(R.string.metrics_bleeding0),R.drawable.blood_1 to stringResource(R.string.metrics_bleeding1),R.drawable.blood_2 to stringResource(R.string.metrics_bleeding2),R.drawable.blood_3 to stringResource(R.string.metrics_bleeding3),R.drawable.blood_4 to stringResource(R.string.metrics_bleeding4)),
+        "musclePain" to listOf(R.drawable.muscle_pain_0 to stringResource(R.string.metrics_musclePain0), R.drawable.muscle_pain_1 to stringResource(R.string.metrics_musclePain1), R.drawable.muscle_pain_2 to stringResource(R.string.metrics_musclePain2)),
         "customColumn1" to listOf(R.drawable.customa_0 to " ",R.drawable.customa_1 to " ",R.drawable.customa_2 to " ",R.drawable.customa_3 to " "),
         "customColumn2" to listOf(R.drawable.customb_0 to " ",R.drawable.customb_1 to " ",R.drawable.customb_2 to " ",R.drawable.customb_3 to " ",R.drawable.customb_4 to " "),
         "customColumn3" to listOf(R.drawable.customc_0 to " ",R.drawable.customc_1 to " ",R.drawable.customc_2 to " ",R.drawable.customc_3 to " ", R.drawable.customc_4 to " "),
@@ -133,20 +132,23 @@ data class MetricPersistence(
     val visible: Boolean
 )
 
-//TODO: FIX ORDER NOT BEING SAVED!!!
+data class MetricPersistence2(
+    val metricName: String,
+    var order: Int,
+    val visible: Boolean,
+    val title: String,
+    val selectedIndex:Int
+)
+
 @Composable
 fun ScrollableMetricsView(){
-    val colorPrimary=getColor(color=com.google.android.material.R.attr.colorPrimary)
-    val colorSecondary=getColor(color=com.google.android.material.R.attr.colorSecondary)
-    val colorTertiary=getColor(color=com.google.android.material.R.attr.colorTertiary)
-    val colorQuaternary=getColor(color=com.google.android.material.R.attr.itemTextColor)
     val padding=12.dp
     val selectedPositions=remember{mutableStateOf(MutableList(15){-1})}
     val weight=remember{mutableStateOf("")}
     val kcalBalance=remember{mutableStateOf("")}
     val notes=remember{mutableStateOf("")}
 
-    val sharedPrefs=LocalContext.current.getSharedPreferences("com.example.rainbowcalendar_pref",Context.MODE_PRIVATE)
+    val sharedPrefs=LocalContext.current.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
     val lang=sharedPrefs.getString("lang","en")!!
     if(lang=="pt-br")
         Locale("pt","BR")
@@ -186,7 +188,7 @@ fun ScrollableMetricsView(){
 
     val loadedMetrics=loadMetricsJson(context)
     if(loadedMetrics!=null){
-        val updatedMetrics=metricRowsState.value.map{metric->
+        /*val updatedMetrics=metricRowsState.value.map{metric->
             val savedMetric=loadedMetrics.firstOrNull{it.metricName==metric.metricName}
             if(savedMetric!=null){
                 metric.copy(visible=savedMetric.visible)
@@ -195,7 +197,15 @@ fun ScrollableMetricsView(){
                 metric
             }
         }
-        metricRowsState.value=updatedMetrics
+        metricRowsState.value=updatedMetrics*/
+        metricRowsState.value=loadedMetrics.map {savedMetric->
+            MetricRowData(
+                title=savedMetric.title,
+                metricName=savedMetric.metricName,
+                selectedIndex=savedMetric.selectedIndex,
+                visible=savedMetric.visible
+            )
+        }
     }
 
     LaunchedEffect(usedDateState.value){
@@ -237,6 +247,7 @@ fun ScrollableMetricsView(){
             }
         }
     }
+    //todo: custom names
     if(customName1=="custom1-missing"){
         metricRowsState.value[12].visible=false
     }
@@ -246,10 +257,15 @@ fun ScrollableMetricsView(){
     if(customName3=="custom3-missing"){
         metricRowsState.value[14].visible=false
     }
+
+    var customName1Input by remember{mutableStateOf("")}
+    var customName2Input by remember{mutableStateOf("")}
+    var customName3Input by remember{mutableStateOf("")}
+
     val showReorderView=remember{mutableStateOf(false)}
     LazyColumn(modifier=Modifier
         .fillMaxSize()
-        .background(colorPrimary)){
+        .background(colorPrimary())){
         item{
             Box(
                 contentAlignment=Alignment.Center,
@@ -259,8 +275,8 @@ fun ScrollableMetricsView(){
             ){
                 Column(horizontalAlignment=Alignment.CenterHorizontally){
                     Text(
-                        color=colorSecondary,
-                        text=getLocal(id=R.string.metrics),
+                        color=colorSecondary(),
+                        text=stringResource(id=R.string.metrics),
                         fontSize=35.sp,
                         textAlign=TextAlign.Center,
                         fontWeight=FontWeight.W500,
@@ -271,44 +287,53 @@ fun ScrollableMetricsView(){
                         modifier=Modifier.fillMaxWidth(),
                         verticalAlignment=Alignment.CenterVertically
                     ){
-                        Button( //left button
+                        Button(
+                            //left button
                             onClick={changeDate(amount=-1)},
                             Modifier
-                                .height(45.dp)
+                                .height(48.dp)
                                 .width(80.dp)
                                 .align(Alignment.CenterVertically)
                                 .padding(start=10.dp),
-                            colors=buttonColors(backgroundColor=colorTertiary),
+                            colors=buttonColors(backgroundColor=colorTertiary()),
                         ){
                             Image(
-                                modifier=Modifier
-                                    .fillMaxSize()
-                                    .scale(2.0f),
                                 painter=painterResource(id=R.drawable.icon_arrow_left_triangle),
                                 contentDescription=null,
                                 contentScale=ContentScale.FillHeight,
+                                modifier=Modifier
+                                    .fillMaxSize()
+                                    .scale(2.0f)
                             )
                         }
-                        Text(
-                            color=colorSecondary,
-                            text=usedDateState.value,
-                            fontSize=32.sp,
-                            textAlign=TextAlign.Center,
+                        Button(
+                            onClick={},
                             modifier=Modifier
-                                .padding(vertical=10.dp)
+                                .padding(vertical=10.dp,horizontal=4.dp)
                                 .align(Alignment.CenterVertically)
-                                .weight(1f)
-                        )
+                                .border(width=2.dp,color=colorTertiary())
+                                .fillMaxSize()
+                                .weight(1f),
+                            colors=buttonColors(backgroundColor=colorPrimary()),
+                        ){
+                            Text(
+                                color=colorSecondary(),
+                                text=usedDateState.value,
+                                fontSize=28.sp,
+                                textAlign=TextAlign.Center,
+
+                            )
+                        }
                         Button(// right button
                             onClick={changeDate(amount=1)},
                             Modifier
-                                .height(45.dp)
+                                .height(48.dp)
                                 .width(80.dp)
                                 .align(Alignment.CenterVertically)
                                 .padding(end=10.dp)
                                 .alpha(if(usedDateState.value>=today) 0f else 1f),
                             enabled=usedDateState.value<today,
-                            colors=buttonColors(backgroundColor=colorTertiary),
+                            colors=buttonColors(backgroundColor=colorTertiary()),
                         ){
                             Image(
                                 modifier=Modifier
@@ -333,7 +358,8 @@ fun ScrollableMetricsView(){
                 Column(horizontalAlignment=Alignment.CenterHorizontally){
                     Row(
                         modifier=Modifier.fillMaxWidth(),
-                        verticalAlignment=Alignment.CenterVertically
+                        verticalAlignment=Alignment.CenterVertically,
+                        horizontalArrangement=Arrangement.SpaceBetween
                     ){
                         Button(
                             onClick={showReorderView.value=!showReorderView.value},
@@ -342,18 +368,13 @@ fun ScrollableMetricsView(){
                                 .width(80.dp)
                                 .align(Alignment.CenterVertically)
                                 .padding(start=10.dp),
-                            colors=buttonColors(backgroundColor=colorTertiary),
-                        ){
-
-                        }
+                            colors=buttonColors(backgroundColor=colorTertiary()),
+                        ){}
                     }
                 }
             }
         } //button
         if(showReorderView.value){
-            item{
-
-            }
             item{
                 Box(modifier=Modifier
                     .fillMaxWidth()
@@ -364,6 +385,34 @@ fun ScrollableMetricsView(){
                             saveMetricsJson(context,updatedList)
                         })
                 }
+            }
+            item{
+                VerticalSpacer()
+            }
+            item{
+                BetterHeader(text="Enter names for custom metrics to track",fontSize="MS",modifier=Modifier.fillMaxSize())
+                BetterHeader(text="4 levels will be available",fontSize="S",modifier=Modifier.fillMaxSize().padding(top=16.dp,bottom=8.dp))
+                BetterTextField(placeholderText="custom metric 1",value=customName1Input, onValueChange={
+                    if(it.isNotEmpty()){
+                        sharedPrefs.edit().putString("customMetric1",it).apply()
+                        customName1Input=it
+                    }
+                })
+                BetterHeader(text="5 levels will be available",fontSize="S",modifier=Modifier.fillMaxSize().padding(top=16.dp,bottom=8.dp))
+                BetterTextField(placeholderText="custom metric 2",value=customName2Input, onValueChange={
+                    if(it.isNotEmpty()){
+                        sharedPrefs.edit().putString("customMetric2",it).apply()
+                        customName2Input=it
+                    }
+                })
+                BetterHeader(text="5 levels will be available",fontSize="S",modifier=Modifier.fillMaxSize().padding(top=16.dp,bottom=8.dp))
+                BetterTextField(placeholderText="custom metric 3",value=customName3Input, onValueChange={
+                    if(it.isNotEmpty()){
+                        sharedPrefs.edit().putString("customMetric3",it).apply()
+                        customName3Input=it
+                    }
+                })
+                VerticalSpacer()
             }
         }
         if(!showReorderView.value){
@@ -385,13 +434,13 @@ fun ScrollableMetricsView(){
 
             }
             item{
-                InputRow(title=getLocal(id=R.string.weight),modifier=Modifier.fillMaxWidth(),value=weight.value,onValueChange={weight.value=it})
+                InputRow(title=stringResource(id=R.string.weight),modifier=Modifier.fillMaxWidth(),value=weight.value,onValueChange={weight.value=it})
             }
             item{
-                InputRow(title=getLocal(id=R.string.kcal_balance),modifier=Modifier.fillMaxWidth(),value=kcalBalance.value,onValueChange={kcalBalance.value=it})
+                InputRow(title=stringResource(id=R.string.kcal_balance),modifier=Modifier.fillMaxWidth(),value=kcalBalance.value,onValueChange={kcalBalance.value=it})
             }
             item{
-                LongInputRow(title=getLocal(id=R.string.notes),modifier=Modifier.fillMaxWidth(),value=notes.value,onValueChange={notes.value=it})
+                InputRow(title=stringResource(id=R.string.notes),modifier=Modifier.fillMaxWidth(),value=notes.value,onValueChange={notes.value=it},width=300.dp,height=100.dp,maxLines=5)
             }
             item{
                 Box(
@@ -404,9 +453,9 @@ fun ScrollableMetricsView(){
                             .height(50.dp)
                             .width(200.dp),
                         onClick={saveToDB(content=selectedPositions.value,context,weight.value,kcalBalance.value,notes.value)},
-                        colors=buttonColors(backgroundColor=colorTertiary),
+                        colors=buttonColors(backgroundColor=colorTertiary()),
                     ){
-                        Text(text=getLocal(id=R.string.save),color=colorQuaternary) //todo: MAKE WEIGHT FLOAT IMPORTANT!!!!
+                        Text(text=stringResource(id=R.string.save),color=colorQuaternary()) //todo: MAKE WEIGHT FLOAT IMPORTANT!!!!
                     }
                 }
             }
@@ -464,9 +513,6 @@ fun changeDate(amount: Int){
 }
 @Composable
 fun MetricRow(title: String,metricName: String,modifier:Modifier=Modifier,visible:Boolean, selectedIndex1:Int, onSelectionChange:(Int)->Unit){
-    val colorSecondary=getColor(color=com.google.android.material.R.attr.colorSecondary)
-    /*val colorTertiary=getColor(color=com.google.android.material.R.attr.colorTertiary)*/
-
     val icons1=createIcons()[metricName]?:emptyList()
     var selectedIndex by remember{mutableStateOf(selectedIndex1)}
 
@@ -477,7 +523,7 @@ fun MetricRow(title: String,metricName: String,modifier:Modifier=Modifier,visibl
     if(visible){
         Column(modifier=modifier){
             Text(
-                color=colorSecondary,
+                color=colorSecondary(),
                 text=title,
                 fontSize=24.sp,
                 modifier=Modifier.padding(
@@ -491,7 +537,7 @@ fun MetricRow(title: String,metricName: String,modifier:Modifier=Modifier,visibl
                         .padding(10.dp)
                         .border(
                             width=if(selectedIndex==index) 4.dp else 0.dp,
-                            color=if(selectedIndex==index) colorSecondary else Color.Transparent,
+                            color=if(selectedIndex==index) colorSecondary() else Color.Transparent,
                             shape=CircleShape
                         )
                         .clickable {
@@ -506,20 +552,24 @@ fun MetricRow(title: String,metricName: String,modifier:Modifier=Modifier,visibl
     }
 }
 @Composable
-fun InputRow(title: String,modifier:Modifier=Modifier,value:String,onValueChange:(String)->Unit){
-    val colorSecondary=getColor(color=com.google.android.material.R.attr.colorSecondary)
+fun InputRow(
+    title:String,
+    modifier:Modifier=Modifier,
+    value:String,
+    onValueChange:(String)->Unit,
+    maxLines:Int=1,
+    width:Dp=250.dp,
+    height:Dp=Dp.Unspecified
+){
     Column(
         modifier=modifier
             .fillMaxSize()
             .padding(
-                start=20.dp,
-                top=10.dp,
-                end=0.dp,
-                bottom=10.dp
+                start=20.dp,top=10.dp,end=0.dp,bottom=10.dp
             )
     ){
         Text(
-            color=colorSecondary,
+            color=colorSecondary(),
             text=title,
             fontSize=24.sp,
             modifier=modifier.padding(bottom=5.dp)
@@ -528,59 +578,22 @@ fun InputRow(title: String,modifier:Modifier=Modifier,value:String,onValueChange
             value=value,
             onValueChange=onValueChange,
             modifier=Modifier
-                .width(250.dp),
+                .width(width)
+                .height(height),
             shape=RoundedCornerShape(5.dp),
             keyboardOptions=KeyboardOptions(
                 keyboardType=KeyboardType.Number,
                 imeAction=androidx.compose.ui.text.input.ImeAction.Done
             ),
-            placeholder={Text(title, color=colorSecondary)},
-            colors=TextFieldDefaults.textFieldColors(textColor=colorSecondary)
-        )
-    }
-}
-
-@Composable
-fun LongInputRow(title: String,modifier:Modifier=Modifier,value:String, onValueChange:(String)->Unit){
-    val colorSecondary=getColor(color=com.google.android.material.R.attr.colorSecondary)
-    Column(
-        modifier=modifier
-            .fillMaxSize()
-            .padding(
-                start=20.dp,
-                top=10.dp,
-                end=0.dp,
-                bottom=10.dp
-            )
-    ){
-        Text(
-            color=colorSecondary,
-            text=title,
-            fontSize=24.sp,
-            modifier=modifier.padding(bottom=5.dp)
-        )
-        TextField(
-            value=value,
-            onValueChange=onValueChange,
-            modifier=Modifier
-                .width(300.dp)
-                .height(100.dp),
-            shape=RoundedCornerShape(5.dp),
-            keyboardOptions=KeyboardOptions(
-                keyboardType=KeyboardType.Text,
-                imeAction=androidx.compose.ui.text.input.ImeAction.Done
-            ),
-            placeholder={Text(title, color=colorSecondary)},
-            colors=TextFieldDefaults.textFieldColors(textColor=colorSecondary),
-            maxLines=5
+            placeholder={Text(title, color=colorSecondary())},
+            maxLines=maxLines,
+            colors=TextFieldDefaults.textFieldColors(textColor=colorSecondary(),focusedIndicatorColor=colorSecondary(),cursorColor=colorSecondary())
         )
     }
 }
 
 @Composable
 fun IconItem(iconResId:Int,label:String, modifier:Modifier=Modifier){
-    val colorSecondary=getColor(color=com.google.android.material.R.attr.colorSecondary)
-    val colorTertiary=getColor(color=com.google.android.material.R.attr.colorTertiary)
     val imgSize=75.dp
     val circleSize=with(LocalDensity.current){(imgSize.toPx()*sqrt(2f))/density}.dp
 
@@ -609,7 +622,7 @@ fun IconItem(iconResId:Int,label:String, modifier:Modifier=Modifier){
             modifier=modifier
                 .size(circleSize)
                 .clip(CircleShape)
-                .background(colorTertiary)
+                .background(colorTertiary())
         ){
             Icon(
                 painter=painterResource(id=iconResId),
@@ -624,7 +637,7 @@ fun IconItem(iconResId:Int,label:String, modifier:Modifier=Modifier){
             )
         }
         Text(
-            color=colorSecondary,
+            color=colorSecondary(),
             text=readyText,
             textAlign=TextAlign.Center,
             modifier=Modifier.widthIn(max=100.dp),
@@ -646,11 +659,6 @@ fun MetricReorderView(metricRows:MutableState<List<MetricRowData>>,onOrderChange
         }
         onOrderChanged(updatedList)
     }
-    val colorPrimary=getColor(color=com.google.android.material.R.attr.colorPrimary)
-    val colorSecondary=getColor(color=com.google.android.material.R.attr.colorSecondary)
-    val colorTertiary=getColor(color=com.google.android.material.R.attr.colorTertiary)
-    /*val colorTertiary=getColor(color=com.google.android.material.R.attr.colorTertiary)
-    val colorQuaternary=getColor(color=com.google.android.material.R.attr.itemTextColor)*/
     val context=LocalContext.current
 
     LazyColumn(state=lazyListState){
@@ -660,9 +668,9 @@ fun MetricReorderView(metricRows:MutableState<List<MetricRowData>>,onOrderChange
                 Surface(elevation=elevation){
                     Row(
                         modifier=Modifier
-                            .border(0.5.dp,colorSecondary,RectangleShape)
+                            .border(1.dp,colorTertiary(),RectangleShape)
                             .fillMaxWidth()
-                            .background(color=colorPrimary)
+                            .background(color=colorPrimary())
                     ){
                         Checkbox(
                             checked=metric.visible,
@@ -676,21 +684,31 @@ fun MetricReorderView(metricRows:MutableState<List<MetricRowData>>,onOrderChange
                                 saveMetricsJson(context, updatedList)
                                 onOrderChanged(updatedList)
                             },
-                            colors=CheckboxDefaults.colors(checkedColor=colorTertiary)
+                            colors=CheckboxDefaults.colors(checkedColor=colorTertiary())
                         )
                         Text(
-                            color=colorSecondary,
+                            color=colorSecondary(),
                             fontSize=20.sp,
                             text=metric.title,
-                            modifier=Modifier.weight(1f)
+                            modifier=Modifier
+                                .weight(1f)
+                                .align(Alignment.CenterVertically)
                         )
                         IconButton(
                             modifier=Modifier.draggableHandle(),
                             onClick={}
                         ){
-                            Image(
+                            /*Image(
                                 painter=painterResource(id=R.drawable.icon_arrow_right_triangle),
                                 contentDescription="Reorder"
+                            )*/
+                            Icon(
+                                imageVector=Icons.Rounded.Menu,
+                                tint=colorSecondary(),
+                                contentDescription="",
+                                modifier=Modifier
+                                    .scale(1.2f)
+                                    .alpha(0.7f)
                             )
                         }
                     }
@@ -701,25 +719,24 @@ fun MetricReorderView(metricRows:MutableState<List<MetricRowData>>,onOrderChange
 }
 
 fun saveMetricsJson(context: Context, metrics: List<MetricRowData>){
-    val sharedPrefs=context.getSharedPreferences("com.example.rainbowcalendar_pref",Context.MODE_PRIVATE)
+    val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
     val gson=Gson()
 
-    val metricsPersistenceList=metrics.mapIndexed{index,metric->
-        MetricPersistence(metricName=metric.metricName,order=index,visible=metric.visible)
+    val metricPersistence2List=metrics.mapIndexed{index,metric->
+        MetricPersistence2(metricName=metric.metricName,order=index,visible=metric.visible,title=metric.title,selectedIndex=metric.selectedIndex)
     }
-
-    val metricsJson=gson.toJson(metricsPersistenceList)
-    sharedPrefs.edit().putString("metricsOrder", metricsJson).apply()
+    val metrics2Json=gson.toJson(metricPersistence2List)
+    sharedPrefs.edit().putString("metricsOrder2", metrics2Json).apply()
 }
 
-fun loadMetricsJson(context: Context): List<MetricPersistence>?{
-    val sharedPrefs=context.getSharedPreferences("com.example.rainbowcalendar_pref",Context.MODE_PRIVATE)
+fun loadMetricsJson(context: Context): List<MetricPersistence2>?{
+    val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
     val gson=Gson()
 
-    val metricsJson=sharedPrefs.getString("metricsOrder",null)
+    val metricsJson2=sharedPrefs.getString("metricsOrder2",null)
 
-    return metricsJson?.let{
-        val type=object:TypeToken<List<MetricPersistence>>(){}.type
+    return metricsJson2?.let{
+        val type=object:TypeToken<List<MetricPersistence2>>(){}.type
         gson.fromJson(it,type)
     }
 }

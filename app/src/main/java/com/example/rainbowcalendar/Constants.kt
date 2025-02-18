@@ -21,7 +21,7 @@ object Constants{
     const val key_isStealthDone="stealthDone"
     /** boolean, whether consent (checkboxes for age etc.) menu is complete**/
     const val key_isConsentDone="consentDone"
-    /** boolean, replace word "period" with "shark week" or another alternative**/
+    /** whether to replace word "period" with "shark week" or another alternative**/
     const val key_censorPeriod="censorPeriod"
 
     /** whether is known if user is taking T or not not used for women**/
@@ -37,8 +37,32 @@ object Constants{
     /** date of last shot of testosterone yyyy-mm-dd**/
     const val key_lastTestosteroneDate="lastTDose"
     /** how many days between testosterone doses**/
-    const val key_testosteroneInterval="testosteroneInterval"
+    const val key_currentTestosteroneInterval="testosteroneInterval"
 
+    const val key_lastTNotification="lastTNotificationTime"
+    const val key_tRemindersOn="tRemindersOn"
+
+    const val key_userName="username"
+    /** string yyyy-mm-dd**/
+    const val key_birthDate="birthDayDate"
+
+    const val key_isNameBirthDayMenuComplete="nameComplete"
+    /** if period menu has been set up**/
+    const val key_isPeriodMenuComplete="periodMenuComplete"
+    /** days, the whole cycle **/
+    const val key_averagePeriodCycleLength="cycleLength"
+    /** bleeding days **/
+    const val key_averagePeriodLength="periodLength"
+    const val key_periodRemindersOn="periodRemindersOn"
+    const val key_lastPeriodNotification="lastPeriodNotificationTime"
+
+
+    const val key_isTakingBirthControlContraceptive="isOnBC"
+    const val key_BCMenuComplete="bcMenuComplete"
+    const val key_lastBCDateContraceptive="lastBCDate"
+    const val key_bcContraceptiveInterval="bcInterval"
+    const val key_lastBCNotification="lastBirthControlNotificationTime"
+    const val key_bcRemindersOn="birthControlRemindersOn"
 
     //region password and recovery
     /**string 1st recovery question content **/

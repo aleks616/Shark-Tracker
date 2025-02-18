@@ -1,5 +1,6 @@
 package com.example.rainbowcalendar
 
+import android.text.BoringLayout
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
@@ -51,6 +52,19 @@ interface CycleDao {
 
     @Query("UPDATE cycles SET correctLength=:newCorrectInterval WHERE cycleId=:cycleId")
     fun changeCycleTypeCorrectInterval(newCorrectInterval:Int,cycleId:Int)
+
+    @Query("SELECT cycleId FROM cycles WHERE cycleName=:name")
+    fun getCycleIdByName(name:String):Int
+
+    @Insert
+    fun addNewDateCycle(dateCycle:DateCycle)
+
+
+    @Query("SELECT EXISTS(SELECT 1 FROM datecycle WHERE date=:date)")
+    fun doesDateExist(date:String):Boolean
+
+    @Query("UPDATE datecycle SET cycleDay=:cycleDay AND cycleId=:cycleId WHERE date=:date")
+    fun updateDateCycle(cycleId:Int,cycleDay:Int,date:String)
 
     @Query(
         """UPDATE metrics SET crampLevel=:crampLevel,headache=:headache,

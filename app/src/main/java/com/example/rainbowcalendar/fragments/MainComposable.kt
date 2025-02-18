@@ -1,7 +1,5 @@
 package com.example.rainbowcalendar.fragments
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -10,22 +8,17 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -45,7 +38,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material.IconButton
 import androidx.compose.material.RadioButton
@@ -54,11 +46,11 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Remove
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.Divider
+//import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -78,10 +70,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
@@ -94,24 +84,42 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.unit.toSize
 import androidx.core.text.isDigitsOnly
 import com.example.rainbowcalendar.Constants
 import com.example.rainbowcalendar.MainActivity
 import com.example.rainbowcalendar.R
 import com.example.rainbowcalendar.ScrollableMetricsView
 import com.example.rainbowcalendar.Utils
-import com.example.rainbowcalendar.getColor
-import com.example.rainbowcalendar.getLocal
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.Date
 import java.util.Locale
-import androidx.compose.ui.geometry.Size
+import com.example.rainbowcalendar.AutoComplete
+import com.example.rainbowcalendar.BetterButton
+import com.example.rainbowcalendar.BetterHeader
+import com.example.rainbowcalendar.BetterText
+import com.example.rainbowcalendar.BetterTextField
+import com.example.rainbowcalendar.CheckboxRow
+import com.example.rainbowcalendar.CheckmarkButtonRow
+import com.example.rainbowcalendar.DateCycle
+import com.example.rainbowcalendar.DateInputField
+import com.example.rainbowcalendar.ErrorText
+import com.example.rainbowcalendar.GoBackButtonRow
+import com.example.rainbowcalendar.MyDatePicker
+import com.example.rainbowcalendar.NumberInput
+import com.example.rainbowcalendar.StyledTimePicker
+import com.example.rainbowcalendar.VerticalSpacer
+import com.example.rainbowcalendar.YesNoRow
+import com.example.rainbowcalendar.colorPrimary
+import com.example.rainbowcalendar.colorQuaternary
+import com.example.rainbowcalendar.colorSecondary
+import com.example.rainbowcalendar.colorTertiary
+import com.vsnappy1.timepicker.data.model.TimePickerTime
+import java.time.ZoneId
 
+@Suppress("UsingMaterialAndMaterial3Libraries")
 object Screens{
     const val sWelcome="WelcomeScreen"
     const val sLanguage="LanguageScreen"
@@ -123,6 +131,7 @@ object Screens{
     const val sAgeConsentOptions="AgeConsentOptions"
     const val sPeriodOptions="PeriodOptionsScreen"
     const val sContraceptiveOptions="ContraceptiveOptionsScreen"
+    const val sNameBirthDayOptions="NameBirthDayOptionsScreen"
 
     const val sPassword="PasswordScreen"
     const val sRecovery="RecoveryScreen"
@@ -136,16 +145,19 @@ fun MainComposable(){
     when(currentScreen){
         Screens.sWelcome->WelcomeScreen{screen->currentScreen=screen}
         Screens.sLanguage->LanguageScreen()
-        Screens.sTheme->ThemeScreen()
+        Screens.sTheme->ThemesSettings{screen->currentScreen=screen}
         Screens.sGenderOptions->GenderOptionsScreen{screen->currentScreen=screen}
         Screens.sStealthOptions->StealthOptionsScreen{screen->currentScreen=screen}
-        Screens.sTOptions->TOptionsScreen{screen->currentScreen=screen}
         Screens.sAgeConsentOptions->AgeConsentOptions{screen->currentScreen=screen}
+
+        Screens.sTOptions->TOptionsScreen{screen->currentScreen=screen}
         Screens.sPeriodOptions->PeriodOptionsScreen{screen->currentScreen=screen}
         Screens.sContraceptiveOptions->ContraceptiveOptionsScreen{screen->currentScreen=screen}
 
         Screens.sPassword->PasswordScreen{screen->currentScreen=screen}
         Screens.sRecovery->RecoveryScreen{screen->currentScreen=screen}
+        Screens.sNameBirthDayOptions->NameBirthDayOptionsScreen{screen->currentScreen=screen}
+
         Screens.sMain->MainScreen{screen->currentScreen=screen}
     }
 }
@@ -232,7 +244,7 @@ fun GenderOptionsScreen(onNavigate:(String)->Unit){
     )
     SideEffect{
         if(sharedPrefs.getInt(Constants.key_gender,-1)!=-1)
-            onNavigate(Screens.sStealthOptions)
+            onNavigate(Screens.sNameBirthDayOptions)
     }
 
     Column(modifier=Modifier.fillMaxWidth()){
@@ -297,7 +309,7 @@ fun GenderOptionsScreen(onNavigate:(String)->Unit){
                 onClick={
                     sharedPrefs.edit().putInt(Constants.key_gender,selectedOption).apply()
                     //0-tm 1-nb 2-female
-                    onNavigate(Screens.sStealthOptions)
+                    onNavigate(Screens.sNameBirthDayOptions)
                 },
                 modifier=Modifier
                     .padding(top=30.dp,end=35.dp)
@@ -322,7 +334,6 @@ fun StealthOptionsScreen(onNavigate:(String) -> Unit){
     var censorPeriod by remember{mutableStateOf(isPeriodCensored(context))}
     val stealthDone=sharedPrefs.getBoolean(Constants.key_isStealthDone,false)
     val next=if(gender==0||gender==1)Screens.sTOptions else Screens.sAgeConsentOptions
-    //todo: later use another screen, and T/contraceptive notifications will be together with this
 
     SideEffect{
         if(stealthDone)
@@ -436,26 +447,37 @@ object PastOrPresentSelectableDates:SelectableDates{
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
+object OldEnoughSelectableDates:SelectableDates{
+    override fun isSelectableDate(utcTimeMillis:Long):Boolean{
+        return utcTimeMillis<=System.currentTimeMillis()-410240038000
+    }
+    override fun isSelectableYear(year:Int):Boolean{
+        return year<=LocalDate.now().year-13
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TOptionsScreen(onNavigate:(String) -> Unit){
     val context=LocalContext.current
+    //Utils.deleteAllCycleTypes(context,true)
     val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
     /**0-trans man 1-non binary 2-female**/
     val gender=sharedPrefs.getInt(Constants.key_gender,-1)
- /*   if(gender==2||sharedPrefs.getBoolean(Constants.key_testosteroneMenuComplete,false)){
+    val tMenuComplete=sharedPrefs.getBoolean(Constants.key_testosteroneMenuComplete,false)
+    if(gender==2||tMenuComplete){
         onNavigate(Screens.sPeriodOptions)
     }
-    */
+
 
     val temp=if(sharedPrefs.contains("isOnT"))sharedPrefs.getBoolean(Constants.key_isTakingTestosterone,false) else null
     /**nullable, null->ask if taking T if null, show the screens if true/false **/
     var isOnT:Boolean? by remember{mutableStateOf(temp)}
     LaunchedEffect(isOnT){}
     var testosteroneName by remember{mutableStateOf("")}
-    var testosteroneInterval by remember{mutableStateOf("")} //yeah it gotta be a string
+    var testosteroneInterval by remember{mutableStateOf("")}
+    var isMicrodosing:Boolean by remember{mutableStateOf(false)}
 
-    ///region datepickers setup
-    //later: testosteroneInterval.toIntOrNull()
     val lastDoseDatePickerState=rememberDatePickerState(
         selectableDates=PastOrPresentSelectableDates
     )
@@ -469,42 +491,29 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
     val firstDoseSelectedDate=firstDoseDatePickerState.selectedDateMillis?.let{
         convertMillisToDate(it)
     }?:""
-    val datePickerColors=DatePickerDefaults.colors(
-        titleContentColor=colorSecondary(),
-        headlineContentColor=colorSecondary(),
-        weekdayContentColor=colorSecondary(),
-        dayContentColor=colorSecondary(),
 
-        todayDateBorderColor=colorSecondary(),
-        todayContentColor=colorSecondary(),
-        selectedDayContainerColor=colorTertiary(),
-        selectedDayContentColor=colorSecondary(),
-
-        containerColor=colorPrimary(),
-        subheadContentColor=Color.Red,
-        yearContentColor=colorSecondary(),
-        currentYearContentColor=colorQuaternary(),
-        selectedYearContentColor=colorQuaternary(),
-        selectedYearContainerColor=colorTertiary(),
-
-        disabledDayContentColor=colorTertiary(),
-
-        disabledSelectedYearContentColor=colorTertiary(),
-        disabledSelectedYearContainerColor=colorTertiary(),
-        disabledSelectedDayContentColor=colorTertiary(),
-    )
-    //endregion
+    val datePickerColors=Utils.datePickerColors()
 
     //val theme=sharedPrefs.getString("theme","Black")
 
     sharedPrefs.edit().putString(Constants.key_firstTestosteroneDate,firstDoseSelectedDate).apply()
     sharedPrefs.edit().putString(Constants.key_lastTestosteroneDate,lastDoseSelectedDate).apply()
-    //todo IMPORTANT put testosterone name to db!
-    if(testosteroneInterval.isNotEmpty()){
-        if(testosteroneInterval.isDigitsOnly()){
-            sharedPrefs.edit().putInt(Constants.key_testosteroneInterval,testosteroneInterval.toInt()).apply()
-        }
-    }
+
+    var errorText by remember{mutableStateOf("")}
+    LaunchedEffect(errorText){}
+    //todo: put errors in strings
+    val testosteroneNameIsEmptyError="testosteroneNameIsEmpty"
+    val intervalIsEmptyError="intervalIsEmpty"
+    val lastDoseIsEmptyError="lastDoseIsEmpty"
+    val firstDoseIsEmptyError="first dose isn't selected but the checkbox isn't checked"
+    val testosteroneIntervalIsNotDigit="Interval should be a whole number greater than 0"
+
+    val skipFirstDose="Not sure/I'll put it in later"
+    var skipFirstDoseDateChecked by remember{mutableStateOf(false)}
+
+    var tShotsReminders by remember{mutableStateOf(false)}
+    var notificationHour by remember{mutableStateOf(6)}
+    var notificationMinute by remember{mutableStateOf(0)}
 
     LazyColumn(
         modifier=//if(theme=="Pride") //theme
@@ -528,6 +537,9 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
                     questionFontSize="ML"
                 )
             }
+            /*item{
+                com.vsnappy1.datepicker.DatePicker(onDateSelected={day,month,year->})
+            }*/
         }
         if(isOnT==true){
             item{GoBackButtonRow(onClick={isOnT=null})}
@@ -547,32 +559,22 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
                     onValueChange={testosteroneName=it}
                 )
             }
-            /*item{
-                Row(
-                    modifier=Modifier
-                        .padding(vertical=12.dp)
-                        .fillMaxWidth()
-                ){
-                    BetterTextField(
-                        value=testosteroneName,
-                        onValueChange={testosteroneName=it},
-                        placeholderText="it can be anything",
-                    )
-                }
-            }*/
+            item{
+                VerticalSpacer()
+            }
             item{
                 BetterHeader(
                     text="How often do you take it?",
                     fontSize="M",
                     modifier=Modifier
                         .fillMaxWidth()
-                        .padding(top=25.dp,bottom=10.dp)
+                        .padding(bottom=5.dp)
                 )
             }
             item{
                 Row(
                     modifier=Modifier
-                        .padding(vertical=12.dp)
+                        .padding(top=10.dp)
                 ){
                     BetterTextField(
                         value=testosteroneInterval,
@@ -582,14 +584,14 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
                         keyboardType=KeyboardType.Number
                     )
                 }
+            }//testosteroneName, testosteroneInterval
+            item{
+                VerticalSpacer()
             }
             item{
                 BetterHeader(
                     text="When was your last dose?",
                     fontSize="M",
-                    modifier=Modifier
-                        .fillMaxWidth()
-                        .padding(top=30.dp,bottom=15.dp)
                 )
             }
             item{
@@ -608,62 +610,159 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
                         colors=datePickerColors
                     )
                 }
+            }//testosteroneName, testosteroneInterval, lastDoseSelectedDate
+            item{
+                CheckboxRow(
+                    checked=tShotsReminders,
+                    onCheckedChange={tShotsReminders=!tShotsReminders},
+                    text="Get reminders?"
+                )
             }
-
+            if(tShotsReminders){
+                item{
+                    Row(modifier=Modifier.fillMaxWidth()){
+                        StyledTimePicker(
+                            onTimeSelected={hour,minute->
+                            notificationHour=hour
+                            notificationMinute=minute
+                        },
+                            time=TimePickerTime(notificationHour,notificationMinute),
+                        )
+                    }
+                }
+            }
+            item{
+                VerticalSpacer()
+            }
             item{
                 BetterHeader(
                     text="When did you start taking testosterone?",
-                    fontSize="M",
-                    modifier=Modifier
-                        .fillMaxWidth()
-                        .padding(top=30.dp)
+                    fontSize="M"
                 )
             }
             item{
-                BetterHeader(
-                    text="This date helps track milestones.\nIf you've taken breaks from testosterone, enter the date you consider your starting point.",
-                    fontSize="S",
-                    fontStyle=FontStyle.Italic,
-                    modifier=Modifier
-                        .fillMaxWidth()
-                        .padding(top=6.dp,start=20.dp,end=20.dp,bottom=20.dp),
+                CheckboxRow(
+                    onCheckedChange={skipFirstDoseDateChecked=!skipFirstDoseDateChecked},
+                    checked=skipFirstDoseDateChecked,
+                    text=skipFirstDose
                 )
             }
-            item{
-                BetterHeader(
-                    text=firstDoseSelectedDate,
-                    fontSize="MS",
-                )
-            }
-            item{
-                Box(modifier=Modifier.padding(horizontal=10.dp)){
-                    DatePicker(
-                        title=null,
-                        headline=null,
-                        state=firstDoseDatePickerState,
-                        showModeToggle=false,
-                        colors=datePickerColors
+            if(!skipFirstDoseDateChecked){
+                item{
+                    BetterHeader(
+                        text="This date helps track milestones.\nIf you've taken breaks from testosterone, enter the date you consider your starting point.",
+                        fontSize="S",
+                        fontStyle=FontStyle.Italic,
+                        modifier=Modifier
+                            .fillMaxWidth()
+                            .padding(top=6.dp,start=20.dp,end=20.dp,bottom=20.dp),
                     )
                 }
+                item{
+                    BetterHeader(
+                        text=firstDoseSelectedDate,
+                        fontSize="MS",
+                    )
+                }//testosteroneName, testosteroneInterval, lastDoseSelectedDate, firstDoseSelectedDate
+                item{
+                    Box(modifier=Modifier.padding(horizontal=10.dp)){
+                        DatePicker(
+                            title=null,
+                            headline=null,
+                            state=firstDoseDatePickerState,
+                            showModeToggle=false,
+                            colors=datePickerColors
+                        )
+                    }
+                }
+                item{
+                    Spacer(modifier=Modifier.padding(vertical=10.dp))
+                }
             }
-            
+            else{
+                item{androidx.compose.material.Divider(color=colorTertiary(), thickness=2.dp,modifier=Modifier.padding(vertical=12.dp))}
+            }
             item{
-                YesNoRow(
-                    onClickYes={sharedPrefs.edit().putBoolean(Constants.key_isMicrodosing,true).apply()},
-                    onClickNo={sharedPrefs.edit().putBoolean(Constants.key_isMicrodosing,false).apply()},
-                    question="Are you microdosing?"
+                CheckboxRow(
+                    checked=isMicrodosing,
+                    onCheckedChange={isMicrodosing=!isMicrodosing},
+                    text="I am microdosing"
                 )
             }
-            
+
+            item{
+                /*Text(
+                    text=errorText,
+                    color=Color.Red,
+                    modifier=Modifier
+                        .fillMaxWidth()
+                        .padding(top=20.dp,bottom=10.dp),
+                    textAlign=TextAlign.Center,
+                    fontSize=28.sp,
+                    fontStyle=FontStyle.Italic
+                )*/
+                ErrorText(text=errorText)
+            }
             item{
                 CheckmarkButtonRow(
                     onClick={
+                        //testosteroneName, testosteroneInterval, lastDoseSelectedDate, firstDoseSelectedDate, microdosing in sharedpref
                         if(testosteroneName.isNotEmpty()){
-                            Utils.addNewCycleType(context,testosteroneName,testosteroneInterval.toInt(),true)
-                            onNavigate(Screens.sPeriodOptions)
-                            sharedPrefs.edit().putBoolean(Constants.key_testosteroneMenuComplete,true).apply()
+                            //Utils.testNotif(context)
+                            errorText=""
+                            if(testosteroneInterval.isNotEmpty()){
+                                errorText=""
+                                if(testosteroneInterval.isDigitsOnly()){
+                                    errorText=""
+                                    if(testosteroneInterval.toInt()>0){
+                                        errorText=""
+                                        if(lastDoseSelectedDate.isNotEmpty()){
+                                            errorText=""
+                                            if(firstDoseSelectedDate.isNotEmpty()||skipFirstDoseDateChecked){ //both are ok, but there's no start date if it's skipped (duh)
+                                                errorText=""
+                                                sharedPrefs.edit().putInt(Constants.key_currentTestosteroneInterval,testosteroneInterval.toInt()).apply()
+                                                sharedPrefs.edit().putBoolean(Constants.key_isMicrodosing,isMicrodosing).apply()
+                                                Utils.addNewCycleType(context,testosteroneName,testosteroneInterval.toInt(),true)
+                                                onNavigate(Screens.sPeriodOptions)
+                                                sharedPrefs.edit().putBoolean(Constants.key_testosteroneMenuComplete,true).apply()
+                                                if(firstDoseSelectedDate.isNotEmpty()){
+                                                    sharedPrefs.edit().putString(Constants.key_firstTestosteroneDate,firstDoseSelectedDate).apply()
+                                                }
+                                                if(tShotsReminders){
+                                                    /*val testIntent=Intent(context,AlarmReceiver::class.java)
+                                                    context.sendBroadcast(testIntent)*/
+
+                                                    sharedPrefs.edit().putBoolean(Constants.key_tRemindersOn,true).apply()
+
+                                                    Utils.createTestosteroneNotificationChannel(context)
+                                                    val daysTillNextT=Utils.getDaysTillNextShot(lastDoseSelectedDate,testosteroneInterval.toInt())
+                                                    Utils.scheduleNotifications(context=context, interval=testosteroneInterval.toInt(),
+                                                        daysTillNext=daysTillNextT, notificationHour=notificationHour, notificationMinute=notificationMinute,type=Constants.key_lastTNotification)
+                                                    //todo: NOTIFICATION SYSTEM
+                                                }
+                                            }
+                                            else{
+                                                errorText=firstDoseIsEmptyError
+                                            }
+                                        }
+                                        else{
+                                            errorText=lastDoseIsEmptyError
+                                        }
+                                    }
+                                    else{
+                                        errorText=testosteroneIntervalIsNotDigit
+                                    }
+                                }
+                                else{
+                                    errorText=testosteroneIntervalIsNotDigit
+                                }
+                            }
+                            else{
+                                errorText=intervalIsEmptyError
+                            }
                         }
                         else{
+                            errorText=testosteroneNameIsEmptyError
                             Log.e("error",testosteroneName)
                         }
                        },
@@ -699,198 +798,512 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
     }
 }
 
-@Composable
-fun AutoComplete(testosteroneName:String,placeholderText:String,onValueChange:(String)->Unit){
-    val testosteroneVersions=listOf(
-        "Agovirin Depot",
-        "Andractim",
-        "Andriol",
-        "AndroGel",
-        "AndroPatch",
-        "Androderm",
-        "Androject",
-        "Andronaq",
-        "Aveed",
-        "Axiron",
-        "Delatestryl",
-        "Depo-Testosterone",
-        "Dianabol",
-        "Halotestin",
-        "Jatenzo",
-        "Metandren",
-        "Nebido",
-        "Omnadren",
-        "Ora-Testryl",
-        "Oreton Methyl",
-        "Perandren",
-        "Prolongatum",
-        "Proviron",
-        "Rektandron",
-        "Sterotate",
-        "Striant",
-        "Sustanon 100",
-        "Sustanon 250",
-        "Testim",
-        "TestoGel",
-        "TestoPatch",
-        "Testopel",
-        "Testoral",
-        "Testoviron",
-        "Testred",
-        "Ultandren",
-        "Virosterone",
-        "Xyosted"
-    )
-
-    var category by remember{mutableStateOf(testosteroneName)}
-    var textFieldSize by remember{mutableStateOf(Size.Zero)}
-    var expanded by remember{mutableStateOf(false)}
-    val interactionSource=remember{MutableInteractionSource()}
-
-    Column(
-        modifier=Modifier
-            .padding(vertical=10.dp)
-            .fillMaxWidth()
-            .clickable(
-                interactionSource=interactionSource,
-                indication=null,
-                onClick={
-                    expanded=false
-                }
-            )
-    ){
-        Row(
-            modifier=Modifier.fillMaxWidth()
-        ){
-            BetterTextField(
-                textFieldModifier=Modifier
-                    .fillMaxWidth()
-                    .onGloballyPositioned {coordinates->
-                        textFieldSize=coordinates.size.toSize()
-                    },
-                value=category,
-                onValueChange={value->
-                    category=value
-                    onValueChange(value)
-                    expanded=true
-                },
-                placeholderText=placeholderText,
-                placeholderTextModifier=Modifier.fillMaxWidth(),
-                trailingIcon={
-                    IconButton(
-                        onClick={
-                            expanded=!expanded
-                            category=""
-                        }
-                    ){
-                        Icon(
-                            modifier=Modifier
-                                .size(58.dp)
-                                .padding(end=10.dp),
-                            imageVector=Icons.Rounded.KeyboardArrowDown,
-                            contentDescription="",
-                            tint=colorSecondary()
-                        )
-                    }
-                }
-            )
-        }
-        AnimatedVisibility(
-            visible=expanded,
-            enter=fadeIn(animationSpec=tween(durationMillis=150))+expandVertically(),
-            exit=fadeOut(animationSpec=tween(durationMillis=150))+shrinkVertically()
-        ){
-            Card(
-                modifier=Modifier
-                    .padding(horizontal=15.dp)
-                    .fillMaxWidth(),
-                shape=RectangleShape
-            ){
-                LazyColumn(
-                    modifier=Modifier
-                        .heightIn(max=200.dp)
-                        .background(colorPrimary()),
-                ){
-                    if(category.isNotEmpty()){
-                        items(
-                            testosteroneVersions.filter{
-                                it.lowercase()
-                                    .contains(category.lowercase())||it.lowercase()
-                                    .contains("others")
-                            }.sorted()
-                        ){
-                            ItemsCategory(title=it){title->
-                                category=title
-                                expanded=false
-                            }
-                        }
-                    }
-                    else{
-                        items(
-                            testosteroneVersions.sorted()
-                        ){
-                            ItemsCategory(title=it){title->
-                                category=title
-                                onValueChange(title)
-                                expanded=false
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun ItemsCategory(
-    title:String,
-    onSelect:(String)->Unit){
-    Row(
-        modifier=Modifier
-            .fillMaxWidth()
-            .clickable {
-                onSelect(title)
-            }
-            .padding(10.dp)
-    ){
-        Text(text=title,fontSize=18.sp,color=colorSecondary())
-    }
-    androidx.compose.material.Divider(color=colorTertiary())
-}
 
 
 @Composable
 fun PeriodOptionsScreen(onNavigate:(String) -> Unit){
     val context=LocalContext.current
     val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
+    val periodMenuComplete=sharedPrefs.getBoolean(Constants.key_isPeriodMenuComplete,false)
+    if(periodMenuComplete){
+        onNavigate(Screens.sContraceptiveOptions)
+    }
+
     /**0-trans man 1-non binary 2-female**/
-    val gender=sharedPrefs.getInt(Constants.key_gender,-1)
-    val takingT=sharedPrefs.getBoolean(Constants.key_isTakingTestosterone,false)
+    /*val gender=sharedPrefs.getInt(Constants.key_gender,-1)
+    val takingT=sharedPrefs.getBoolean(Constants.key_isTakingTestosterone,false)*/
+    val censor=sharedPrefs.getBoolean(Constants.key_censorPeriod,false)
 
-    val question1=if(takingT) "Do you still have periods?" else "Are your periods regular?"
+    var periodRegular by remember{mutableStateOf(false)}
+    var cycleLengthValue by remember{mutableStateOf("0")}
+    var periodLengthValue by remember{mutableStateOf("0")}
 
+    var amountOfCyclesToEnter by remember{mutableStateOf(1)}
+    var cycleDates2 by remember{mutableStateOf(listOf(arrayOf("","","")))}
+    LaunchedEffect(amountOfCyclesToEnter){}
+    Log.v("important",cycleDates2.toString())
+
+    var periodReminders by remember{mutableStateOf(false)}
+    var notificationHour by remember{mutableStateOf(10)}
+    var notificationMinute by remember{mutableStateOf(0)}
+    var remindXDaysBeforePeriod by remember{mutableStateOf("")}
+
+    var errorText by remember{mutableStateOf("")}
+    val cycleLengthNotANumberError="Cycle length must be a whole number."
+    val periodLengthNotANumberError="Period length should be a whole number."
+    val notNumberDatesError="Each year, month, and day must be a whole number."
+    val invalidDatesError="Dates must be a valid, format is year month day, dates must be in the past."
+    val invalidDaysBeforePeriod="Days before period must be a whole number."
+    val datesNotDescendingError="Dates aren't ordered from newest to oldest."
     LazyColumn{
         item{
             YesNoRow(
-                onClickYes={onNavigate(Screens.sMain)},
-                onClickNo={/*TODO*/},
-                question="aaa")
+                onClickYes={periodRegular=true},
+                onClickNo={periodRegular=false},
+                question="Are your periods regular?"
+            )
         }
+        if(periodRegular){
+            item{
+                VerticalSpacer()
+            }
+            item{
+                BetterText(
+                    text="Enter your average cycle length",
+                    fontSize=28.sp,
+                    modifier=Modifier.padding(bottom=15.dp,start=15.dp,end=10.dp)
+                )
+            }
+            item{
+                NumberInput(onValueChange={cycleLengthValue=it},startValue=28)
+            }
+        }
+        item{
+            VerticalSpacer()
+        }
+        item{
+            BetterText(
+                text="Enter your average period length", //todo censored and gendered strings
+                fontSize=28.sp,
+                modifier=Modifier.padding(bottom=15.dp,start=15.dp,end=10.dp)
+            )
+        }
+        item{
+            NumberInput(onValueChange={periodLengthValue=it},startValue=5)
+        }
+        item{
+            VerticalSpacer()
+        }
+        item{
+            BetterText(
+                text="Enter your cycle dates, from more recent ones.",
+                fontSize=28.sp,
+                modifier=Modifier.padding(bottom=15.dp,start=15.dp,end=10.dp)
+            )
+        }
+        items(cycleDates2.size,key={it}){index->
+            Row(
+                modifier=Modifier.padding(start=15.dp,top=8.dp,bottom=8.dp)
+            ){
+                DateInputField(
+                    onDayValueChange={value->
+                        cycleDates2=cycleDates2.toMutableList().apply{
+                            this[index][0]=value
+                            Log.i("newValueD: ",value)
+                        }
+                    },
+                    onMonthValueChange={value->
+                        cycleDates2=cycleDates2.toMutableList().apply{
+                            this[index][1]=value
+                            Log.i("newValueM: ",value)
+                        }
+                    },
+                    onYearValueChange={value->
+                        cycleDates2=cycleDates2.toMutableList().apply{
+                            this[index][2]=value
+                            Log.i("newValueY: ",value)
+                        }
+                    }
+                )
+            }
+        }
+        item{
+            Row(modifier=Modifier.padding(top=20.dp,start=15.dp,bottom=15.dp)){
+                BetterButton(
+                    modifier=Modifier
+                        .padding(end=10.dp)
+                        .size(width=70.dp,height=40.dp),
+                    onClick={
+                        //cycleDates+=""
+                        cycleDates2+=listOf(arrayOf("","",""))
+                        amountOfCyclesToEnter++
+                    }
+                ){
+                    Icon(
+                        imageVector=Icons.Rounded.Add,
+                        tint=colorSecondary(),
+                        contentDescription="",
+                        modifier=Modifier.scale(1.4f)
+                    )
+                }
+                BetterButton(
+                    modifier=Modifier
+                        .padding(start=10.dp)
+                        .size(width=70.dp,height=40.dp)
+                        .animateContentSize(),
+                    onClick={
+                        //if(cycleDates.size>1) cycleDates=cycleDates.dropLast(1)
+                        if(cycleDates2.size>1) cycleDates2=cycleDates2.dropLast(1)
+                        if(amountOfCyclesToEnter>0)amountOfCyclesToEnter--
+                    }
+                ){
+                    Icon(
+                        imageVector=Icons.Rounded.Remove,
+                        tint=colorSecondary(),
+                        contentDescription="",
+                        modifier=Modifier.scale(1.4f)
+                    )
+                }
+            }
+        }
+        if(periodRegular){
+            item{
+                CheckboxRow(
+                    checked=periodReminders,
+                    onCheckedChange={periodReminders=!periodReminders},
+                    text="Get reminders?"
+                )
+            }
+            if(periodReminders){
+                item{
+                    Row(modifier=Modifier.fillMaxWidth()){
+                        StyledTimePicker(
+                            onTimeSelected={hour,minute->
+                                notificationHour=hour
+                                notificationMinute=minute
+                            },
+                            time=TimePickerTime(notificationHour,notificationMinute),
+                        )
+                    }
+                }
+                item{
+                    BetterHeader(
+                        text="How many days before the period start should the reminder be?",
+                        fontSize="MS",
+                        modifier=Modifier.padding(top=15.dp)
+                    )
+                }
+                item{
+                    NumberInput(
+                        onValueChange={remindXDaysBeforePeriod=it},
+                        startValue=if(Utils.canBeIntParsed(remindXDaysBeforePeriod)) remindXDaysBeforePeriod.toInt() else 2,
+                        maxValue=30,
+                        modifier=Modifier.padding(start=15.dp,top=15.dp),
+                        arrowScale=1.5f,
+                        arrowHeight=30.dp
+                    )
+                }
+            }
+            item{
+                VerticalSpacer()
+            }
+        }
+        else{
+            item{
+                VerticalSpacer()
+            }
+        }
+        item{
+            ErrorText(text=errorText)
+        }
+        item{
+            CheckmarkButtonRow(onClick={
+                //mandatory: average cycle length, at least 1 cycle date
+                //mandatory if regular:period length
+                if(Utils.canBeIntParsed(cycleLengthValue)){
+                    errorText=""
+                    sharedPrefs.edit().putInt(Constants.key_averagePeriodCycleLength,cycleLengthValue.toInt()).apply()
+                    Utils.addNewCycleType(context=context, cycleName="period",correctInterval=cycleLengthValue.toInt(),active=true)
+
+                    cycleDates2.forEachIndexed{index,cycle->
+                        Log.i("newDateCycleDebug",cycle[2]+"-"+cycle[1]+"-"+cycle[0])
+                        if(Utils.canBeIntParsed(cycle[2])&&Utils.canBeIntParsed(cycle[1])&&Utils.canBeIntParsed(cycle[0])){
+                            //Log.i("newDateCycleDebug","here1")
+                            if(Utils.isValidPastDate(cycle[2].toInt(),cycle[1].toInt(),cycle[0].toInt())){
+                                Log.i("newDateCycleDebug",index.toString())
+                                if(index>0){
+                                    //Log.i("newDateCycleDebug","here3")
+                                    val indexDate=Utils.createDateFromIntegers(cycle[2].toInt(),cycle[1].toInt(),cycle[0].toInt())
+                                    val previousDate=Utils.createDateFromIntegers(cycleDates2[index-1][2].toInt(),cycleDates2[index-1][1].toInt(),cycleDates2[index-1][0].toInt())
+                                    if(Utils.isDate1AfterDate2(indexDate,previousDate)){
+                                        errorText=datesNotDescendingError
+                                        Log.i("newDateCycleDebugDates","date: $previousDate previous date: $indexDate")
+                                    }
+                                }
+                                    if(errorText!=datesNotDescendingError){
+                                    //else{
+                                        val indexDate=Utils.createDateFromIntegers(cycle[2].toInt(),cycle[1].toInt(),cycle[0].toInt())
+                                        errorText=""
+                                        //Log.i("newDateCycleDebug","here4")
+                                        //TODO: PUT OTHER DAYS OF CYCLES TO DB (now only 0s gets inserted)
+                                        val cycleId=Utils.getCycleIdByName(context,"period")
+                                        if(periodRegular){
+                                            if(Utils.canBeIntParsed(periodLengthValue)){
+                                                errorText=""
+                                                sharedPrefs.edit().putInt(Constants.key_averagePeriodLength,periodLengthValue.toInt()).apply()
+                                                //Log.i("newDateCycleDebug","here0")
+                                                if(periodReminders){
+                                                    sharedPrefs.edit().putBoolean(Constants.key_periodRemindersOn,true).apply()
+                                                    Utils.createPeriodNotificationChannel(context)
+                                                    val isDateError=errorText!=datesNotDescendingError&&errorText!=notNumberDatesError&&errorText!=invalidDatesError
+                                                    if(Utils.canBeIntParsed(remindXDaysBeforePeriod)/*&&!isDateError*/){
+                                                        errorText=""
+                                                        val lastDate=Utils.createDateFromIntegers(cycleDates2[0][2].toInt(),cycleDates2[0][1].toInt(),cycleDates2[0][0].toInt())
+                                                        val nextDoseDate=Utils.getNextDoseDate(lastDate,cycleLengthValue.toInt())
+                                                        //todo: ADD REMINDERS at [nextDoseDate] !!!
+
+                                                    }
+                                                    else{
+                                                        Log.v("daysBefore",remindXDaysBeforePeriod)
+                                                        errorText=invalidDaysBeforePeriod
+                                                    }
+                                                }
+                                            }
+                                            else{
+                                                errorText=periodLengthNotANumberError
+                                            }
+                                        }
+                                        if(errorText.isEmpty()&&Utils.addNewDateCycle(context,DateCycle(indexDate,cycleId,0))){
+                                            amountOfCyclesToEnter=0
+                                            cycleDates2=listOf(arrayOf("","",""))
+                                            sharedPrefs.edit().putBoolean(Constants.key_isPeriodMenuComplete,true).apply()
+                                            onNavigate(Screens.sContraceptiveOptions)
+                                        }
+                                    }
+                                //}
+                            }
+                            else{
+                                Log.v("newDateCycleInvalidDate",cycle[2]+"-"+cycle[1]+"-"+cycle[0])
+                                errorText=invalidDatesError
+                            }
+                        }
+                        else{
+                            errorText=notNumberDatesError
+                        }
+                    }
+                }
+                else{
+                    errorText=cycleLengthNotANumberError
+                }
+            })
+        }
+        item{
+            VerticalSpacer()
+        }
+
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ContraceptiveOptionsScreen(onNavigate:(String) -> Unit){
-    BetterText(text="contraceptive")
+fun ContraceptiveOptionsScreen(onNavigate:(String)->Unit){
+    val context=LocalContext.current
+    val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
+
+    val bcMenuComplete=sharedPrefs.getBoolean(Constants.key_BCMenuComplete,false)
+    if(bcMenuComplete){
+        onNavigate(Screens.sMain)
+    }
+
+    val temp=if(sharedPrefs.contains("isOnBC")) sharedPrefs.getBoolean(Constants.key_isTakingBirthControlContraceptive,false) else null
+    /**nullable, null->ask if taking T if null, show the screens if true/false **/
+    var isOnBC:Boolean? by remember{mutableStateOf(temp)}
+    LaunchedEffect(isOnBC){}
+    var contraceptiveName by remember{mutableStateOf("")}
+    var contraceptiveInterval by remember{mutableStateOf("")}
+    ///region datePickers setup
+    val lastDoseDatePickerState=rememberDatePickerState(
+        selectableDates=PastOrPresentSelectableDates
+    )
+    val lastDoseSelectedDate=lastDoseDatePickerState.selectedDateMillis?.let{
+        convertMillisToDate(it)
+    } ?: ""
+
+
+    val datePickerColors=Utils.datePickerColors()
+    //endregion
+
+    //val theme=sharedPrefs.getString("theme","Black")
+
+    sharedPrefs.edit().putString(Constants.key_lastBCDateContraceptive,lastDoseSelectedDate).apply()
+
+    var errorText by remember{mutableStateOf("")}
+    LaunchedEffect(errorText){}
+    //todo: put errors in strings
+    val contraceptiveNameIsEmptyError="contraceptiveNameIsEmptyError"
+    val intervalIsEmptyError="intervalIsEmpty"
+    val lastDoseIsEmptyError="lastDoseIsEmpty"
+    val contraceptiveIntervalIsNotDigit="Interval should be a whole number greater than 0"
+
+
+    var bcReminders by remember{mutableStateOf(false)}
+    var notificationHour by remember{mutableStateOf(6)}
+    var notificationMinute by remember{mutableStateOf(0)}
+
+    LazyColumn(
+        modifier=//if(theme=="Pride") //theme
+        Modifier
+            .fillMaxSize()
+        //.paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
+        //else Modifier.fillMaxSize()
+    ){
+        if(isOnBC==null){
+            item{
+                YesNoRow(
+                    onClickYes={
+                        isOnBC=true
+                        sharedPrefs.edit().putBoolean(Constants.key_isTakingBirthControlContraceptive,true).apply()
+                    },
+                    onClickNo={
+                        isOnBC=false
+                        sharedPrefs.edit().putBoolean(Constants.key_BCMenuComplete,true).apply()
+                        sharedPrefs.edit().putBoolean(Constants.key_isTakingBirthControlContraceptive,false).apply()
+                        onNavigate(Screens.sMain)
+                    },
+                    question="Are you currently taking birth control?",
+                    questionFontSize="ML"
+                )
+            }
+        }
+        if(isOnBC==true){
+            item{GoBackButtonRow(onClick={isOnBC=null})}
+            item{
+                BetterHeader(
+                    text="Enter name of your birth control medication",
+                    fontSize="ML",
+                    modifier=Modifier
+                        .fillMaxWidth()
+                        .padding(vertical=12.dp,horizontal=20.dp)
+                )
+            }
+            item{
+                AutoComplete(
+                    contraceptiveName,
+                    placeholderText="contraceptive",
+                    onValueChange={contraceptiveName=it},
+                    bc=true
+                )
+            }
+            item{
+                VerticalSpacer()
+            }
+            item{
+                BetterHeader(
+                    text="How often do you take it?",
+                    fontSize="M",
+                    modifier=Modifier
+                        .fillMaxWidth()
+                        .padding(bottom=5.dp)
+                )
+            }
+            item{
+                Row(
+                    modifier=Modifier
+                        .padding(top=10.dp)
+                ){
+                    BetterTextField(
+                        value=contraceptiveInterval,
+                        onValueChange={contraceptiveInterval=it},
+                        placeholderText="in days, 1->everyday",
+                        imeAction=ImeAction.Done,
+                        keyboardType=KeyboardType.Number
+                    )
+                }
+            }//testosteroneName, testosteroneInterval
+            item{
+                VerticalSpacer()
+            }
+            item{
+                BetterHeader("When was your last dose?",fontSize="M")
+            }
+            item{
+                BetterHeader(lastDoseSelectedDate,fontSize="MS")
+            }
+            item{
+                Box(modifier=Modifier.padding(horizontal=10.dp)){
+                    DatePicker(
+                        title=null,
+                        headline=null,
+                        state=lastDoseDatePickerState,
+                        showModeToggle=true,
+                        colors=datePickerColors
+                    )
+                }
+            }//testosteroneName, testosteroneInterval, lastDoseSelectedDate
+            item{
+                CheckboxRow(
+                    checked=bcReminders,
+                    onCheckedChange={bcReminders=!bcReminders},
+                    text="Get reminders?"
+                )
+            }
+            if(bcReminders){
+                item{
+                    Row(modifier=Modifier.fillMaxWidth()){
+                        StyledTimePicker(
+                            onTimeSelected={hour,minute->
+                                notificationHour=hour
+                                notificationMinute=minute
+                            },
+                            time=TimePickerTime(notificationHour,notificationMinute),
+                        )
+                    }
+                }
+            }
+            item{
+                VerticalSpacer()
+            }
+            item{
+                CheckmarkButtonRow(
+                    onClick={
+                        //testosteroneName, testosteroneInterval, lastDoseSelectedDate, firstDoseSelectedDate, microdosing in sharedpref
+                        if(contraceptiveName.isNotEmpty()){
+                            //Utils.testNotif(context)
+                            errorText=""
+                            if(contraceptiveInterval.isNotEmpty()){
+                                errorText=""
+                                if(contraceptiveInterval.isDigitsOnly()){
+                                    errorText=""
+                                    if(contraceptiveInterval.toInt()>0){
+                                        errorText=""
+                                        if(lastDoseSelectedDate.isNotEmpty()){
+                                            errorText=""
+                                                errorText=""
+                                                sharedPrefs.edit().putInt(Constants.key_bcContraceptiveInterval,contraceptiveInterval.toInt()).apply()
+                                                Utils.addNewCycleType(context,contraceptiveName,contraceptiveInterval.toInt(),true)
+                                                onNavigate(Screens.sPeriodOptions)
+                                                sharedPrefs.edit().putBoolean(Constants.key_BCMenuComplete,true).apply()
+                                                sharedPrefs.edit().putBoolean(Constants.key_isSetupDone,true).apply()
+                                                if(bcReminders){
+                                                    sharedPrefs.edit().putBoolean(Constants.key_tRemindersOn,true).apply()
+                                                    Utils.createContraceptiveNotificationChannel(context)
+                                                    //val daysTillNextBC=Utils.getDaysTillNextShot(lastDoseSelectedDate,contraceptiveInterval.toInt())
+                                                }
+                                        }
+                                        else{
+                                            errorText=lastDoseIsEmptyError
+                                        }
+                                    }
+                                    else{
+                                        errorText=contraceptiveIntervalIsNotDigit
+                                    }
+                                }
+                                else{
+                                    errorText=contraceptiveIntervalIsNotDigit
+                                }
+                            }
+                            else{
+                                errorText=intervalIsEmptyError
+                            }
+                        }
+                        else{
+                            errorText=contraceptiveNameIsEmptyError
+                            Log.e("error",contraceptiveName)
+                        }
+                    },
+                    rowModifier=Modifier.padding(bottom=50.dp)
+                )
+            }
+        }
+    }
 }
 
 //region MainActivity
 @Composable
 fun MainScreen(onNavigate:(String)->Unit){
-    val context=LocalContext.current
+    //val context=LocalContext.current
    // Utils.addNewCycleType("period",28)
-    onNavigate(Screens.sTOptions)
+    //onNavigate(Screens.sAgeConsentOptions)
     //val colorTertiary=getColor(color=com.google.android.material.R.attr.colorTertiary)
     //val colorSecondary=getColor(color=com.google.android.material.R.attr.colorSecondary)
     data class BottomNavItem(
@@ -900,10 +1313,10 @@ fun MainScreen(onNavigate:(String)->Unit){
     )
 
     val bottomNavItems=listOf(
-        BottomNavItem(R.drawable.home_icon,getLocal(id=R.string.home_button_name),"Home"),
-        BottomNavItem(R.drawable.calendar_icon,getLocal(id=R.string.calendar_button_text),"Calendar"),
-        BottomNavItem(R.drawable.add_icon,getLocal(id=R.string.add_button_text),"Add"),
-        BottomNavItem(R.drawable.account_icon,getLocal(id=R.string.account_button_name),"Settings")
+        BottomNavItem(R.drawable.home_icon,stringResource(id=R.string.home_button_name),"Home"),
+        BottomNavItem(R.drawable.calendar_icon,stringResource(id=R.string.calendar_button_text),"Calendar"),
+        BottomNavItem(R.drawable.add_icon,stringResource(id=R.string.add_button_text),"Add"),
+        BottomNavItem(R.drawable.account_icon,stringResource(id=R.string.account_button_name),"Settings")
     )
 
 
@@ -1025,10 +1438,6 @@ fun LanguageScreen(){
     LanguageMenu()
 }
 
-@Composable
-fun ThemeScreen(){
-    ThemesSettings()
-}
 //TODO BIG:
 // 1 FIX PASSWORD ERRORS NOT SHOWING!
 // 2. ADD RECOVERY WHEN FORGOT PASSWORD
@@ -1036,6 +1445,97 @@ fun ThemeScreen(){
 // 4. (don't forget setup complete)
 // 5. BRING BACK CREATE PASSWORD/RECOVERY POPUP
 // 6. SOCIALS/CREDITS TAB
+//: TODO FROM OLD ACTIVITIES: name, birthday, period-settings, home_fragment
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun NameBirthDayOptionsScreen(onNavigate:(String) -> Unit){
+    //on navigate stealth
+    val context=LocalContext.current
+    val sharedPrefs=context.getSharedPreferences(Constants.key_package, Context.MODE_PRIVATE)
+    if(sharedPrefs.getBoolean(Constants.key_isNameBirthDayMenuComplete,false))
+        onNavigate(Screens.sStealthOptions)
+
+    var name by remember{mutableStateOf("")}
+    val birthdayDatePickerState=rememberDatePickerState(
+        initialSelectedDateMillis=LocalDate.now().minusYears(21).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+        selectableDates=OldEnoughSelectableDates
+    )
+    val birthdaySelectedDate=birthdayDatePickerState.selectedDateMillis?.let{
+        convertMillisToDate(it)
+    }?:""
+    var errorText by remember{mutableStateOf("")}
+
+    LazyColumn(modifier=Modifier.fillMaxSize()){
+        item{
+            BetterHeader(text="Enter your (nick)name.", fontSize="ML",
+                modifier=Modifier
+                    .padding(vertical=6.dp,horizontal=8.dp)
+                    .fillMaxWidth()
+            )
+        }
+       item{
+           BetterHeader(text="it will appear on main screen", fontSize="S",
+               modifier=Modifier
+                   .padding(vertical=6.dp)
+                   .fillMaxWidth()
+           )
+       }
+        item{
+            BetterTextField(
+                value=name,
+                onValueChange={name=it},
+                textFieldModifier=Modifier.padding(all=5.dp),
+                placeholderText="enter your name"
+            )
+        }
+        item{
+            VerticalSpacer()
+        }
+        item{
+            BetterHeader(text="Enter your birthday to get birthday notifications", fontSize="ML",
+                modifier=Modifier
+                    .padding(vertical=6.dp,horizontal=8.dp)
+                    .fillMaxWidth()
+            )
+        }
+        item{
+            BetterHeader(
+                text="Selected date: $birthdaySelectedDate",fontSize="M",fontStyle=FontStyle.Italic,
+                modifier=Modifier
+                    .padding(top=14.dp,bottom=6.dp)
+                    .fillMaxWidth(),
+            )
+        }
+        item{
+            MyDatePicker(
+                state=birthdayDatePickerState
+            )
+        }
+        item{
+            ErrorText(text=errorText,modifier=Modifier.fillMaxWidth())
+        }
+        item{
+            CheckmarkButtonRow(onClick={
+                if(name.isNotEmpty()){
+                    errorText=""
+                    sharedPrefs.edit().putString(Constants.key_userName,name).apply()
+                    sharedPrefs.edit().putBoolean(Constants.key_isNameBirthDayMenuComplete,true).apply()
+                    if(birthdaySelectedDate.isNotEmpty()){
+                        sharedPrefs.edit().putString(Constants.key_birthDate,birthdaySelectedDate).apply()
+                    }
+                    onNavigate(Screens.sStealthOptions)
+                }
+                else{
+                    errorText="Name cannot be empty"
+                }
+            })
+        }
+        item{
+            VerticalSpacer()
+        }
+    }
+}
 
 @Composable
 fun WelcomeScreen(onNavigate:(String)->Unit){
@@ -1043,32 +1543,40 @@ fun WelcomeScreen(onNavigate:(String)->Unit){
 
     val sharedPrefs=context.getSharedPreferences(Constants.key_package, Context.MODE_PRIVATE)
     val setupDone=sharedPrefs.getBoolean(Constants.key_isSetupDone,false)
-    val languageSetupDone=sharedPrefs.getBoolean(Constants.key_isLanguageSetUp,false)
-    val themeSetupDone=sharedPrefs.getBoolean(Constants.key_isThemeSetUp,false)
-    //sharedPrefs.edit().putBoolean(Constants.key_isSetupDone,false).apply()
-    if(setupDone){
-        SideEffect{
-            if(!sharedPrefs.getString(Constants.key_passwordValue,"").isNullOrEmpty()){//there is password
+    SideEffect{
+        if(setupDone){
+            if(!sharedPrefs.getString(Constants.key_passwordValue,"").isNullOrEmpty())//there is password
                 onNavigate(Screens.sPassword)
-            }
+        }
             else{
                 Handler(Looper.getMainLooper()).postDelayed({
-                    onNavigate(Screens.sMain)
+                    if(sharedPrefs.getBoolean(Constants.key_isSetupDone,false))
+                        onNavigate(Screens.sMain)
+                    else if(!sharedPrefs.getBoolean(Constants.key_isLanguageSetUp,false))
+                        onNavigate(Screens.sLanguage)
+                    else if(!sharedPrefs.getBoolean(Constants.key_isThemeSetUp,false))
+                        onNavigate(Screens.sTheme)
+                    else if(!sharedPrefs.getBoolean(Constants.key_isConsentDone,false))
+                        onNavigate(Screens.sAgeConsentOptions)
+                    else if(sharedPrefs.getInt(Constants.key_gender,-1)==-1)
+                        onNavigate(Screens.sGenderOptions)
+                    else if(!sharedPrefs.getBoolean(Constants.key_isNameBirthDayMenuComplete,false))
+                        onNavigate(Screens.sNameBirthDayOptions)
+                    else if(!sharedPrefs.getBoolean(Constants.key_isStealthDone,false))
+                        onNavigate(Screens.sStealthOptions)
+                    else if(!sharedPrefs.getBoolean(Constants.key_testosteroneMenuComplete,false))
+                        onNavigate(Screens.sTOptions)
+                    else if(!sharedPrefs.getBoolean(Constants.key_isPeriodMenuComplete,false))
+                        onNavigate(Screens.sPeriodOptions)
+                    else if(!sharedPrefs.getBoolean(Constants.key_isTakingBirthControlContraceptive,false))
+                        onNavigate(Screens.sContraceptiveOptions)
+                    else{
+                        sharedPrefs.edit().putBoolean(Constants.key_isSetupDone,true).apply()
+                        onNavigate(Screens.sMain)
+                    }
+
                 },500)
             }
-        }
-    }
-    else{
-        createNotificationChannel(context) //todo: i think i need to check if it exists before
-        Handler(Looper.getMainLooper()).postDelayed({
-            if(!languageSetupDone)
-                onNavigate(Screens.sLanguage)
-            else if(!themeSetupDone)
-                onNavigate(Screens.sTheme)
-            else{
-                onNavigate(Screens.sPassword) //TODO: CHANGE TO INTRO SCREEN
-            }
-        }, 1000)
     }
 //    sharedPrefs.edit().putBoolean("setup",false).apply()
 
@@ -1082,7 +1590,7 @@ fun WelcomeScreen(onNavigate:(String)->Unit){
                 .padding(top=50.dp)
         )
         BetterText(
-            text=getLocal(id=R.string.welcome_text),
+            text=stringResource(id=R.string.welcome_text),
             textAlign=TextAlign.Center,
             modifier=Modifier
                 .fillMaxWidth()
@@ -1128,163 +1636,166 @@ fun PasswordScreen(onNavigate:(String)->Unit){
     var enteredPin by remember{mutableStateOf("")}
 
 
-    if(passwordScreenType==0){
-        //display choose type
-        Column(modifier=Modifier.fillMaxWidth()){
-            BetterText(
-                text=getLocal(id=R.string.password_type_title),
-                fontSize=38.sp,
-                modifier=Modifier.padding(horizontal=15.dp, vertical=5.dp),
-                textAlign=TextAlign.Center
-            )
-            Row(modifier=Modifier.padding(top=20.dp)){
-                RadioButton(
-                    selected=(selectedOption==0),
-                    onClick={selectedOption=0},
-                    colors=RadioButtonDefaults.colors(selectedColor=colorSecondary(),unselectedColor=colorSecondary()),
-                )
+    when(passwordScreenType){
+        0->{
+            //display choose type
+            Column(modifier=Modifier.fillMaxWidth()){
                 BetterText(
-                    text=getLocal(id=R.string.password_text_password),
-                    fontSize=30.sp
+                    text=stringResource(id=R.string.password_type_title),
+                    fontSize=38.sp,
+                    modifier=Modifier.padding(horizontal=15.dp, vertical=5.dp),
+                    textAlign=TextAlign.Center
                 )
-            }
-            Row(modifier=Modifier.padding(top=20.dp)){
-                RadioButton(
-                    selected=(selectedOption==1),
-                    onClick={selectedOption=1},
-                    colors=RadioButtonDefaults.colors(selectedColor=colorSecondary(),unselectedColor=colorSecondary()),
-                )
-                BetterText(
-                    text=getLocal(id=R.string.password_pin_password),
-                    fontSize=30.sp
-                )
-            }
-            Row(modifier=Modifier.padding(top=20.dp)){
-                RadioButton(
-                    selected=(selectedOption==2),
-                    onClick={selectedOption=2},
-                    colors=RadioButtonDefaults.colors(selectedColor=colorSecondary(),unselectedColor=colorSecondary()),
-                )
-                BetterText(
-                    text=getLocal(id=R.string.dont_want_password),
-                    fontSize=30.sp
-                )
-            }
-            Row(modifier=Modifier.fillMaxWidth()){
-                IconButton(onClick={
-                    when(selectedOption){
-                        0->{
-                            passwordScreenType=1 //text
-
-                        }
-                        1->{
-                            passwordScreenType=2 //pin
-                            pinScreenType=1
-                        }
-                        2->{
-                            passwordScreenType=0 //none
-                            sharedPrefs.edit().putBoolean(Constants.key_isSetupDone,true).apply()
-                            onNavigate(Screens.sMain)
-                            sharedPrefs.edit().putInt(Constants.key_passwordScreenType,passwordScreenType).apply()
-                        }
-                    }
-                    sharedPrefs.edit().putInt(Constants.key_passwordScreenType,passwordScreenType).apply()
-                },
-                    modifier=Modifier
-                        .fillMaxWidth()
-                        .padding(30.dp)){
-                   Image(
-                       painter=painterResource(id=R.drawable.icon_checkmark_circle),
-                       contentDescription=null,
-                       modifier=Modifier
-                           .scale(3f)
-                   )
+                Row(modifier=Modifier.padding(top=20.dp)){
+                    RadioButton(
+                        selected=(selectedOption==0),
+                        onClick={selectedOption=0},
+                        colors=RadioButtonDefaults.colors(selectedColor=colorSecondary(),unselectedColor=colorSecondary()),
+                    )
+                    BetterText(
+                        text=stringResource(id=R.string.password_text_password),
+                        fontSize=30.sp
+                    )
                 }
-            }
+                Row(modifier=Modifier.padding(top=20.dp)){
+                    RadioButton(
+                        selected=(selectedOption==1),
+                        onClick={selectedOption=1},
+                        colors=RadioButtonDefaults.colors(selectedColor=colorSecondary(),unselectedColor=colorSecondary()),
+                    )
+                    BetterText(
+                        text=stringResource(id=R.string.password_pin_password),
+                        fontSize=30.sp
+                    )
+                }
+                Row(modifier=Modifier.padding(top=20.dp)){
+                    RadioButton(
+                        selected=(selectedOption==2),
+                        onClick={selectedOption=2},
+                        colors=RadioButtonDefaults.colors(selectedColor=colorSecondary(),unselectedColor=colorSecondary()),
+                    )
+                    BetterText(
+                        text=stringResource(id=R.string.dont_want_password),
+                        fontSize=30.sp
+                    )
+                }
+                Row(modifier=Modifier.fillMaxWidth()){
+                    IconButton(onClick={
+                        when(selectedOption){
+                            0->{
+                                passwordScreenType=1 //text
 
-        }
-    }
-    else if(passwordScreenType==1){
-       val creatingPassword=passwordValue.isNullOrEmpty()
-//        creatingPassword=!creatingPassword
-        Column(modifier=Modifier.fillMaxWidth()){
-            BetterText(
-                text=if(creatingPassword) getLocal(id=R.string.create_password)
-                    else getLocal(id=R.string.enter_password),
-                fontSize=40.sp,
-                textAlign=TextAlign.Center,
-                modifier=Modifier
-                    .fillMaxWidth()
-                    .padding(vertical=30.dp)
-            )
-            if(creatingPassword){
-                BetterText(
-                    text=getLocal(id=R.string.password_warning),
-                    fontSize=22.sp,
-                    modifier=Modifier.padding(horizontal=20.dp)
-                )
-            }
-            Row(modifier=Modifier
-                .fillMaxWidth()
-                .padding(top=15.dp)
-            ){
-                if(!creatingPassword){
-                    IconButton(
-                        onClick={},
-                        modifier=Modifier
-                            .pointerInput(Unit) {
-                                awaitPointerEventScope {
-                                    while(true) {
-                                        val event=awaitPointerEvent()
-                                        if(event.type==PointerEventType.Press)
-                                            showPasswordPressed=true
-                                        else if(event.type==PointerEventType.Release)
-                                            showPasswordPressed=false
-                                    }
-                                }
                             }
-                            .align(Alignment.CenterVertically)
 
-                    ){
-                        Icon(
-                            painter=if(showPasswordPressed)painterResource(id=R.drawable.icon_eye)
-                            else painterResource(id=R.drawable.icon_eye_closed),
+                            1->{
+                                passwordScreenType=2 //pin
+                                pinScreenType=1
+                            }
+
+                            2->{
+                                passwordScreenType=0 //none
+                                sharedPrefs.edit().putBoolean(Constants.key_isSetupDone,true).apply()
+                                onNavigate(Screens.sMain)
+                                sharedPrefs.edit().putInt(Constants.key_passwordScreenType,passwordScreenType).apply()
+                            }
+                        }
+                        sharedPrefs.edit().putInt(Constants.key_passwordScreenType,passwordScreenType).apply()
+                    },
+                        modifier=Modifier
+                            .fillMaxWidth()
+                            .padding(30.dp)){
+                        Image(
+                            painter=painterResource(id=R.drawable.icon_checkmark_circle),
                             contentDescription=null,
-                            tint=Color.Unspecified,
                             modifier=Modifier
-                                .scale(2f)
-                                .padding(start=10.dp)
+                                .scale(3f)
                         )
                     }
                 }
-                TextField(
-                    value=enteredPassword,
-                    onValueChange={enteredPassword=it},
+
+            }
+        }
+        1->{
+            val creatingPassword=passwordValue.isNullOrEmpty()
+//        creatingPassword=!creatingPassword
+            Column(modifier=Modifier.fillMaxWidth()){
+                BetterText(
+                    text=if(creatingPassword) stringResource(id=R.string.create_password)
+                    else stringResource(id=R.string.enter_password),
+                    fontSize=40.sp,
+                    textAlign=TextAlign.Center,
                     modifier=Modifier
-                        .padding(start=15.dp,end=10.dp)
-                        .weight(1f),
-                    colors=TextFieldDefaults.textFieldColors(
-                        placeholderColor=colorSecondary(),
-                        textColor=colorSecondary(),
-                        focusedIndicatorColor=colorSecondary(),
-                        unfocusedIndicatorColor=colorSecondary(),
-                        cursorColor=colorSecondary()
-                    ),
-                    textStyle=TextStyle(fontSize=24.sp),
-                    placeholder={
-                        BetterText(
-                            text=getLocal(id=R.string.password),
-                            fontSize=24.sp,
-                            modifier=Modifier.fillMaxWidth(),
-                            textAlign=TextAlign.Center
-                        )},
-                    visualTransformation=if(!showPasswordPressed)PasswordVisualTransformation() else VisualTransformation.None,
-                    keyboardOptions=KeyboardOptions.Default.copy(keyboardType=KeyboardType.Password),
-                    maxLines=1
+                        .fillMaxWidth()
+                        .padding(vertical=30.dp)
                 )
-                if(!creatingPassword){
-                    IconButton(
-                        onClick={
+                if(creatingPassword){
+                    BetterText(
+                        text=stringResource(id=R.string.password_warning),
+                        fontSize=22.sp,
+                        modifier=Modifier.padding(horizontal=20.dp)
+                    )
+                }
+                Row(modifier=Modifier
+                    .fillMaxWidth()
+                    .padding(top=15.dp)
+                ){
+                    if(!creatingPassword){
+                        IconButton(
+                            onClick={},
+                            modifier=Modifier
+                                .pointerInput(Unit) {
+                                    awaitPointerEventScope {
+                                        while(true) {
+                                            val event=awaitPointerEvent()
+                                            if(event.type==PointerEventType.Press)
+                                                showPasswordPressed=true
+                                            else if(event.type==PointerEventType.Release)
+                                                showPasswordPressed=false
+                                        }
+                                    }
+                                }
+                                .align(Alignment.CenterVertically)
+
+                        ){
+                            Icon(
+                                painter=if(showPasswordPressed)painterResource(id=R.drawable.icon_eye)
+                                else painterResource(id=R.drawable.icon_eye_closed),
+                                contentDescription=null,
+                                tint=Color.Unspecified,
+                                modifier=Modifier
+                                    .scale(2f)
+                                    .padding(start=10.dp)
+                            )
+                        }
+                    }
+                    TextField(
+                        value=enteredPassword,
+                        onValueChange={enteredPassword=it},
+                        modifier=Modifier
+                            .padding(start=15.dp,end=10.dp)
+                            .weight(1f),
+                        colors=TextFieldDefaults.textFieldColors(
+                            placeholderColor=colorSecondary(),
+                            textColor=colorSecondary(),
+                            focusedIndicatorColor=colorSecondary(),
+                            unfocusedIndicatorColor=colorSecondary(),
+                            cursorColor=colorSecondary()
+                        ),
+                        textStyle=TextStyle(fontSize=24.sp),
+                        placeholder={
+                            BetterText(
+                                text=stringResource(id=R.string.password),
+                                fontSize=24.sp,
+                                modifier=Modifier.fillMaxWidth(),
+                                textAlign=TextAlign.Center
+                            )},
+                        visualTransformation=if(!showPasswordPressed)PasswordVisualTransformation() else VisualTransformation.None,
+                        keyboardOptions=KeyboardOptions.Default.copy(keyboardType=KeyboardType.Password),
+                        maxLines=1
+                    )
+                    if(!creatingPassword){
+                        IconButton(
+                            onClick={
                                 if(enteredPassword==passwordValue&&canExecute){
                                     showError=""
                                     failedAttemptsCount=0
@@ -1310,59 +1821,59 @@ fun PasswordScreen(onNavigate:(String)->Unit){
                                     }
                                 }
 
-                        },
-                        modifier=Modifier.padding(end=10.dp)
-                    ){
-                        Icon(
-                            painter=painterResource(id=R.drawable.icon_login_door),
-                            contentDescription=null,
-                            tint=Color.Unspecified,
-                            modifier=Modifier
-                                .scale(2.5f)
-                                .align(Alignment.CenterVertically)
-                        )
+                            },
+                            modifier=Modifier.padding(end=10.dp)
+                        ){
+                            Icon(
+                                painter=painterResource(id=R.drawable.icon_login_door),
+                                contentDescription=null,
+                                tint=Color.Unspecified,
+                                modifier=Modifier
+                                    .scale(2.5f)
+                                    .align(Alignment.CenterVertically)
+                            )
+                        }
                     }
                 }
-            }
-            if(creatingPassword){
-                BetterText(
-                    text=getLocal(id=R.string.password_repeat),
-                    textAlign=TextAlign.Center,
-                    fontSize=30.sp,
-                    modifier=Modifier
-                        .padding(top=30.dp)
-                        .fillMaxWidth()
+                if(creatingPassword){
+                    BetterText(
+                        text=stringResource(id=R.string.password_repeat),
+                        textAlign=TextAlign.Center,
+                        fontSize=30.sp,
+                        modifier=Modifier
+                            .padding(top=30.dp)
+                            .fillMaxWidth()
 
-                )
-                TextField(
-                    value=enteredRepeatedPassword,
-                    onValueChange={enteredRepeatedPassword=it},
-                    modifier=Modifier
-                        .padding(start=15.dp,end=10.dp,top=10.dp)
-                        .align(Alignment.CenterHorizontally)
-                        .fillMaxWidth(),
-                    colors=TextFieldDefaults.textFieldColors(
-                        placeholderColor=colorSecondary(),
-                        textColor=colorSecondary(),
-                        focusedIndicatorColor=colorSecondary(),
-                        unfocusedIndicatorColor=colorSecondary(),
-                        cursorColor=colorSecondary()
-                    ),
-                    textStyle=TextStyle(fontSize=24.sp),
-                    placeholder={
-                        BetterText(
-                            text=getLocal(id=R.string.password),
-                            fontSize=24.sp,
-                            modifier=Modifier.fillMaxWidth(),
-                            textAlign=TextAlign.Center
-                        )},
-                    visualTransformation=PasswordVisualTransformation(),
-                    keyboardOptions=KeyboardOptions.Default.copy(keyboardType=KeyboardType.Password)
-                )
-                Row(modifier=Modifier.fillMaxWidth()){
-                    Spacer(modifier=Modifier.weight(1f))
-                    IconButton(
-                        onClick={
+                    )
+                    TextField(
+                        value=enteredRepeatedPassword,
+                        onValueChange={enteredRepeatedPassword=it},
+                        modifier=Modifier
+                            .padding(start=15.dp,end=10.dp,top=10.dp)
+                            .align(Alignment.CenterHorizontally)
+                            .fillMaxWidth(),
+                        colors=TextFieldDefaults.textFieldColors(
+                            placeholderColor=colorSecondary(),
+                            textColor=colorSecondary(),
+                            focusedIndicatorColor=colorSecondary(),
+                            unfocusedIndicatorColor=colorSecondary(),
+                            cursorColor=colorSecondary()
+                        ),
+                        textStyle=TextStyle(fontSize=24.sp),
+                        placeholder={
+                            BetterText(
+                                text=stringResource(id=R.string.password),
+                                fontSize=24.sp,
+                                modifier=Modifier.fillMaxWidth(),
+                                textAlign=TextAlign.Center
+                            )},
+                        visualTransformation=PasswordVisualTransformation(),
+                        keyboardOptions=KeyboardOptions.Default.copy(keyboardType=KeyboardType.Password)
+                    )
+                    Row(modifier=Modifier.fillMaxWidth()){
+                        Spacer(modifier=Modifier.weight(1f))
+                        IconButton(
+                            onClick={
                                 //creating password
                                 if(enteredPassword!=enteredRepeatedPassword){
                                     showError=differentPasswordsError
@@ -1382,19 +1893,19 @@ fun PasswordScreen(onNavigate:(String)->Unit){
                                     }
                                 }
 
-                        },
-                        modifier=Modifier.padding(top=30.dp, end=30.dp, bottom=20.dp)
+                            },
+                            modifier=Modifier.padding(top=30.dp, end=30.dp, bottom=20.dp)
 
-                    ){
-                        Icon(
-                            painter=painterResource(id=R.drawable.icon_checkmark_circle),
-                            contentDescription=null,
-                            tint=Color.Unspecified,
-                            modifier=Modifier
-                                .scale(2.9f)
-                        )
+                        ){
+                            Icon(
+                                painter=painterResource(id=R.drawable.icon_checkmark_circle),
+                                contentDescription=null,
+                                tint=Color.Unspecified,
+                                modifier=Modifier
+                                    .scale(2.9f)
+                            )
+                        }
                     }
-                }
                     Text(
                         text=showError,
                         modifier=Modifier.fillMaxWidth(),
@@ -1404,242 +1915,245 @@ fun PasswordScreen(onNavigate:(String)->Unit){
 
 
                     )
+                }
             }
         }
-    }
-    else if(passwordScreenType==2){
-        Column(
-            modifier=Modifier.fillMaxSize(),
-            horizontalAlignment=Alignment.CenterHorizontally
-        ){
-            BetterText(
-                text=
-                    if(pinScreenType==0) getLocal(id=R.string.enter_pin)
-                    else if(pinScreenType==1) getLocal(id=R.string.create_pin)
-                    else getLocal(id=R.string.enter_pin_again), //2
-                fontSize=40.sp,
-                textAlign=TextAlign.Center,
-                modifier=Modifier
-                    .padding(vertical=15.dp)
-                    .fillMaxWidth()
-
-            )
-            Row(
-                modifier=Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                horizontalArrangement=Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
-
-            ){
-                //region small buttons
-                Icon(
-                    painter=if(digitsEntered>0) painterResource(id=R.drawable.rounded_button_filled_img)
-                    else painterResource(id=R.drawable.rounded_button_img),
-                    contentDescription=null,
-                    modifier=Modifier
-                        .padding(horizontal=8.dp)
-                        .scale(1.6f),
-                    tint=Color.Unspecified
-                )
-                Icon(
-                    painter=if(digitsEntered>1) painterResource(id=R.drawable.rounded_button_filled_img)
-                    else painterResource(id=R.drawable.rounded_button_img),
-                    contentDescription=null,
-                    modifier=Modifier
-                        .padding(horizontal=8.dp)
-                        .scale(1.6f),
-                    tint=Color.Unspecified
-                )
-                Icon(
-                    painter=if(digitsEntered>2) painterResource(id=R.drawable.rounded_button_filled_img)
-                    else painterResource(id=R.drawable.rounded_button_img),
-                    contentDescription=null,
-                    modifier=Modifier
-                        .padding(horizontal=8.dp)
-                        .scale(1.6f),
-                    tint=Color.Unspecified
-                )
-                Icon(
-                    painter=if(digitsEntered>3) painterResource(id=R.drawable.rounded_button_filled_img)
-                    else painterResource(id=R.drawable.rounded_button_img),
-                    contentDescription=null,
-                    modifier=Modifier
-                        .padding(horizontal=8.dp)
-                        .scale(1.6f),
-                    tint=Color.Unspecified
-                )
-            }
-            //endregion
+        2->{
             Column(
-                modifier=Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(start=20.dp,end=20.dp,top=25.dp)
+                modifier=Modifier.fillMaxSize(),
+                horizontalAlignment=Alignment.CenterHorizontally
             ){
-                val buttonDigits=listOf("1","2","3","4","5","6","7","8","9")
-                val buttonDigitRow=buttonDigits.chunked(3)
-                buttonDigitRow.forEach{rowButtons->
-                    Row(
-                        modifier=Modifier.fillMaxWidth(),
-                        horizontalArrangement=Arrangement.SpaceEvenly
-                    ){
-                        rowButtons.forEach{text->
-                            Button(
-                                shape=CircleShape,
-                                onClick={
-                                    if(canExecute&&digitsEntered<4){
-                                        enteredPin+=text
-                                        digitsEntered++
-                                    }},
-                                modifier=Modifier
-                                    .padding(10.dp)
-                                    .width(100.dp)
-                                    .height(100.dp),
-                                colors=ButtonDefaults.buttonColors(backgroundColor=colorSecondary()),
-                            ){
-                                Text(
-                                    text=text,
-                                    color=colorPrimary(),
-                                    fontSize=25.sp
-                                )
+                BetterText(
+                    text=
+                    when(pinScreenType){
+                        0->stringResource(id=R.string.enter_pin)
+                        1->stringResource(id=R.string.create_pin)
+                        else->stringResource(id=R.string.enter_pin_again)
+                    }, //2
+                    fontSize=40.sp,
+                    textAlign=TextAlign.Center,
+                    modifier=Modifier
+                        .padding(vertical=15.dp)
+                        .fillMaxWidth()
+
+                )
+                Row(
+                    modifier=Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .fillMaxWidth()
+                        .wrapContentHeight(),
+                    horizontalArrangement=Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+
+                ){
+                    //region small buttons
+                    Icon(
+                        painter=if(digitsEntered>0) painterResource(id=R.drawable.rounded_button_filled_img)
+                        else painterResource(id=R.drawable.rounded_button_img),
+                        contentDescription=null,
+                        modifier=Modifier
+                            .padding(horizontal=8.dp)
+                            .scale(1.6f),
+                        tint=Color.Unspecified
+                    )
+                    Icon(
+                        painter=if(digitsEntered>1) painterResource(id=R.drawable.rounded_button_filled_img)
+                        else painterResource(id=R.drawable.rounded_button_img),
+                        contentDescription=null,
+                        modifier=Modifier
+                            .padding(horizontal=8.dp)
+                            .scale(1.6f),
+                        tint=Color.Unspecified
+                    )
+                    Icon(
+                        painter=if(digitsEntered>2) painterResource(id=R.drawable.rounded_button_filled_img)
+                        else painterResource(id=R.drawable.rounded_button_img),
+                        contentDescription=null,
+                        modifier=Modifier
+                            .padding(horizontal=8.dp)
+                            .scale(1.6f),
+                        tint=Color.Unspecified
+                    )
+                    Icon(
+                        painter=if(digitsEntered>3) painterResource(id=R.drawable.rounded_button_filled_img)
+                        else painterResource(id=R.drawable.rounded_button_img),
+                        contentDescription=null,
+                        modifier=Modifier
+                            .padding(horizontal=8.dp)
+                            .scale(1.6f),
+                        tint=Color.Unspecified
+                    )
+                }
+                //endregion
+                Column(
+                    modifier=Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .padding(start=20.dp,end=20.dp,top=25.dp)
+                ){
+                    val buttonDigits=listOf("1","2","3","4","5","6","7","8","9")
+                    val buttonDigitRow=buttonDigits.chunked(3)
+                    buttonDigitRow.forEach{rowButtons->
+                        Row(
+                            modifier=Modifier.fillMaxWidth(),
+                            horizontalArrangement=Arrangement.SpaceEvenly
+                        ){
+                            rowButtons.forEach{text->
+                                Button(
+                                    shape=CircleShape,
+                                    onClick={
+                                        if(canExecute&&digitsEntered<4){
+                                            enteredPin+=text
+                                            digitsEntered++
+                                        }},
+                                    modifier=Modifier
+                                        .padding(10.dp)
+                                        .width(100.dp)
+                                        .height(100.dp),
+                                    colors=ButtonDefaults.buttonColors(backgroundColor=colorSecondary()),
+                                ){
+                                    Text(
+                                        text=text,
+                                        color=colorPrimary(),
+                                        fontSize=25.sp
+                                    )
+                                }
                             }
                         }
                     }
-                }
-                Row(
-                    modifier=Modifier.fillMaxWidth(),
-                    horizontalArrangement=Arrangement.SpaceEvenly,
-                    verticalAlignment=Alignment.CenterVertically
-                ){
-                    IconButton(
-                        onClick={
-                            if(digitsEntered>0) digitsEntered--
-                            enteredPin=enteredPin.dropLast(1)
-                                },
-                        modifier=Modifier.padding(10.dp)
+                    Row(
+                        modifier=Modifier.fillMaxWidth(),
+                        horizontalArrangement=Arrangement.SpaceEvenly,
+                        verticalAlignment=Alignment.CenterVertically
                     ){
-                        Icon(
-                            painter=painterResource(id=R.drawable.icon_backspace),
-                            contentDescription=null,
-                            tint=Color.Unspecified,
-                            modifier=Modifier.scale(3.3f)
-                        )
-                    }
-                    Button(
-                        //0
-                        shape=CircleShape,
-                        onClick={
-                            if(canExecute&&digitsEntered<4){
-                                enteredPin+="0"
-                                digitsEntered++
-                            }},
-                        modifier=Modifier
-                            .padding(10.dp)
-                            .width(100.dp)
-                            .height(100.dp),
-                        colors=ButtonDefaults.buttonColors(backgroundColor=colorSecondary()),
-                    ){
-                        Text(
-                            text="0",
-                            color=colorPrimary(),
-                            fontSize=25.sp
-                        )
-                    }
-                    IconButton(
-                        onClick={
-                            if(pinScreenType==0){//login
-                                if(enteredPin==passwordValue&&canExecute){
-                                    showError=""
-                                    failedAttemptsCount=0
-                                    sharedPrefs.edit().putInt(Constants.key_failedAttempts,failedAttemptsCount).apply()
-                                    onNavigate(Screens.sMain)
-                                }
-                                else{
-                                    failedAttemptsCount++
-                                    sharedPrefs.edit().putInt(Constants.key_failedAttempts,failedAttemptsCount).apply()
-                                    showError=wrongPasswordError
-                                    digitsEntered=0
-                                    enteredPin=""
+                        IconButton(
+                            onClick={
+                                if(digitsEntered>0) digitsEntered--
+                                enteredPin=enteredPin.dropLast(1)
+                            },
+                            modifier=Modifier.padding(10.dp)
+                        ){
+                            Icon(
+                                painter=painterResource(id=R.drawable.icon_backspace),
+                                contentDescription=null,
+                                tint=Color.Unspecified,
+                                modifier=Modifier.scale(3.3f)
+                            )
+                        }
+                        Button(
+                            //0
+                            shape=CircleShape,
+                            onClick={
+                                if(canExecute&&digitsEntered<4){
+                                    enteredPin+="0"
+                                    digitsEntered++
+                                }},
+                            modifier=Modifier
+                                .padding(10.dp)
+                                .width(100.dp)
+                                .height(100.dp),
+                            colors=ButtonDefaults.buttonColors(backgroundColor=colorSecondary()),
+                        ){
+                            Text(
+                                text="0",
+                                color=colorPrimary(),
+                                fontSize=25.sp
+                            )
+                        }
+                        IconButton(
+                            onClick={
+                                if(pinScreenType==0){//login
+                                    if(enteredPin==passwordValue&&canExecute){
+                                        showError=""
+                                        failedAttemptsCount=0
+                                        sharedPrefs.edit().putInt(Constants.key_failedAttempts,failedAttemptsCount).apply()
+                                        onNavigate(Screens.sMain)
+                                    }
+                                    else{
+                                        failedAttemptsCount++
+                                        sharedPrefs.edit().putInt(Constants.key_failedAttempts,failedAttemptsCount).apply()
+                                        showError=wrongPasswordError
+                                        digitsEntered=0
+                                        enteredPin=""
 
 
-                                    if(failedAttemptsCount in 3..4){
-                                        showError=wrong3TimesError
-                                        canExecute=false
-                                        Handler(Looper.getMainLooper()).postDelayed({
-                                            canExecute=true
-                                            showError=""
-                                        },30*1000)
-                                    }
-                                    else if(failedAttemptsCount>4){
-                                        if(recoverySet)
-                                            onNavigate(Screens.sRecovery)
-                                        //todo i don't know what else i guess user is fucked
+                                        if(failedAttemptsCount in 3..4){
+                                            showError=wrong3TimesError
+                                            canExecute=false
+                                            Handler(Looper.getMainLooper()).postDelayed({
+                                                canExecute=true
+                                                showError=""
+                                            },30*1000)
+                                        }
+                                        else if(failedAttemptsCount>4){
+                                            if(recoverySet)
+                                                onNavigate(Screens.sRecovery)
+                                            //todo i don't know what else i guess user is fucked
+                                        }
                                     }
                                 }
-                            }
-                            else if(pinScreenType==1){
-                                if(enteredPin.length!=4){
-                                    showError=wrongPinLengthError
-                                    digitsEntered=0
-                                    enteredPin=""
-                                }
-                                else{
-                                    showError=""
-                                    if(enteredPin.length!=digitsEntered){
-                                        showError=unknownError
+                                else if(pinScreenType==1){
+                                    if(enteredPin.length!=4){
+                                        showError=wrongPinLengthError
                                         digitsEntered=0
                                         enteredPin=""
                                     }
                                     else{
-                                        pinScreenType=2
+                                        showError=""
+                                        if(enteredPin.length!=digitsEntered){
+                                            showError=unknownError
+                                            digitsEntered=0
+                                            enteredPin=""
+                                        }
+                                        else{
+                                            pinScreenType=2
+                                            sharedPrefs.edit().putInt(Constants.key_pinScreenType,pinScreenType).apply()
+                                            val pinToSave=enteredPin
+                                            sharedPrefs.edit().putString(Constants.key_temporaryPin,pinToSave).apply()
+                                            digitsEntered=0
+                                            enteredPin=""
+                                        }
+                                    }
+
+
+                                }
+                                else if(pinScreenType==2){
+                                    val tempPin=sharedPrefs.getString(Constants.key_temporaryPin,"")
+                                    if(enteredPin==tempPin){
+                                        sharedPrefs.edit().putInt(Constants.key_pinScreenType,0).apply()
+                                        sharedPrefs.edit().putString(Constants.key_temporaryPin,"").apply()
+                                        sharedPrefs.edit().putString(Constants.key_passwordValue,enteredPin).apply()
+                                        if(recoverySet)
+                                            onNavigate(Screens.sMain)
+                                        else
+                                            onNavigate(Screens.sRecovery)
+                                    }
+                                    else{
+                                        showError=differentPinsError
+                                        pinScreenType=1
                                         sharedPrefs.edit().putInt(Constants.key_pinScreenType,pinScreenType).apply()
-                                        val pinToSave=enteredPin
-                                        sharedPrefs.edit().putString(Constants.key_temporaryPin,pinToSave).apply()
-                                        digitsEntered=0
                                         enteredPin=""
+                                        digitsEntered=0
                                     }
                                 }
+                            },
+                            modifier=Modifier.padding(10.dp)
+                        ){
+                            Icon(
+                                painter=painterResource(id=R.drawable.icon_checkmark_circle),
+                                contentDescription=null,
+                                tint=Color.Unspecified,
+                                modifier=Modifier.scale(4.1f)
+                            )
+                        }
 
-
-                            }
-                            else if(pinScreenType==2){
-                                val tempPin=sharedPrefs.getString(Constants.key_temporaryPin,"")
-                                if(enteredPin==tempPin){
-                                    sharedPrefs.edit().putInt(Constants.key_pinScreenType,0).apply()
-                                    sharedPrefs.edit().putString(Constants.key_temporaryPin,"").apply()
-                                    sharedPrefs.edit().putString(Constants.key_passwordValue,enteredPin).apply()
-                                    if(recoverySet)
-                                        onNavigate(Screens.sMain)
-                                    else
-                                        onNavigate(Screens.sRecovery)
-                                }
-                                else{
-                                    showError=differentPinsError
-                                    pinScreenType=1
-                                    sharedPrefs.edit().putInt(Constants.key_pinScreenType,pinScreenType).apply()
-                                    enteredPin=""
-                                    digitsEntered=0
-                                }
-                            }
-                        },
-                        modifier=Modifier.padding(10.dp)
-                    ){
-                        Icon(
-                            painter=painterResource(id=R.drawable.icon_checkmark_circle),
-                            contentDescription=null,
-                            tint=Color.Unspecified,
-                            modifier=Modifier.scale(4.1f)
-                        )
                     }
+
 
                 }
 
-
             }
-
+            //display pin enter/creation
         }
-        //display pin enter/creation
     }
 
 
@@ -1716,7 +2230,7 @@ fun RecoveryScreen(onNavigate:(String)->Unit){
                                     menuText=menuText.copyOf().apply{this[field]=question}
                                 }
                             )
-                            Divider(color=colorTertiary(),thickness=1.dp)
+                            androidx.compose.material.Divider(color=colorTertiary(),thickness=1.dp)
                         }
                     }
                 }
@@ -1844,14 +2358,14 @@ fun convertMillisToDate(millis:Long):String{
     val formatter=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault())
     return formatter.format(Date(millis))
 }
-private fun createNotificationChannel(context: Context){
+/*private fun createNotificationChannel(context: Context){
     val channel=NotificationChannel("hrt","Hrt reminders", NotificationManager.IMPORTANCE_HIGH).apply{
-        description="This channel is for hrt reminders" //todo: strings
+        description="This channel is for hrt reminders"
     }
 
     val notificationManager=context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     notificationManager.createNotificationChannel(channel)
-}
+}*/
 
 fun isPeriodCensored(context:Context):Boolean{
     val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
@@ -1881,221 +2395,6 @@ fun isStealthModeOn(context:Context):Boolean{
 
     return packageManager.getComponentEnabledSetting(stealth)==PackageManager.COMPONENT_ENABLED_STATE_ENABLED
 }
-
-//region custom composables
-
-/**
- * @param questionFontSize fontSize for [BetterHeader]
- */
-@Composable
-fun YesNoRow(
-    questionFontSize:String="M",
-    onClickYes:()->Unit,
-    onClickNo:()->Unit,
-    question:String
-    ){
-    val context=LocalContext.current
-    Column(modifier=Modifier.fillMaxWidth()){
-        BetterHeader(
-            text=question,
-            fontSize=questionFontSize,
-            modifier=Modifier
-                .fillMaxWidth()
-                .padding(vertical=15.dp,horizontal=10.dp)
-        )
-        Row(
-            modifier=Modifier
-                .padding(vertical=12.dp,horizontal=12.dp)
-                .fillMaxWidth(),
-            Arrangement.SpaceAround
-        ){
-            BetterButton(
-                onClick=onClickYes
-            ){
-                BetterText(
-                    text=context.getString(R.string.yes),
-                    fontSize=32.sp,
-                    modifier=Modifier.padding(vertical=6.dp)
-                )
-            }
-            BetterButton(
-                onClick=onClickNo
-            ){
-                BetterText(
-                    text=context.getString(R.string.no),
-                    fontSize=32.sp,
-                    modifier=Modifier.padding(vertical=6.dp)
-                )
-            }
-        }
-    }
-}
-
-
-@Composable
-fun BetterButton(
-    onClick:()->Unit,
-    modifier:Modifier=Modifier,
-    enabled:Boolean=true,
-    shape:androidx.compose.ui.graphics.Shape=RectangleShape,
-    content:@Composable RowScope.()->Unit,
-){
-    Button(
-        onClick=onClick,
-        modifier=modifier,
-        enabled=enabled,
-        colors=ButtonDefaults.buttonColors(backgroundColor=colorTertiary()),
-        shape=shape,
-        content=content,
-        contentPadding=PaddingValues(0.dp),
-        )
-}
-/** use with modifier weight(1f) when in row!**/
-@Composable
-fun BetterTextField(
-    value:String,
-    onValueChange:(String)->Unit,
-    textFieldModifier:Modifier=Modifier,
-    placeholderText:String="",
-    placeholderTextModifier:Modifier=Modifier,
-    visualTransformation:VisualTransformation=VisualTransformation.None,
-    keyboardType:KeyboardType=KeyboardType.Text,
-    imeAction:ImeAction=ImeAction.Default,
-    trailingIcon: @Composable (() -> Unit)? = null,
-    onItemSelected: @Composable (() -> Unit)? = null
-){
-    TextField(
-        value=value,
-        onValueChange=onValueChange,
-
-        modifier=textFieldModifier
-            .padding(start=15.dp,end=10.dp),
-        colors=TextFieldDefaults.textFieldColors(
-            placeholderColor=colorSecondary(),
-            textColor=colorSecondary(),
-            focusedIndicatorColor=colorSecondary(),
-            unfocusedIndicatorColor=colorSecondary(),
-            cursorColor=colorSecondary()
-        ),
-        textStyle=TextStyle(fontSize=24.sp),
-        placeholder={
-            BetterText(
-                text=placeholderText,
-                fontSize=24.sp,
-                modifier=placeholderTextModifier.fillMaxWidth(),
-                textAlign=TextAlign.Center
-            )},
-        maxLines=1,
-        visualTransformation=visualTransformation,
-        keyboardOptions=KeyboardOptions.Default.copy(keyboardType=keyboardType),
-        trailingIcon=trailingIcon,
-    )
-}
-
-@Composable
-fun GoBackButtonRow(
-    onClick:()->Unit,
-    rowModifier:Modifier=Modifier,
-    iconButtonModifier:Modifier=Modifier,
-    imageScale:Float=2.5f,
-    enabled:Boolean=true
-){
-    Row(
-        modifier=rowModifier.fillMaxWidth(),
-        horizontalArrangement=Arrangement.Start
-    ){
-        IconButton(
-            onClick=onClick,
-            modifier=iconButtonModifier.padding(8.dp),
-            enabled=enabled
-        ){
-            Image(
-                painter=painterResource(id=R.drawable.icon_arrow_left_triangle),
-                contentDescription=null,
-                modifier=Modifier
-                    .scale(imageScale)
-            )
-        }
-    }
-}
-
-@Composable
-fun CheckmarkButtonRow(
-    onClick:()->Unit,
-    rowModifier:Modifier=Modifier,
-    iconButtonModifier:Modifier=Modifier,
-    imageScale:Float=3.5f,
-    enabled:Boolean=true
-){
-    Row(
-        modifier=rowModifier.fillMaxWidth(),
-        horizontalArrangement=Arrangement.End
-    ){
-        IconButton(
-            onClick=onClick,
-            modifier=iconButtonModifier.padding(top=30.dp,end=35.dp),
-            enabled=enabled
-        ){
-            Image(
-                painter=painterResource(id=R.drawable.icon_checkmark_circle),
-                contentDescription=null,
-                modifier=Modifier
-                    .scale(imageScale)
-            )
-        }
-    }
-}
-
-/**
- * @param textAlign center by default
- * @param fontSize XL, L, ML, M, MS, S, XS from 40.sp to 16.sp, default - ML(32.sp)
- * **/
-@Composable
-fun BetterHeader(
-    text:String,
-    modifier:Modifier=Modifier.fillMaxWidth(),
-    textAlign:TextAlign=TextAlign.Center,
-    fontSize:String="ML",
-    fontStyle:FontStyle=FontStyle.Normal
-){
-    val fs=when(fontSize){
-        "XL"->40.sp
-        "L"->36.sp
-        "ML"->32.sp
-        "M"->28.sp
-        "MS"->34.sp
-        "S"->20.sp
-        "XS"->16.sp
-        else->{32.sp}
-    }
-    BetterText(
-        fontSize=fs,
-        text=text,
-        textAlign=textAlign,
-        modifier=modifier,
-        fontStyle=fontStyle
-    )
-}
-
-@Composable
-fun BetterText(
-    text:String,
-    modifier:Modifier=Modifier,
-    textAlign:TextAlign=TextAlign.Start,
-    fontSize:TextUnit=16.sp,
-    fontStyle:FontStyle=FontStyle.Normal
-){
-    Text(
-        fontSize=fontSize,
-        text=text,
-        textAlign=textAlign,
-        modifier=modifier,
-        letterSpacing=0.sp,
-        color=colorSecondary(),
-        fontStyle=fontStyle
-    )
-}
-//endregion
 //region language settings
 data class LanguageData(
     val flag: Int,
@@ -2109,12 +2408,12 @@ fun LanguageMenu(){
     val sharedPrefs=context.getSharedPreferences(Constants.key_package, Context.MODE_PRIVATE)
 
     val languages=listOf(
-        LanguageData(R.drawable.flag_lang_en,getLocal(id=R.string.langEnglish),getLocal(id=R.string.langEnglishLocal)),
-        LanguageData(R.drawable.flag_pl,getLocal(id=R.string.langPolish),getLocal(id=R.string.langPolishLocal)),
-        LanguageData(R.drawable.flag_fr,getLocal(id=R.string.langFrench),getLocal(id=R.string.langFrenchLocal)),
-        LanguageData(R.drawable.flag_br,getLocal(id=R.string.langPortugueseBR),getLocal(id=R.string.langPortugueseBRLocal)),
-        LanguageData(R.drawable.flag_ru,getLocal(id=R.string.langRussian),getLocal(id=R.string.langRussianLocal)),
-        LanguageData(R.drawable.flag_ua,getLocal(id=R.string.langUkrainian),getLocal(id=R.string.langUkrainianLocal))
+        LanguageData(R.drawable.flag_lang_en,stringResource(id=R.string.langEnglish),stringResource(id=R.string.langEnglishLocal)),
+        LanguageData(R.drawable.flag_pl,stringResource(id=R.string.langPolish),stringResource(id=R.string.langPolishLocal)),
+        LanguageData(R.drawable.flag_fr,stringResource(id=R.string.langFrench),stringResource(id=R.string.langFrenchLocal)),
+        LanguageData(R.drawable.flag_br,stringResource(id=R.string.langPortugueseBR),stringResource(id=R.string.langPortugueseBRLocal)),
+        LanguageData(R.drawable.flag_ru,stringResource(id=R.string.langRussian),stringResource(id=R.string.langRussianLocal)),
+        LanguageData(R.drawable.flag_ua,stringResource(id=R.string.langUkrainian),stringResource(id=R.string.langUkrainianLocal))
     )
     val selectedLanguage=remember{mutableStateOf<String?>(Utils.codeToLanguage(sharedPrefs.getString(Constants.key_language,"en")!!))}
     val languagesState=remember{mutableStateOf(languages)}
@@ -2126,7 +2425,7 @@ fun LanguageMenu(){
         .background(color=colorPrimary())){
         Text(
             color=colorSecondary(),
-            text=getLocal(id=R.string.language),
+            text=stringResource(id=R.string.language),
             fontSize=38.sp,
             fontWeight=FontWeight.SemiBold,
             textAlign=TextAlign.Center,
@@ -2158,7 +2457,7 @@ fun LanguageMenu(){
                             .height(45.dp)
                     ){
                         Text(
-                            text=getLocal(id=R.string.save),
+                            text=stringResource(id=R.string.save),
                             color=colorSecondary(),
                             fontSize=20.sp
                         )
@@ -2237,7 +2536,7 @@ var themes=listOf(
 )
 
 @Composable
-fun ThemesSettings(){
+fun ThemesSettings(onNavigate:(String)->Unit){
     val sharedPrefs=LocalContext.current.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
     val theme=sharedPrefs.getString(Constants.key_theme,"Gray")
 
@@ -2260,14 +2559,14 @@ fun ThemesSettings(){
         )
         LazyRow{
             items(themesState.value, key={it.name}){theme ->
-                themeItem(name=theme.name,imgResource=theme.img,selected=theme.selected)
+                themeItem(name=theme.name,imgResource=theme.img,selected=theme.selected,onNavigate=onNavigate)
             }
         }
     }
 }
 
 @Composable
-fun themeItem(name: String, imgResource:Int, selected:Boolean){
+fun themeItem(name: String, imgResource:Int, selected:Boolean,onNavigate:(String)->Unit){
     val context=LocalContext.current
     val sharedPrefs=LocalContext.current.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
     val themeSetupDone=sharedPrefs.getBoolean(Constants.key_isThemeSetUp,false)
@@ -2307,6 +2606,7 @@ fun themeItem(name: String, imgResource:Int, selected:Boolean){
                     sharedPrefs.edit().putString(Constants.key_theme,name).apply()
                     Handler(Looper.getMainLooper()).postDelayed({
                         context.startActivity(Intent(context,MainActivity::class.java))
+
                     }, 100)
                 }
             })
@@ -2315,20 +2615,5 @@ fun themeItem(name: String, imgResource:Int, selected:Boolean){
 //endregion
 
 //region colors
-@Composable
-fun colorPrimary():Color{
-    return getColor(color=com.google.android.material.R.attr.colorPrimary)
-}
-@Composable
-fun colorSecondary():Color{
-    return getColor(color=com.google.android.material.R.attr.colorSecondary)
-}
-@Composable
-fun colorTertiary():Color{
-    return getColor(color=com.google.android.material.R.attr.colorTertiary)
-}
-@Composable
-fun colorQuaternary():Color{
-    return getColor(color=com.google.android.material.R.attr.itemTextColor)
-}
+
 //endregion

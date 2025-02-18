@@ -87,19 +87,13 @@ data class Cycles(
     primaryKeys=["date","cycleId"],
     foreignKeys=[
         ForeignKey(
-            entity=Cycle::class,
-            parentColumns=["date"],
-            childColumns=["date"],
-            onDelete=ForeignKey.CASCADE
-        ),
-        ForeignKey(
             entity=Cycles::class,
             parentColumns=["cycleId"],
             childColumns=["cycleId"],
             onDelete=ForeignKey.CASCADE
         ),
     ],
-    indices=[Index("date"),Index("cycleId")]
+    indices=[Index("cycleId")]
 )
 data class DateCycle(
     val date:String,
