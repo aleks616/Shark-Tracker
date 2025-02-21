@@ -8,22 +8,12 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import com.example.rainbowcalendar.fragments.AddFragment
-import com.example.rainbowcalendar.fragments.CalendarFragment
 import com.example.rainbowcalendar.fragments.HomeFragment
-import com.example.rainbowcalendar.fragments.SettingsFragment
 import java.util.Locale
-import android.view.View
 import com.example.rainbowcalendar.fragments.MainComposable
 
 class MainActivity: AppCompatActivity(){
@@ -47,9 +37,9 @@ class MainActivity: AppCompatActivity(){
 
 
         val homeFragment=HomeFragment()
-        val settingsFragment=SettingsFragment()
+        /*val settingsFragment=SettingsFragment()
         val calendarFragment=CalendarFragment()
-        val addFragment=AddFragment()
+        val addFragment=AddFragment()*/
 
         makeCurrentFragment(homeFragment)
 
@@ -76,7 +66,7 @@ class MainActivity: AppCompatActivity(){
 
 
 
-@Composable
+/*@Composable
 fun ScreenController(){
     var currentScreen by remember{mutableStateOf(Screen.Home)}
     val context=LocalContext.current
@@ -95,7 +85,7 @@ fun ScreenController(){
         Screen.Add->AddScreen{currentScreen=Screen.Add}
         Screen.Settings->SettingsScreen{newScreen->currentScreen=newScreen}
     }
-}
+}*/
 enum class Screen {
     Home,
     Calendar,
@@ -120,7 +110,7 @@ fun AddScreen(currentScreen: (Screen) -> Unit){
 
 @Composable
 fun SettingsScreen(currentScreen:(Screen)->Unit){
-    val context=LocalContext.current
+    //val context=LocalContext.current
 
     Box(modifier=Modifier.sizeIn(maxWidth=200.dp, maxHeight=50.dp)){
         Button(onClick={}) {

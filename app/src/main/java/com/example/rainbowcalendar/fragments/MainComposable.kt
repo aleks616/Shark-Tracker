@@ -249,7 +249,7 @@ fun GenderOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
     val context=LocalContext.current
     val sharedPrefs=context.getSharedPreferences(Constants.key_package, Context.MODE_PRIVATE)
     var selectedOption by remember{mutableStateOf(sharedPrefs.getInt(Constants.key_gender,-1))}
-    var genderItems=mutableListOf(
+    val genderItems=mutableListOf(
         GenderOption(0,stringResource(id=R.string.genderTransMan),stringResource(id=R.string.tmanDescription)),
         GenderOption(1,stringResource(id=R.string.genderNB),stringResource(id=R.string.nbDescription)),
         GenderOption(2,stringResource(id=R.string.genderWoman),stringResource(id=R.string.womanDescription))
