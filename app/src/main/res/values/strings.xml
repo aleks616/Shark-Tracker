@@ -1,18 +1,15 @@
 <resources>
-    <!-- Preference Titles -->
     <string name="messages_header" translatable="false">Messages</string>
     <string name="sync_header" translatable="false">Sync</string>
-
-    <!-- Messages Preferences -->
     <string name="signature_title" translatable="false">Your signature</string>
     <string name="reply_title" translatable="false">Default reply action</string>
-
-    <!-- Sync Preferences -->
     <string name="sync_title" translatable="false">Sync email periodically</string>
     <string name="attachment_title" translatable="false">Download incoming attachments</string>
     <string name="attachment_summary_on" translatable="false">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off" translatable="false">Only download attachments when manually requested</string>
+
+
 
     <string name="app_name">Rainbow Calendar</string>
     <string name="app_name1" translatable="false">Shark Track</string>
@@ -89,70 +86,12 @@
     <string name="minor_consent">By selecting this option, I confirm that I am of legal age to discuss sexual activity according to the laws of my country or state.</string>
     <string name="error_minor_consent">You didn\'t confirm you are of legal age, age option automatically has been switched to \'minor\'</string>
 
-    <string name="pin_length_error">Wrong pin length</string>
-    <string name="password">password</string>
-    <string name="enter_pin">Enter pin</string>
-    <string name="pin_circle_description">circle indicating if digit has been set</string>
-    <string name="enter_password">Enter password</string>
-    <string name="pin_delete_description">delete pin character</string>
-    <string name="pin_enter_description">enter pin and proceed</string>
-    <string name="recovery_setup_title">Set up recovery questions</string>
-    <string name="answer_recovery_questions">Answer recovery questions</string>
-    <string name="enter_answer">Enter answer</string>
-    <string name="enter">Enter</string>
-    <string name="recovery_noquestion_error">If you don\'t see a question, there has been an error</string>
-    <string name="password_type_title">Choose password type</string>
-    <string name="password_text_password">Text password</string>
-    <string name="password_pin_password">Pin password</string>
-    <string name="password_confirm_type">Confirm password type</string>
-    <string name="password_warning">Remember this password!\nApp isn\'t connected to cloud, if you forget it, you\'ll lose all data!</string>
-    <string name="password_show">temporarily show password</string>
-    <string name="enter_the_app">Enter the app</string>
-    <string name="password_repeat">Enter same password again</string>
-    <string name="recovery_answer_empty">Answers can\'t be empty</string>
-    <string name="recovery_wrong_answer">"Wrong answer to question  "</string>
-    <string name="recovery_questions_repeat">Questions can\'t repeat</string>
-    <string name="recovery_choose_all">Choose all 3 questions</string>
-    <string name="recovery_answer_all">Answer all 3 questions</string>
-    <string name="create_pin">Create a pin</string>
-    <string name="enter_pin_again">Enter pin again</string>
-    <string name="wrong_password">Wrong password</string>
-    <string name="create_password">Create a password</string>
-    <string name="passwords_different_error">Passwords aren\'t the same</string>
-    <string name="password_length_error">This is for your safety, password has to be at least 6 characters.</string>
     <string name="password_digit_error">Oh come on, if you want a digit only password, set a pin instead</string>
-    <string name="wrong_pin_try_again">Wrong pin, try again</string>
-    <string name="pins_different_error">Pins are different, try again</string>
     <string name="no_birthday">I don\'t want to enter my birthday</string>
     <string name="settings">settings</string>
     <string name="tReminderText">"It's T time innit"</string>
 
-    <string-array name="recoveryQuestions">
-        <item>Select a question.</item>
-        <item>What was your childhood career?</item>
-        <item>What is your grandmother’s maiden name?</item>
-        <item>What is a phrase you live by?</item>
-        <item>What was the first band you saw live?</item>
-        <item>What brand was your first phone?</item>
-        <item>Who was the first person you kissed?</item>
-        <item>What was the size of your first shoe?</item>
-        <item>What time were you born at?</item>
-        <item>What street did your best friend live on during childhood?</item>
-        <item>What was the first album you ever purchased?</item>
-        <item>What is the flavor of your favorite ice cream?</item>
-        <item>Who won when you went to your first sports game?</item>
-        <item>Where did you have your first ever flight to?</item>
-        <item>What was subject you hated the most in high school?</item>
-        <item>What was the name of your favorite video game as a teen?</item>
-        <item>What was the color of your favorite childhood blanket?</item>
-        <item>What was the title of the first book you read?</item>
-        <item>Who was your first crush?</item>
-        <item>What was the first dish you learned?</item>
-        <item>What was the name/nickname of your least favorite teacher?</item>
-        <item>What is the middle name of your oldest cousin?</item>
-        <item>In what city or town did your parents meet?</item>
-    </string-array>
-    <string name="title_activity_settings" translatable="false">SettingsActivity</string>
+
     <string name="period_settings_f">Menstrual cycle settings</string>
     <string name="period_settings_m">Blahaj cycle settings</string>
     <string name="period_regular_cb_f">Is your period regular?</string>
@@ -163,6 +102,13 @@
     <string name="cycle_length_question_m">How long does your blahaj cycle usually last?</string>
     <string name="last_start_question">How many days ago did it last start?</string>
 
+    <string name="legal_adult">I\'m legally adult</string>
+
+    <string name="close_popup">close popup</string>
+    <string name="it_started">It started</string>
+
+
+    <!--region metrics-->
     <string name="metrics_crampLevelTitle">Cramp Level</string>
     <string name="metrics_crampLevel0">No cramps</string>
     <string name="metrics_crampLevel1">Mild cramps</string>
@@ -233,22 +179,43 @@
     <string name="metrics_musclePain0">No Pain</string>
     <string name="metrics_musclePain1">Mild Pain</string>
     <string name="metrics_musclePain2">Severe Pain</string>
-    <string name="legal_adult">I\'m legally adult</string>
+    <!--endregion-->
 
-
+    <!--region metrics+recovery-->
     <string name="save">Save</string>
     <string name="weight">Weight</string>
     <string name="notes">Notes</string>
     <string name="kcal_balance">Kcal Balance</string>
     <string name="metrics">Metrics</string>
     <string name="stealth_mode">Toggle stealth mode</string>
-    <string name="dont_want_password">I don\'t want to use password</string>
-    <string name="close_popup">close popup</string>
-    <string name="it_started">It started</string>
-    <string name="wrong_password_wait">Wrong password 3 times, wait 30 seconds before next attempt</string>
-    <string name="title_activity_theme">ThemeActivity</string>
+    <string-array name="recoveryQuestions">
+        <item>Select a question.</item>
+        <item>What was your childhood career?</item>
+        <item>What is your grandmother’s maiden name?</item>
+        <item>What is a phrase you live by?</item>
+        <item>What was the first band you saw live?</item>
+        <item>What brand was your first phone?</item>
+        <item>Who was the first person you kissed?</item>
+        <item>What was the size of your first shoe?</item>
+        <item>What time were you born at?</item>
+        <item>What street did your best friend live on during childhood?</item>
+        <item>What was the first album you ever purchased?</item>
+        <item>What is the flavor of your favorite ice cream?</item>
+        <item>Who won when you went to your first sports game?</item>
+        <item>Where did you have your first ever flight to?</item>
+        <item>What was subject you hated the most in high school?</item>
+        <item>What was the name of your favorite video game as a teen?</item>
+        <item>What was the color of your favorite childhood blanket?</item>
+        <item>What was the title of the first book you read?</item>
+        <item>Who was your first crush?</item>
+        <item>What was the first dish you learned?</item>
+        <item>What was the name/nickname of your least favorite teacher?</item>
+        <item>What is the middle name of your oldest cousin?</item>
+        <item>In what city or town did your parents meet?</item>
+    </string-array>
+    <!--endregion-->
 
-
+    <!-- region languages-->
     <string name="langEnglishLocal" translatable="false">English</string> <!--local-non translatable -->
     <string name="langFrenchLocal" translatable="false">Français</string>
     <string name="langPortugueseBRLocal" translatable="false">Português</string>
@@ -257,19 +224,72 @@
     <string name="langPolishLocal" translatable="false">Polski</string>
     <string name="language">Language</string>
 
-
     <string name="langEnglish">English</string>
     <string name="langFrench">French</string>
     <string name="langPortugueseBR">Portuguese(BR)</string>
     <string name="langRussian">Russian</string>
     <string name="langUkrainian">Ukrainian</string>
     <string name="langPolish">Polish</string>
+    <!--endregion-->
 
+    <!-- region password/pin/recovery-->
+    <string name="answer_recovery_questions">Answer recovery questions</string>
+    <string name="create_password">Create a password</string>
+    <string name="create_pin">Create a pin</string>
+    <string name="dont_want_password">I don\'t want to use password</string>
+    <string name="enter_answer">Enter answer</string>
+    <string name="enter_password">Enter password</string>
+    <string name="enter_pin">Enter pin</string>
+    <string name="enter_pin_again">Enter pin again</string>
+
+    <string name="password">password</string>
+    <string name="password_length_error">Password must be at least 6 characters.</string>
+    <string name="password_pin_password">Pin password</string>
+    <string name="password_repeat">Enter same password again</string>
+    <string name="password_text_password">Text password</string>
+    <string name="password_type_title">Choose password type</string>
+    <string name="password_warning">Remember this password!\nApp isn\'t connected to cloud, if you forget it, you\'ll lose all data!</string>
+    <string name="passwords_different_error">Passwords aren\'t the same</string>
+
+    <string name="pin_length_error">Wrong pin length</string>
+    <string name="pins_different_error">Pins are different, try again</string>
+
+
+    <string name="recovery_answer_all">Answer all 3 questions</string>
+    <string name="recovery_answer_empty">Answers can\'t be empty</string>
+    <string name="recovery_choose_all">Choose all 3 questions</string>
+    <string name="recovery_noquestion_error">If you don\'t see a question, there has been an error</string>
+    <string name="recovery_questions_repeat">Questions can\'t repeat</string>
+    <string name="recovery_setup_title">Set up recovery questions</string>
+    <string name="recovery_wrong_answer">"Wrong answer to question"</string>
+
+    <string name="wrong_password">Wrong password</string>
+    <string name="wrong_password_wait">Wrong password 3 times, wait 30 seconds before next attempt</string>
+
+    <string name="enter">Enter</string>
+    <string name="password_confirm_type">Confirm password type</string>
+    <string name="password_show">temporarily show password</string>
+    <string name="pin_circle_description">circle indicating if digit has been set</string>
+    <string name="pin_delete_description">delete pin character</string>
+    <string name="pin_enter_description">enter pin and proceed</string>
+    <string name="wrong_pin_try_again">Wrong pin, try again</string>
+    <!--endregion-->
+
+
+
+
+
+
+    <!--region gender options-->
     <string name="genderTransMan">Trans man</string>
     <string name="genderNB">Non binary</string>
     <string name="genderWoman">Woman</string>
-    <string name="tmanDescription">including masculine-leaning non-binary people that are transitioning/are planning to</string>
-    <string name="nbDescription">non-binary, agender, other, prefers neutral terms</string>
+    <string name="tmanDescription">trans man, T/transition options will be available</string>
+    <string name="nbDescription">non-binary, other, T/transition options will be available</string>
+    <string name="womanDescription">woman, T/transition options WILL NOT be available</string>
+    <string name="noGenderNeutral">Sorry, gender-neutral mode isn\'t available for this language yet, if you need it, choose english instead</string>
+    <string name="noGenderNeutralSuggestion">you can send a suggestion once you\'ve completed setup</string>
+    <string name="go_to_language_screen">Go to language screen</string>
     <string name="yourIdentityHeader">Your identity</string>
     <string name="chooseMostFittingOption">Choose the most fitting option</string>
     <string name="useStealthModeQuestion">Use "stealth mode"?</string>
@@ -278,5 +298,47 @@
     <string name="usePeriod">Use "period"</string>
     <string name="useCensorPeriod">Use shark week</string>
     <string name="errorUnknown">Something went wrong sorry</string>
+    <!--endregion-->
+
+
+    <string name="chooseAppTheme">Choose app theme</string>
+
+    <!--t+birth control+period options-->
+    <string name="nameIsEmptyError">name can\'t be left empty</string>
+    <string name="intervalIsEmptyError">interval can\'t be empty</string>
+    <string name="lastDoseIsEmptyError">last dose date can\'t be empty</string>
+    <string name="intervalNotANumberError">Interval should be a whole number greater than 0</string>
+    <string name="birthControlQuestion">Are you currently taking birth control?</string>
+    <string name="birthControlName">Enter the name of your birth control medication</string>
+    <string name="contraceptive">contraceptive</string>
+    <string name="howOftenDoYouTakeIt">How often do you take it?</string>
+    <string name="daysSpecify">in days, 1->everyday</string>
+    <string name="lastDoseQuestion">When was your last dose?</string>
+    <string name="getRemindersQuestion">Get reminders?</string>
+
+    <string name="datesNotDescendingError">Dates aren\'t ordered from newest to oldest.</string>
+    <string name="invalidDaysBeforePeriod">Days before period must be a whole number.</string>
+    <string name="invalidDatesError">"Dates must be a valid, format is year month day, dates must be in the past."</string>
+    <string name="notNumberDatesError">Each year, month, and day must be a whole number.</string>
+    <string name="periodLengthNotANumberError">Period length should be a whole number.</string>
+    <string name="cycleLengthNotANumberError">Cycle length must be a whole number.</string>
+    <string name="skipLater">Not sure/I\'ll put it in later</string>
+    <string name="testosteroneQuestion">Are you currently taking testosterone?</string>
+    <string name="enterTestosteroneName">Enter name of your testosterone</string>
+    <string name="testosterone">testosterone</string>
+    <string name="firstTestosteroneQuestion">When did you start taking testosterone?</string>
+    <string name="enterDateDescription">This date helps track milestones.\nIf you\'ve taken breaks from testosterone, enter the date you consider your starting point.</string>
+    <string name="microdosing">I am microdosing</string>
+    <string name="testostroneInFutureQuestion">Are you planning to take testosterone in future?</string>
+    <string name="testostroneInFutureDescription">if you\'re not sure, select \"yes\" and you\'ll be asked about it again in a while"</string>
+    <string name="normal">NORMAL</string>
+    <string name="stealth">STEALTH</string>
+    <!--endregion-->
+
+    <string name="termsAndConditions1">I confirm that I am over 18, or I am over the age of 13 and have the consent of my parent or guardian to use this app.</string>
+    <string name="termsAndConditions2">I acknowledge that this app does not collect, store, or share any of my data externally and that all data remains on my device.</string>
+    <string name="termsAndConditions3">I understand that this app is not a medical tool and should not replace professional health advice.</string>
+    <string name="termsAndConditions4">I understand that I am responsible for the security and backup of my own data, and the app developer is not liable for any data loss or misuse.</string>
+    <string name="termsAndConditionsTitle">Terms and conditions</string>
 
 </resources>

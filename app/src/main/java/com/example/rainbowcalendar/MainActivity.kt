@@ -28,10 +28,7 @@ import com.example.rainbowcalendar.fragments.MainComposable
 
 class MainActivity: AppCompatActivity(){
     override fun onCreate(savedInstanceState:Bundle?){
-        val sharedPrefs=applicationContext.getSharedPreferences(
-            "com.example.rainbowcalendar_pref",
-            Context.MODE_PRIVATE
-        )
+        val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref",Context.MODE_PRIVATE)
         val theme=sharedPrefs.getString("theme","Light")
         ThemeManager[this]=theme
         val lang=sharedPrefs.getString("lang","en")!!

@@ -63,6 +63,9 @@ interface CycleDao {
     @Query("SELECT EXISTS(SELECT 1 FROM datecycle WHERE date=:date)")
     fun doesDateExist(date:String):Boolean
 
+    @Query("SELECT EXISTS(SELECT 1 FROM Cycles WHERE cycleId=:cycleId)")
+    fun doesCycleExist(cycleId:Int):Boolean
+
     @Query("UPDATE datecycle SET cycleDay=:cycleDay AND cycleId=:cycleId WHERE date=:date")
     fun updateDateCycle(cycleId:Int,cycleDay:Int,date:String)
 

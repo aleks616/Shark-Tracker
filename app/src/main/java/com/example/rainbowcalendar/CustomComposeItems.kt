@@ -71,6 +71,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -489,7 +490,7 @@ fun CheckmarkButtonRow(
 
 /**
  * @param textAlign center by default
- * @param fontSize XL, L, ML, M, MS, S, XS from 40.sp to 16.sp, default - ML(32.sp)
+ * @param fontSize XL, L, ML, M, MS, S, XS from 40.sp to 16.sp, default - ML(32.sp), you can use lowercase as well
  * **/
 @Composable
 fun BetterHeader(
@@ -499,7 +500,7 @@ fun BetterHeader(
     fontSize:String="ML",
     fontStyle:FontStyle=FontStyle.Normal
 ){
-    val fs=when(fontSize){
+    val fs=when(fontSize.uppercase()){
         "XL"->40.sp
         "L"->36.sp
         "ML"->32.sp

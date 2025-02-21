@@ -12,6 +12,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.core.app.NotificationCompat
+import com.example.rainbowcalendar.fragments.Screens
 import com.google.gson.Gson
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -367,21 +368,76 @@ object Utils{
         return result.get()
     }
 
+    fun previousScreenKey(previousScreen:String?):String{
+        var prefs=""
+        if(previousScreen!=null){
+            Log.v("previous screen in function",previousScreen)
+            prefs=when(previousScreen){
+                Screens.sLanguage->Constants.key_isLanguageSetUp
+                Screens.sTheme->Constants.key_isThemeSetUp
+                Screens.sAgeConsentOptions->Constants.key_isConsentDone
+                Screens.sGenderOptions->Constants.key_gender //-1, NOT A BOOLEAN!
+                Screens.sNameBirthDayOptions->Constants.key_isNameBirthDayMenuComplete
+                Screens.sStealthOptions->Constants.key_isStealthDone
+                Screens.sTOptions->Constants.key_testosteroneMenuComplete
+                Screens.sPeriodOptions->Constants.key_isPeriodMenuComplete
+                Screens.sContraceptiveOptions->Constants.key_BCMenuComplete
+                else->""
+            }
+        }
+        Log.v("screen will be",prefs)
+        return prefs
+    }
+
+    fun getPreviousScreen(currentScreen:String?,context:Context):String{
+        var previousScreen=""
+        if(currentScreen!=null){
+            Log.v("current screen in function",currentScreen)
+            previousScreen=when(currentScreen){
+                Screens.sLanguage->""
+                Screens.sTheme->Screens.sLanguage;
+                Screens.sAgeConsentOptions->Screens.sTheme
+                Screens.sGenderOptions->Screens.sAgeConsentOptions
+                Screens.sNameBirthDayOptions->Screens.sGenderOptions
+                Screens.sStealthOptions->Screens.sNameBirthDayOptions
+                Screens.sTOptions->Screens.sStealthOptions
+               /* Screens.sPeriodOptions->"unknown"*/
+                Screens.sPeriodOptions->Screens.sTOptions
+                Screens.sContraceptiveOptions->Screens.sPeriodOptions
+                else->""
+            }
+            /*if(prefs=="unknown"){
+                val sharedPrefs=context.getSharedPreferences(Constants.key_package, Context.MODE_PRIVATE)
+                val gender=sharedPrefs.getInt(Constants.key_gender,-1)
+                prefs=if(gender==2) Screens.sStealthOptions
+                else Screens.sTOptions
+            }*/
+        }
+        Log.v("previous screen is",previousScreen)
+        return previousScreen
+    }
+
     fun addNewDateCycle(context:Context,dateCycle:DateCycle):Boolean{
         val result=AtomicBoolean(false)
 
         cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
         val thread=Thread{
-            val canInsert=!cycleDao.doesDateExist(dateCycle.date)
-            if(canInsert){
-                Log.v("newDateCycle","id: "+dateCycle.cycleId.toString()+" date:"+dateCycle.date+" day: "+dateCycle.cycleDay.toString())
-                cycleDao.addNewDateCycle(dateCycle)
-                result.set(true)
+            val cycleTypeExists:Boolean=cycleDao.doesCycleExist(dateCycle.cycleId)
+            if(cycleTypeExists){
+                val canInsert=!cycleDao.doesDateExist(dateCycle.date)
+                if(canInsert){
+                    Log.v("newDateCycle","id: "+dateCycle.cycleId.toString()+" date:"+dateCycle.date+" day: "+dateCycle.cycleDay.toString())
+                    cycleDao.addNewDateCycle(dateCycle)
+                    result.set(true)
+                }
+                else{
+                    cycleDao.updateDateCycle(dateCycle.cycleId,dateCycle.cycleDay,dateCycle.date)
+                    Log.v("newDateCycle","date "+dateCycle.date+" already exists, updating instead")
+                    result.set(true)
+                }
             }
             else{
-                cycleDao.updateDateCycle(dateCycle.cycleId,dateCycle.cycleDay,dateCycle.date)
-                Log.v("newDateCycle","date "+dateCycle.date+" already exists, updating instead")
-                result.set(true)
+                result.set(false)
             }
         }
         thread.start()
@@ -434,8 +490,6 @@ object Utils{
             "English" -> "en"
             "Polski" -> "pl"
             "Francais" -> "fr"
-            "Italiano" -> "it"
-            "Espanol" -> "es"
             "Português (Brasil)" -> "pt-BR"
             "Русский" -> "ru"
             "українська" -> "uk"
@@ -449,8 +503,6 @@ object Utils{
             "english" -> "en"
             "polski" -> "pl"
             "français" -> "fr"
-            "italiano" -> "it"
-            "español" -> "es"
             "português" -> "pt-BR"
             "русский" -> "ru"
             "українська" -> "uk"
@@ -464,8 +516,6 @@ object Utils{
             "en" -> "English"
             "pl" -> "Polski"
             "fr" -> "Français"
-            "it" -> "italiano"
-            "es" -> "Español"
             "pt" -> "Português"
             "pt-br" -> "Português"
             "ru" -> "Русский"
@@ -495,6 +545,9 @@ object Utils{
             context.recreate()
         }
     }
+
+
+
     fun smth(context:Context){
         val sharedPrefs=context.getSharedPreferences("com.example.rainbowcalendar_pref",Context.MODE_PRIVATE)
         val gson=Gson()

@@ -64,6 +64,9 @@ object Constants{
     const val key_lastBCNotification="lastBirthControlNotificationTime"
     const val key_bcRemindersOn="birthControlRemindersOn"
 
+    //todo: value for if metrics were customized, change default ones by gender etc
+
+
     //region password and recovery
     /**string 1st recovery question content **/
     const val key_recoveryQuestion1="rQuestion1"
@@ -90,4 +93,5 @@ object Constants{
     /** password/pin - string**/
     const val key_passwordValue="passwordValue"
     //endregion
+
 }

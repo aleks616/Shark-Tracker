@@ -28,7 +28,6 @@ class IntroductionActivity2 : AppCompatActivity(){
 
         //TODO:
         // 1. if year is same as now skip year but still send birthday notifications
-        // 3. period options menu AFTER this one
 
         val adultCb=findViewById<CheckBox>(R.id.adultCb)
         var adult=false
@@ -298,7 +297,7 @@ class IntroductionActivity2 : AppCompatActivity(){
 
         //region BUTTON2
         button1.setOnClickListener{
-            //todo: possible t start, show on main screen when it's close
+            //to do: possible t start, show on main screen when it's close
             if(mode==3){
                 val stringDate:String=tDatePickerYear.value.toString()+"-"+tDatePickerMonth.value.toString().padStart(2,'0')+"-01"
                 sharedPrefs.edit().putString("possTDate",stringDate).apply()
@@ -315,14 +314,14 @@ class IntroductionActivity2 : AppCompatActivity(){
                     val daysTillShot=tInterval-daysSinceT
 
                     val alarm=Alarm(this)
-                    alarm.schedulePushNotifications(tTime.hour, tTime.minute, tInterval, daysTillShot)
+                    //alarm.schedulePushNotifications(tTime.hour, tTime.minute, tInterval, daysTillShot)
                     Toast.makeText(this@IntroductionActivity2, "notification set to"+tTime.hour.toString()+":"+tTime.minute.toString()+"in "+daysTillShot+" days",Toast.LENGTH_SHORT).show()
 
                     sharedPrefs.edit().putInt("tInterval",tInterval).apply()
                 }
                 else{ //gel
                     val alarm=Alarm(this)
-                    alarm.schedulePushNotifications(tTime.hour,tTime.minute,1,0)
+                    //alarm.schedulePushNotifications(tTime.hour,tTime.minute,1,0)
 
                     sharedPrefs.edit().putInt("tInterval",1).apply()
                     Toast.makeText(this@IntroductionActivity2, "notification set to"+tTime.hour.toString()+":"+tTime.minute.toString(),Toast.LENGTH_SHORT).show()

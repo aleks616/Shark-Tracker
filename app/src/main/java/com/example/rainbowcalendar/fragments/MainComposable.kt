@@ -1,14 +1,16 @@
 package com.example.rainbowcalendar.fragments
 
+import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.MotionEvent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
@@ -31,7 +33,6 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -50,7 +51,6 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Remove
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePicker
-//import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -66,12 +66,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.contentcapture.ContentCaptureManager
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
@@ -88,7 +91,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import com.example.rainbowcalendar.Constants
-import com.example.rainbowcalendar.MainActivity
 import com.example.rainbowcalendar.R
 import com.example.rainbowcalendar.ScrollableMetricsView
 import com.example.rainbowcalendar.Utils
@@ -141,29 +143,31 @@ object Screens{
 @Composable
 fun MainComposable(){
     var currentScreen by remember{mutableStateOf(Screens.sWelcome)}
+    Log.v("currentScreen",currentScreen)
 
     when(currentScreen){
         Screens.sWelcome->WelcomeScreen{screen->currentScreen=screen}
         Screens.sLanguage->LanguageScreen()
-        Screens.sTheme->ThemesSettings{screen->currentScreen=screen}
-        Screens.sGenderOptions->GenderOptionsScreen{screen->currentScreen=screen}
-        Screens.sStealthOptions->StealthOptionsScreen{screen->currentScreen=screen}
-        Screens.sAgeConsentOptions->AgeConsentOptions{screen->currentScreen=screen}
+        Screens.sTheme->ThemesSettings(onNavigate={screen->currentScreen=screen},thisScreen=currentScreen)
+        Screens.sAgeConsentOptions->AgeConsentOptions(onNavigate={screen->currentScreen=screen},thisScreen=currentScreen)
+        Screens.sGenderOptions->GenderOptionsScreen(onNavigate={screen->currentScreen=screen},thisScreen=currentScreen)
+        Screens.sNameBirthDayOptions->NameBirthDayOptionsScreen(onNavigate={screen->currentScreen=screen},thisScreen=currentScreen)
 
-        Screens.sTOptions->TOptionsScreen{screen->currentScreen=screen}
-        Screens.sPeriodOptions->PeriodOptionsScreen{screen->currentScreen=screen}
-        Screens.sContraceptiveOptions->ContraceptiveOptionsScreen{screen->currentScreen=screen}
+        Screens.sStealthOptions->StealthOptionsScreen(onNavigate={screen->currentScreen=screen},thisScreen=currentScreen)
+        Screens.sTOptions->TOptionsScreen(onNavigate={screen->currentScreen=screen},thisScreen=currentScreen)
+        Screens.sPeriodOptions->PeriodOptionsScreen(onNavigate={screen->currentScreen=screen},thisScreen=currentScreen)
+        Screens.sContraceptiveOptions->ContraceptiveOptionsScreen(onNavigate={screen->currentScreen=screen},thisScreen=currentScreen)
 
         Screens.sPassword->PasswordScreen{screen->currentScreen=screen}
         Screens.sRecovery->RecoveryScreen{screen->currentScreen=screen}
-        Screens.sNameBirthDayOptions->NameBirthDayOptionsScreen{screen->currentScreen=screen}
+
 
         Screens.sMain->MainScreen{screen->currentScreen=screen}
     }
 }
 
 @Composable
-fun AgeConsentOptions(onNavigate:(String) -> Unit){
+fun AgeConsentOptions(onNavigate:(String)->Unit,thisScreen:String?){
     val context=LocalContext.current
     val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
     val consentDone=sharedPrefs.getBoolean(Constants.key_isConsentDone,false)
@@ -172,18 +176,26 @@ fun AgeConsentOptions(onNavigate:(String) -> Unit){
     }
     var consentChecked by remember{mutableStateOf(arrayOf(false,false,false,false))}
     val consentTexts=listOf(
-        "I confirm that I am legally adult where I reside, or I am over the age of 13 and have the consent of my parent or guardian to use this app",
-        "I acknowledge that this app does not collect, store, or share any of my data externally and that all data remains on my device.",
-        "I understand that this app is not a medical tool and should not replace professional health advice.",
-        "I understand that I am responsible for the security and backup of my own data, and the app developer is not liable for any data loss or misuse."
+        stringResource(id=R.string.termsAndConditions1),
+        stringResource(id=R.string.termsAndConditions2),
+        stringResource(id=R.string.termsAndConditions3),
+        stringResource(id=R.string.termsAndConditions4),
     )
     val index=listOf(0,1,2,3)
 
     Column(
         modifier=Modifier.fillMaxSize()
     ){
+        val prevScreen=Utils.getPreviousScreen(thisScreen,context)
+        val previousKey=Utils.previousScreenKey(prevScreen)
+        if(thisScreen!=null&&previousKey!=""){
+            if(previousKey==Constants.key_gender)
+                GoBackButtonRow(onClick={sharedPrefs.edit().putInt(Utils.previousScreenKey(prevScreen),0).apply();onNavigate(prevScreen)})
+            else
+                GoBackButtonRow(onClick={sharedPrefs.edit().putBoolean(Utils.previousScreenKey(prevScreen),false).apply();onNavigate(prevScreen)})
+        }
         BetterHeader(
-            text="Terms and conditions",
+            text=stringResource(id=R.string.termsAndConditionsTitle),
             fontSize="L",
             textAlign=TextAlign.Center,
             modifier=Modifier
@@ -233,21 +245,34 @@ data class GenderOption(
 )
 
 @Composable
-fun GenderOptionsScreen(onNavigate:(String)->Unit){
+fun GenderOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
     val context=LocalContext.current
     val sharedPrefs=context.getSharedPreferences(Constants.key_package, Context.MODE_PRIVATE)
     var selectedOption by remember{mutableStateOf(sharedPrefs.getInt(Constants.key_gender,-1))}
-    val genderItems=listOf(
+    var genderItems=mutableListOf(
         GenderOption(0,stringResource(id=R.string.genderTransMan),stringResource(id=R.string.tmanDescription)),
         GenderOption(1,stringResource(id=R.string.genderNB),stringResource(id=R.string.nbDescription)),
-        GenderOption(2,stringResource(id=R.string.genderWoman),"")
+        GenderOption(2,stringResource(id=R.string.genderWoman),stringResource(id=R.string.womanDescription))
     )
+    val neutralAvailable=when(sharedPrefs.getString(Constants.key_language,"en")){"en"->true;"pl"->true;"pt"->false;"pt-br"->false;"ru"->false;"uk"->false;"fr"->false;else->false}
+    if(!neutralAvailable){
+        genderItems.removeAt(1)
+    }
+
     SideEffect{
         if(sharedPrefs.getInt(Constants.key_gender,-1)!=-1)
             onNavigate(Screens.sNameBirthDayOptions)
     }
 
     Column(modifier=Modifier.fillMaxWidth()){
+        val prevScreen=Utils.getPreviousScreen(thisScreen,context)
+        val previousKey=Utils.previousScreenKey(prevScreen)
+        if(thisScreen!=null&&previousKey!=""){
+            if(previousKey==Constants.key_gender)
+                GoBackButtonRow(onClick={sharedPrefs.edit().putInt(Utils.previousScreenKey(prevScreen),0).apply();onNavigate(prevScreen)})
+            else
+                GoBackButtonRow(onClick={sharedPrefs.edit().putBoolean(Utils.previousScreenKey(prevScreen),false).apply();onNavigate(prevScreen)})
+        }
         BetterText(
             text=stringResource(id=R.string.yourIdentityHeader),
             fontSize=42.sp,
@@ -300,6 +325,24 @@ fun GenderOptionsScreen(onNavigate:(String)->Unit){
                 }
             }
         }
+        if(!neutralAvailable){
+            BetterHeader(
+                text=stringResource(id=R.string.noGenderNeutral),
+                fontSize="MS",
+                modifier=Modifier.padding(vertical=10.dp,horizontal=6.dp)
+            )
+            BetterHeader(
+                text=stringResource(id=R.string.noGenderNeutralSuggestion),
+                fontSize="S",
+                modifier=Modifier.padding(vertical=4.dp,horizontal=12.dp).fillMaxWidth()
+            )
+            Row(modifier=Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.Center){
+                BetterButton(modifier=Modifier.padding(vertical=12.dp),onClick={onNavigate(Screens.sLanguage)}){
+                    BetterText(text=stringResource(id=R.string.go_to_language_screen),fontSize=20.sp,modifier=Modifier.padding(10.dp))
+                }
+            }
+
+        }
 
         Row(
             modifier=Modifier.fillMaxWidth(),
@@ -326,7 +369,7 @@ fun GenderOptionsScreen(onNavigate:(String)->Unit){
 }
 
 @Composable
-fun StealthOptionsScreen(onNavigate:(String) -> Unit){
+fun StealthOptionsScreen(onNavigate:(String) -> Unit,thisScreen:String?){
     val context=LocalContext.current
     val sharedPrefs=context.getSharedPreferences(Constants.key_package, Context.MODE_PRIVATE)
     val gender=sharedPrefs.getInt(Constants.key_gender,-1)
@@ -344,6 +387,14 @@ fun StealthOptionsScreen(onNavigate:(String) -> Unit){
     Column(
         modifier=Modifier.fillMaxWidth()
     ){
+        val prevScreen=Utils.getPreviousScreen(thisScreen,context)
+        val previousKey=Utils.previousScreenKey(prevScreen)
+        if(thisScreen!=null&&previousKey!=""){
+            if(previousKey==Constants.key_gender)
+                GoBackButtonRow(onClick={sharedPrefs.edit().putInt(Utils.previousScreenKey(prevScreen),0).apply();onNavigate(prevScreen)})
+            else
+                GoBackButtonRow(onClick={sharedPrefs.edit().putBoolean(Utils.previousScreenKey(prevScreen),false).apply();onNavigate(prevScreen)})
+        }
         BetterText(
             text=stringResource(id=R.string.useStealthModeQuestion),
             fontSize=40.sp,
@@ -373,7 +424,7 @@ fun StealthOptionsScreen(onNavigate:(String) -> Unit){
                     .padding(vertical=20.dp)
             ){
                 BetterText(
-                    text=if(isStealthModeOn(context)) "NORMAL" else "STEALTH",
+                    text=if(isStealthModeOn(context)) stringResource(id=R.string.normal) else stringResource(id=R.string.stealth),
                     fontSize=24.sp
                 )
             }
@@ -449,16 +500,18 @@ object PastOrPresentSelectableDates:SelectableDates{
 @OptIn(ExperimentalMaterial3Api::class)
 object OldEnoughSelectableDates:SelectableDates{
     override fun isSelectableDate(utcTimeMillis:Long):Boolean{
-        return utcTimeMillis<=System.currentTimeMillis()-410240038000
+        return (System.currentTimeMillis()-22090320000000..System.currentTimeMillis()-410240038000).contains(utcTimeMillis)
+        //return utcTimeMillis<=System.currentTimeMillis()-410240038000
     }
     override fun isSelectableYear(year:Int):Boolean{
-        return year<=LocalDate.now().year-13
+        return (LocalDate.now().year-70..LocalDate.now().year-13).contains(year)
+        //return year<=LocalDate.now().year-13
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TOptionsScreen(onNavigate:(String) -> Unit){
+fun TOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
     val context=LocalContext.current
     //Utils.deleteAllCycleTypes(context,true)
     val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
@@ -502,13 +555,12 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
     var errorText by remember{mutableStateOf("")}
     LaunchedEffect(errorText){}
     //todo: put errors in strings
-    val testosteroneNameIsEmptyError="testosteroneNameIsEmpty"
-    val intervalIsEmptyError="intervalIsEmpty"
-    val lastDoseIsEmptyError="lastDoseIsEmpty"
-    val firstDoseIsEmptyError="first dose isn't selected but the checkbox isn't checked"
-    val testosteroneIntervalIsNotDigit="Interval should be a whole number greater than 0"
+    val testosteroneNameIsEmptyError=stringResource(id=R.string.nameIsEmptyError)
+    val intervalIsEmptyError=stringResource(id=R.string.intervalIsEmptyError)
+    val lastDoseIsEmptyError=stringResource(id=R.string.lastDoseIsEmptyError)
+    val testosteroneIntervalIsNotDigit=stringResource(id=R.string.intervalNotANumberError)
 
-    val skipFirstDose="Not sure/I'll put it in later"
+    val skipFirstDose=stringResource(id=R.string.skipLater)
     var skipFirstDoseDateChecked by remember{mutableStateOf(false)}
 
     var tShotsReminders by remember{mutableStateOf(false)}
@@ -523,6 +575,16 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
         //else Modifier.fillMaxSize()
     ){
         if(isOnT==null){
+            val prevScreen=Utils.getPreviousScreen(thisScreen,context)
+            val previousKey=Utils.previousScreenKey(prevScreen)
+            if(thisScreen!=null&&previousKey!=""){
+                if(previousKey==Constants.key_gender)
+                    item{GoBackButtonRow(onClick={sharedPrefs.edit().putInt(Utils.previousScreenKey(prevScreen),0).apply();onNavigate(prevScreen)})}
+                else
+                    item{GoBackButtonRow(onClick={sharedPrefs.edit().putBoolean(Utils.previousScreenKey(prevScreen),false).apply();onNavigate(prevScreen)})}
+            }
+
+
             item{
                 YesNoRow(
                     onClickYes={
@@ -533,7 +595,7 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
                         isOnT=false
                         sharedPrefs.edit().putBoolean(Constants.key_isTakingTestosterone,false).apply()
                     },
-                    question="Are you currently taking testosterone?",
+                    question=stringResource(id=R.string.testosteroneQuestion),
                     questionFontSize="ML"
                 )
             }
@@ -545,7 +607,7 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
             item{GoBackButtonRow(onClick={isOnT=null})}
             item{
                 BetterHeader(
-                    text="Enter name of your testosterone",
+                    text=stringResource(id=R.string.enterTestosteroneName),
                     fontSize="ML",
                     modifier=Modifier
                         .fillMaxWidth()
@@ -555,7 +617,7 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
             item{
                 AutoComplete(
                     testosteroneName,
-                    placeholderText="testosterone",
+                    placeholderText=stringResource(id=R.string.testosterone),
                     onValueChange={testosteroneName=it}
                 )
             }
@@ -564,7 +626,7 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
             }
             item{
                 BetterHeader(
-                    text="How often do you take it?",
+                    text=stringResource(id=R.string.howOftenDoYouTakeIt),
                     fontSize="M",
                     modifier=Modifier
                         .fillMaxWidth()
@@ -579,7 +641,7 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
                     BetterTextField(
                         value=testosteroneInterval,
                         onValueChange={testosteroneInterval=it},
-                        placeholderText="in days, 1->everyday",
+                        placeholderText=stringResource(id=R.string.daysSpecify),
                         imeAction=ImeAction.Done,
                         keyboardType=KeyboardType.Number
                     )
@@ -590,7 +652,7 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
             }
             item{
                 BetterHeader(
-                    text="When was your last dose?",
+                    text=stringResource(id=R.string.lastDoseQuestion),
                     fontSize="M",
                 )
             }
@@ -615,7 +677,7 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
                 CheckboxRow(
                     checked=tShotsReminders,
                     onCheckedChange={tShotsReminders=!tShotsReminders},
-                    text="Get reminders?"
+                    text=stringResource(id=R.string.getRemindersQuestion)
                 )
             }
             if(tShotsReminders){
@@ -636,7 +698,7 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
             }
             item{
                 BetterHeader(
-                    text="When did you start taking testosterone?",
+                    text=stringResource(id=R.string.firstTestosteroneQuestion),
                     fontSize="M"
                 )
             }
@@ -650,7 +712,7 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
             if(!skipFirstDoseDateChecked){
                 item{
                     BetterHeader(
-                        text="This date helps track milestones.\nIf you've taken breaks from testosterone, enter the date you consider your starting point.",
+                        text=stringResource(id=R.string.enterDateDescription),
                         fontSize="S",
                         fontStyle=FontStyle.Italic,
                         modifier=Modifier
@@ -686,21 +748,11 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
                 CheckboxRow(
                     checked=isMicrodosing,
                     onCheckedChange={isMicrodosing=!isMicrodosing},
-                    text="I am microdosing"
+                    text=stringResource(id=R.string.microdosing)
                 )
             }
 
             item{
-                /*Text(
-                    text=errorText,
-                    color=Color.Red,
-                    modifier=Modifier
-                        .fillMaxWidth()
-                        .padding(top=20.dp,bottom=10.dp),
-                    textAlign=TextAlign.Center,
-                    fontSize=28.sp,
-                    fontStyle=FontStyle.Italic
-                )*/
                 ErrorText(text=errorText)
             }
             item{
@@ -742,7 +794,7 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
                                                 }
                                             }
                                             else{
-                                                errorText=firstDoseIsEmptyError
+                                                skipFirstDoseDateChecked=true
                                             }
                                         }
                                         else{
@@ -776,11 +828,11 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
                 YesNoRow(
                     onClickYes={sharedPrefs.edit().putBoolean(Constants.key_isPlanningToTakeTestosterone,true).apply()},
                     onClickNo={sharedPrefs.edit().putBoolean(Constants.key_isPlanningToTakeTestosterone,false).apply()},
-                    question="Are you planning to take testosterone in future?")
+                    question=stringResource(id=R.string.testostroneInFutureQuestion))
             }
             item{
                 BetterHeader(
-                    text="if you're not sure, select \"yes\" and you'll be asked about it again in a while",
+                    text=stringResource(id=R.string.testostroneInFutureDescription),
                     fontSize="S",
                     fontStyle=FontStyle.Italic,
                     modifier=Modifier
@@ -799,9 +851,8 @@ fun TOptionsScreen(onNavigate:(String) -> Unit){
 }
 
 
-
 @Composable
-fun PeriodOptionsScreen(onNavigate:(String) -> Unit){
+fun PeriodOptionsScreen(onNavigate:(String) -> Unit,thisScreen:String?){
     val context=LocalContext.current
     val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
     val periodMenuComplete=sharedPrefs.getBoolean(Constants.key_isPeriodMenuComplete,false)
@@ -829,13 +880,23 @@ fun PeriodOptionsScreen(onNavigate:(String) -> Unit){
     var remindXDaysBeforePeriod by remember{mutableStateOf("")}
 
     var errorText by remember{mutableStateOf("")}
-    val cycleLengthNotANumberError="Cycle length must be a whole number."
-    val periodLengthNotANumberError="Period length should be a whole number."
-    val notNumberDatesError="Each year, month, and day must be a whole number."
-    val invalidDatesError="Dates must be a valid, format is year month day, dates must be in the past."
-    val invalidDaysBeforePeriod="Days before period must be a whole number."
-    val datesNotDescendingError="Dates aren't ordered from newest to oldest."
+    val cycleLengthNotANumberError=stringResource(id=R.string.cycleLengthNotANumberError)
+    val periodLengthNotANumberError=stringResource(id=R.string.periodLengthNotANumberError)
+    val notNumberDatesError=stringResource(id=R.string.notNumberDatesError)
+    val invalidDatesError=stringResource(id=R.string.invalidDatesError)
+    val invalidDaysBeforePeriod=stringResource(id=R.string.invalidDaysBeforePeriod)
+    val datesNotDescendingError=stringResource(id=R.string.datesNotDescendingError)
     LazyColumn{
+        val prevScreen=Utils.getPreviousScreen(thisScreen,context)
+        val previousKey=Utils.previousScreenKey(prevScreen)
+
+        if(thisScreen!=null&&previousKey!=""){
+            Log.v("previous screen key",previousKey)
+            if(previousKey==Constants.key_gender)
+                item{GoBackButtonRow(onClick={sharedPrefs.edit().putInt(Utils.previousScreenKey(prevScreen),0).apply();onNavigate(prevScreen)})}
+            else
+                item{GoBackButtonRow(onClick={sharedPrefs.edit().putBoolean(Utils.previousScreenKey(prevScreen),false).apply();onNavigate(prevScreen)})}
+        }
         item{
             YesNoRow(
                 onClickYes={periodRegular=true},
@@ -1036,7 +1097,7 @@ fun PeriodOptionsScreen(onNavigate:(String) -> Unit){
                                                     sharedPrefs.edit().putBoolean(Constants.key_periodRemindersOn,true).apply()
                                                     Utils.createPeriodNotificationChannel(context)
                                                     val isDateError=errorText!=datesNotDescendingError&&errorText!=notNumberDatesError&&errorText!=invalidDatesError
-                                                    if(Utils.canBeIntParsed(remindXDaysBeforePeriod)/*&&!isDateError*/){
+                                                    if(Utils.canBeIntParsed(remindXDaysBeforePeriod)&&!isDateError){
                                                         errorText=""
                                                         val lastDate=Utils.createDateFromIntegers(cycleDates2[0][2].toInt(),cycleDates2[0][1].toInt(),cycleDates2[0][0].toInt())
                                                         val nextDoseDate=Utils.getNextDoseDate(lastDate,cycleLengthValue.toInt())
@@ -1053,12 +1114,19 @@ fun PeriodOptionsScreen(onNavigate:(String) -> Unit){
                                                 errorText=periodLengthNotANumberError
                                             }
                                         }
-                                        if(errorText.isEmpty()&&Utils.addNewDateCycle(context,DateCycle(indexDate,cycleId,0))){
-                                            amountOfCyclesToEnter=0
-                                            cycleDates2=listOf(arrayOf("","",""))
-                                            sharedPrefs.edit().putBoolean(Constants.key_isPeriodMenuComplete,true).apply()
-                                            onNavigate(Screens.sContraceptiveOptions)
+                                        if(errorText.isEmpty()){
+                                            if(Utils.addNewDateCycle(context,DateCycle(indexDate,cycleId,0))){
+                                                amountOfCyclesToEnter=0
+                                                cycleDates2=listOf(arrayOf("","",""))
+                                                sharedPrefs.edit().putBoolean(Constants.key_isPeriodMenuComplete,true).apply()
+                                                onNavigate(Screens.sContraceptiveOptions)
+                                            }
+                                            else{ //cycle type not created
+                                                errorText="Can't add cycle data yet, try again in 30 seconds."
+                                            }
                                         }
+
+
                                     }
                                 //}
                             }
@@ -1086,7 +1154,7 @@ fun PeriodOptionsScreen(onNavigate:(String) -> Unit){
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ContraceptiveOptionsScreen(onNavigate:(String)->Unit){
+fun ContraceptiveOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?=null){
     val context=LocalContext.current
     val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
 
@@ -1120,10 +1188,10 @@ fun ContraceptiveOptionsScreen(onNavigate:(String)->Unit){
     var errorText by remember{mutableStateOf("")}
     LaunchedEffect(errorText){}
     //todo: put errors in strings
-    val contraceptiveNameIsEmptyError="contraceptiveNameIsEmptyError"
-    val intervalIsEmptyError="intervalIsEmpty"
-    val lastDoseIsEmptyError="lastDoseIsEmpty"
-    val contraceptiveIntervalIsNotDigit="Interval should be a whole number greater than 0"
+    val contraceptiveNameIsEmptyError=stringResource(id=R.string.nameIsEmptyError)
+    val intervalIsEmptyError=stringResource(id=R.string.intervalIsEmptyError)
+    val lastDoseIsEmptyError=stringResource(id=R.string.lastDoseIsEmptyError)
+    val contraceptiveIntervalIsNotDigit=stringResource(id=R.string.intervalNotANumberError)
 
 
     var bcReminders by remember{mutableStateOf(false)}
@@ -1138,6 +1206,16 @@ fun ContraceptiveOptionsScreen(onNavigate:(String)->Unit){
         //else Modifier.fillMaxSize()
     ){
         if(isOnBC==null){
+            val prevScreen=Utils.getPreviousScreen(thisScreen,context)
+            val previousKey=Utils.previousScreenKey(prevScreen)
+
+            if(thisScreen!=null&&previousKey!=""){
+                Log.v("previous screen key",previousKey)
+                if(previousKey==Constants.key_gender)
+                    item{GoBackButtonRow(onClick={sharedPrefs.edit().putInt(Utils.previousScreenKey(prevScreen),0).apply();onNavigate(prevScreen)})}
+                else
+                    item{GoBackButtonRow(onClick={sharedPrefs.edit().putBoolean(Utils.previousScreenKey(prevScreen),false).apply();onNavigate(prevScreen)})}
+            }
             item{
                 YesNoRow(
                     onClickYes={
@@ -1150,7 +1228,7 @@ fun ContraceptiveOptionsScreen(onNavigate:(String)->Unit){
                         sharedPrefs.edit().putBoolean(Constants.key_isTakingBirthControlContraceptive,false).apply()
                         onNavigate(Screens.sMain)
                     },
-                    question="Are you currently taking birth control?",
+                    question=stringResource(id=R.string.birthControlQuestion),
                     questionFontSize="ML"
                 )
             }
@@ -1159,7 +1237,7 @@ fun ContraceptiveOptionsScreen(onNavigate:(String)->Unit){
             item{GoBackButtonRow(onClick={isOnBC=null})}
             item{
                 BetterHeader(
-                    text="Enter name of your birth control medication",
+                    text=stringResource(id=R.string.birthControlName),
                     fontSize="ML",
                     modifier=Modifier
                         .fillMaxWidth()
@@ -1169,7 +1247,7 @@ fun ContraceptiveOptionsScreen(onNavigate:(String)->Unit){
             item{
                 AutoComplete(
                     contraceptiveName,
-                    placeholderText="contraceptive",
+                    placeholderText=stringResource(id=R.string.contraceptive),
                     onValueChange={contraceptiveName=it},
                     bc=true
                 )
@@ -1179,7 +1257,7 @@ fun ContraceptiveOptionsScreen(onNavigate:(String)->Unit){
             }
             item{
                 BetterHeader(
-                    text="How often do you take it?",
+                    text=stringResource(id=R.string.howOftenDoYouTakeIt),
                     fontSize="M",
                     modifier=Modifier
                         .fillMaxWidth()
@@ -1194,7 +1272,7 @@ fun ContraceptiveOptionsScreen(onNavigate:(String)->Unit){
                     BetterTextField(
                         value=contraceptiveInterval,
                         onValueChange={contraceptiveInterval=it},
-                        placeholderText="in days, 1->everyday",
+                        placeholderText=stringResource(id=R.string.daysSpecify),
                         imeAction=ImeAction.Done,
                         keyboardType=KeyboardType.Number
                     )
@@ -1204,7 +1282,7 @@ fun ContraceptiveOptionsScreen(onNavigate:(String)->Unit){
                 VerticalSpacer()
             }
             item{
-                BetterHeader("When was your last dose?",fontSize="M")
+                BetterHeader(stringResource(id=R.string.lastDoseQuestion),fontSize="M")
             }
             item{
                 BetterHeader(lastDoseSelectedDate,fontSize="MS")
@@ -1215,7 +1293,7 @@ fun ContraceptiveOptionsScreen(onNavigate:(String)->Unit){
                         title=null,
                         headline=null,
                         state=lastDoseDatePickerState,
-                        showModeToggle=true,
+                        showModeToggle=false,
                         colors=datePickerColors
                     )
                 }
@@ -1224,7 +1302,7 @@ fun ContraceptiveOptionsScreen(onNavigate:(String)->Unit){
                 CheckboxRow(
                     checked=bcReminders,
                     onCheckedChange={bcReminders=!bcReminders},
-                    text="Get reminders?"
+                    text=stringResource(id=R.string.getRemindersQuestion)
                 )
             }
             if(bcReminders){
@@ -1261,14 +1339,17 @@ fun ContraceptiveOptionsScreen(onNavigate:(String)->Unit){
                                                 errorText=""
                                                 sharedPrefs.edit().putInt(Constants.key_bcContraceptiveInterval,contraceptiveInterval.toInt()).apply()
                                                 Utils.addNewCycleType(context,contraceptiveName,contraceptiveInterval.toInt(),true)
-                                                onNavigate(Screens.sPeriodOptions)
                                                 sharedPrefs.edit().putBoolean(Constants.key_BCMenuComplete,true).apply()
                                                 sharedPrefs.edit().putBoolean(Constants.key_isSetupDone,true).apply()
                                                 if(bcReminders){
-                                                    sharedPrefs.edit().putBoolean(Constants.key_tRemindersOn,true).apply()
+                                                    sharedPrefs.edit().putBoolean(Constants.key_bcRemindersOn,true).apply()
                                                     Utils.createContraceptiveNotificationChannel(context)
                                                     //val daysTillNextBC=Utils.getDaysTillNextShot(lastDoseSelectedDate,contraceptiveInterval.toInt())
                                                 }
+                                                if(sharedPrefs.getString(Constants.key_passwordValue,"").isNullOrEmpty())
+                                                    onNavigate(Screens.sPassword)
+                                                else
+                                                    onNavigate(Screens.sPeriodOptions)
                                         }
                                         else{
                                             errorText=lastDoseIsEmptyError
@@ -1302,10 +1383,6 @@ fun ContraceptiveOptionsScreen(onNavigate:(String)->Unit){
 @Composable
 fun MainScreen(onNavigate:(String)->Unit){
     //val context=LocalContext.current
-   // Utils.addNewCycleType("period",28)
-    //onNavigate(Screens.sAgeConsentOptions)
-    //val colorTertiary=getColor(color=com.google.android.material.R.attr.colorTertiary)
-    //val colorSecondary=getColor(color=com.google.android.material.R.attr.colorSecondary)
     data class BottomNavItem(
         val icon:Int,
         val text:String,
@@ -1445,11 +1522,11 @@ fun LanguageScreen(){
 // 4. (don't forget setup complete)
 // 5. BRING BACK CREATE PASSWORD/RECOVERY POPUP
 // 6. SOCIALS/CREDITS TAB
-//: TODO FROM OLD ACTIVITIES: name, birthday, period-settings, home_fragment
+//: TODO FROM OLD ACTIVITIES: home_fragment
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NameBirthDayOptionsScreen(onNavigate:(String) -> Unit){
+fun NameBirthDayOptionsScreen(onNavigate:(String) -> Unit,thisScreen:String?){
     //on navigate stealth
     val context=LocalContext.current
     val sharedPrefs=context.getSharedPreferences(Constants.key_package, Context.MODE_PRIVATE)
@@ -1465,8 +1542,17 @@ fun NameBirthDayOptionsScreen(onNavigate:(String) -> Unit){
         convertMillisToDate(it)
     }?:""
     var errorText by remember{mutableStateOf("")}
+    var skipBirthday by remember{mutableStateOf(false)}
 
     LazyColumn(modifier=Modifier.fillMaxSize()){
+        val prevScreen=Utils.getPreviousScreen(thisScreen,context)
+        val previousKey=Utils.previousScreenKey(prevScreen)
+        if(thisScreen!=null&&previousKey!=""){
+            if(previousKey==Constants.key_gender)
+                item{GoBackButtonRow(onClick={sharedPrefs.edit().putInt(Utils.previousScreenKey(prevScreen),-1).apply();onNavigate(prevScreen)})}
+            else
+                item{GoBackButtonRow(onClick={sharedPrefs.edit().putBoolean(Utils.previousScreenKey(prevScreen),false).apply();onNavigate(prevScreen)})}
+        }
         item{
             BetterHeader(text="Enter your (nick)name.", fontSize="ML",
                 modifier=Modifier
@@ -1492,25 +1578,30 @@ fun NameBirthDayOptionsScreen(onNavigate:(String) -> Unit){
         item{
             VerticalSpacer()
         }
-        item{
-            BetterHeader(text="Enter your birthday to get birthday notifications", fontSize="ML",
-                modifier=Modifier
-                    .padding(vertical=6.dp,horizontal=8.dp)
-                    .fillMaxWidth()
-            )
+        if(!skipBirthday){
+            item{
+                BetterHeader(text="Enter your birthday to get birthday notifications", fontSize="ML",
+                    modifier=Modifier
+                        .padding(vertical=6.dp,horizontal=8.dp)
+                        .fillMaxWidth()
+                )
+            }
+            item{
+                BetterHeader(
+                    text="Selected date: $birthdaySelectedDate",fontSize="M",fontStyle=FontStyle.Italic,
+                    modifier=Modifier
+                        .padding(top=14.dp,bottom=6.dp)
+                        .fillMaxWidth(),
+                )
+            }
+            item{
+                MyDatePicker(
+                    state=birthdayDatePickerState
+                )
+            }
         }
         item{
-            BetterHeader(
-                text="Selected date: $birthdaySelectedDate",fontSize="M",fontStyle=FontStyle.Italic,
-                modifier=Modifier
-                    .padding(top=14.dp,bottom=6.dp)
-                    .fillMaxWidth(),
-            )
-        }
-        item{
-            MyDatePicker(
-                state=birthdayDatePickerState
-            )
+            CheckboxRow(checked=skipBirthday,onCheckedChange={skipBirthday=it},text="I don't want to enter my birthday")
         }
         item{
             ErrorText(text=errorText,modifier=Modifier.fillMaxWidth())
@@ -1521,7 +1612,7 @@ fun NameBirthDayOptionsScreen(onNavigate:(String) -> Unit){
                     errorText=""
                     sharedPrefs.edit().putString(Constants.key_userName,name).apply()
                     sharedPrefs.edit().putBoolean(Constants.key_isNameBirthDayMenuComplete,true).apply()
-                    if(birthdaySelectedDate.isNotEmpty()){
+                    if(!skipBirthday){
                         sharedPrefs.edit().putString(Constants.key_birthDate,birthdaySelectedDate).apply()
                     }
                     onNavigate(Screens.sStealthOptions)
@@ -1548,35 +1639,36 @@ fun WelcomeScreen(onNavigate:(String)->Unit){
             if(!sharedPrefs.getString(Constants.key_passwordValue,"").isNullOrEmpty())//there is password
                 onNavigate(Screens.sPassword)
         }
-            else{
-                Handler(Looper.getMainLooper()).postDelayed({
-                    if(sharedPrefs.getBoolean(Constants.key_isSetupDone,false))
-                        onNavigate(Screens.sMain)
-                    else if(!sharedPrefs.getBoolean(Constants.key_isLanguageSetUp,false))
-                        onNavigate(Screens.sLanguage)
-                    else if(!sharedPrefs.getBoolean(Constants.key_isThemeSetUp,false))
-                        onNavigate(Screens.sTheme)
-                    else if(!sharedPrefs.getBoolean(Constants.key_isConsentDone,false))
-                        onNavigate(Screens.sAgeConsentOptions)
-                    else if(sharedPrefs.getInt(Constants.key_gender,-1)==-1)
-                        onNavigate(Screens.sGenderOptions)
-                    else if(!sharedPrefs.getBoolean(Constants.key_isNameBirthDayMenuComplete,false))
-                        onNavigate(Screens.sNameBirthDayOptions)
-                    else if(!sharedPrefs.getBoolean(Constants.key_isStealthDone,false))
-                        onNavigate(Screens.sStealthOptions)
-                    else if(!sharedPrefs.getBoolean(Constants.key_testosteroneMenuComplete,false))
-                        onNavigate(Screens.sTOptions)
-                    else if(!sharedPrefs.getBoolean(Constants.key_isPeriodMenuComplete,false))
-                        onNavigate(Screens.sPeriodOptions)
-                    else if(!sharedPrefs.getBoolean(Constants.key_isTakingBirthControlContraceptive,false))
-                        onNavigate(Screens.sContraceptiveOptions)
-                    else{
-                        sharedPrefs.edit().putBoolean(Constants.key_isSetupDone,true).apply()
-                        onNavigate(Screens.sMain)
-                    }
-
-                },500)
-            }
+        else{
+            Handler(Looper.getMainLooper()).postDelayed({
+                if(sharedPrefs.getBoolean(Constants.key_isSetupDone,false))
+                    onNavigate(Screens.sMain)
+                else if(!sharedPrefs.getBoolean(Constants.key_isLanguageSetUp,false))
+                    onNavigate(Screens.sLanguage)
+                else if(!sharedPrefs.getBoolean(Constants.key_isThemeSetUp,false))
+                    onNavigate(Screens.sTheme)
+                else if(!sharedPrefs.getBoolean(Constants.key_isConsentDone,false))
+                    onNavigate(Screens.sAgeConsentOptions)
+                else if(sharedPrefs.getInt(Constants.key_gender,-1)==-1)
+                    onNavigate(Screens.sGenderOptions)
+                else if(!sharedPrefs.getBoolean(Constants.key_isNameBirthDayMenuComplete,false))
+                    onNavigate(Screens.sNameBirthDayOptions)
+                else if(!sharedPrefs.getBoolean(Constants.key_isStealthDone,false))
+                    onNavigate(Screens.sStealthOptions)
+                else if(!sharedPrefs.getBoolean(Constants.key_testosteroneMenuComplete,false))
+                    onNavigate(Screens.sTOptions)
+                else if(!sharedPrefs.getBoolean(Constants.key_isPeriodMenuComplete,false))
+                    onNavigate(Screens.sPeriodOptions)
+                else if(!sharedPrefs.getBoolean(Constants.key_BCMenuComplete,false))
+                    onNavigate(Screens.sContraceptiveOptions)
+                else if(!sharedPrefs.getString(Constants.key_passwordValue,"").isNullOrEmpty())
+                    onNavigate(Screens.sPassword) //only if setup isn't complete, if it is, allow to continue without password
+                else{
+                    sharedPrefs.edit().putBoolean(Constants.key_isSetupDone,true).apply()
+                    onNavigate(Screens.sMain)
+                }
+            },500)
+        }
     }
 //    sharedPrefs.edit().putBoolean("setup",false).apply()
 
@@ -1983,7 +2075,7 @@ fun PasswordScreen(onNavigate:(String)->Unit){
                         tint=Color.Unspecified
                     )
                 }
-                //endregion
+                    //endregion
                 Column(
                     modifier=Modifier
                         .fillMaxWidth()
@@ -2536,84 +2628,116 @@ var themes=listOf(
 )
 
 @Composable
-fun ThemesSettings(onNavigate:(String)->Unit){
-    val sharedPrefs=LocalContext.current.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
+fun ThemesSettings(onNavigate:(String)->Unit,thisScreen:String?){
+    val context=LocalContext.current
+    val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
     val theme=sharedPrefs.getString(Constants.key_theme,"Gray")
 
     for(tm in themes){
         tm.selected=tm.name==theme
     }
 
-    val themesState=remember{mutableStateOf(themes)}
-    Column(modifier=Modifier
-        .fillMaxWidth(1f)
-        .background(colorPrimary())){
-        Text(
-            color=colorSecondary(),
-            text="Choose theme", //todo: strings
-            fontSize=44.sp,
-            fontWeight=FontWeight.SemiBold,
-            modifier=Modifier
-                .padding(top=30.dp,bottom=10.dp)
-                .align(Alignment.CenterHorizontally)
-        )
-        LazyRow{
-            items(themesState.value, key={it.name}){theme ->
-                themeItem(name=theme.name,imgResource=theme.img,selected=theme.selected,onNavigate=onNavigate)
+    val themeRow=themes.chunked(2)
+    LazyColumn(modifier=Modifier
+        .fillMaxWidth()
+        .background(colorPrimary())
+    ){
+        val prevScreen=Utils.getPreviousScreen(thisScreen,context)
+        val previousKey=Utils.previousScreenKey(prevScreen)
+        if(thisScreen!=null&&previousKey!=""){
+            if(previousKey==Constants.key_gender)
+                item{GoBackButtonRow(onClick={sharedPrefs.edit().putInt(Utils.previousScreenKey(prevScreen),0).apply();onNavigate(prevScreen)})}
+            else
+                item{GoBackButtonRow(onClick={sharedPrefs.edit().putBoolean(Utils.previousScreenKey(prevScreen),false).apply();onNavigate(prevScreen)})}
+        }
+        item{
+            Text(
+                color=colorSecondary(),
+                text=stringResource(R.string.chooseAppTheme),
+                fontSize=44.sp,
+                fontWeight=FontWeight.SemiBold,
+                modifier=Modifier
+                    .padding(top=30.dp,bottom=10.dp)
+            )
+        }
+        themeRow.forEach{row->
+            item{
+                Column(
+                    modifier=Modifier
+                        .fillMaxWidth()
+                        .heightIn(max=300.dp)
+                ){
+                    Row(
+                        modifier=Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                    ){
+                        row.forEach{item->
+                            Box(modifier=Modifier.weight(1f)){
+                                themeItem2(name=item.name,imgResource=item.img,onNavigate=onNavigate,isSelected=item.selected)
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 }
-
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun themeItem(name: String, imgResource:Int, selected:Boolean,onNavigate:(String)->Unit){
-    val context=LocalContext.current
+fun themeItem2(name: String, imgResource:Int,onNavigate:(String)->Unit,isSelected:Boolean=false){
+    val context=LocalContext.current as Activity
     val sharedPrefs=LocalContext.current.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
     val themeSetupDone=sharedPrefs.getBoolean(Constants.key_isThemeSetUp,false)
-    var isSelected by remember{mutableStateOf(selected)}
-    Column(
-        horizontalAlignment=Alignment.CenterHorizontally,
-        modifier=Modifier.padding(all=10.dp)
-    ){
-        Text(
-            text=name,
-            color=colorSecondary(),
-            fontSize=34.sp,
-            fontWeight=FontWeight.SemiBold,
-            modifier=Modifier.padding(vertical=20.dp)
-        )
-        Box(modifier=Modifier.heightIn(max=470.dp)){ //todo: change max heightIn so it matches real photos
-            Image(
-                painter=painterResource(id=imgResource),
-                contentDescription=null,
+
+    val selected=remember {mutableStateOf(false)}
+    val scale=animateFloatAsState(if(selected.value) 1.1f else 1f,label="")
+
+    val onClick={if(!themeSetupDone) sharedPrefs.edit().putBoolean(Constants.key_isThemeSetUp,true).apply()
+        sharedPrefs.edit().putString(Constants.key_theme,name).apply()
+        Handler(Looper.getMainLooper()).postDelayed({
+            onNavigate(Screens.sMain)
+            context.recreate()
+        },100)}
+
+            Column(
                 modifier=Modifier
-                    .width(250.dp)
-                    .fillMaxSize(1f)
-                    .padding(horizontal=5.dp)
-                    .border(width=2.dp,color=Color.Black)
-            )
-        }
-        RadioButton(
-            selected=(isSelected),
-            modifier=Modifier
-                .scale(1.5f)
-                .padding(top=15.dp),
-            colors=RadioButtonDefaults.colors(selectedColor=colorSecondary(),unselectedColor=colorSecondary()),
-            onClick={
-                if(!themeSetupDone) sharedPrefs.edit().putBoolean(Constants.key_isThemeSetUp,true).apply()
-                isSelected=!isSelected
-                if(isSelected){
-                    sharedPrefs.edit().putString(Constants.key_theme,name).apply()
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        context.startActivity(Intent(context,MainActivity::class.java))
+                    .fillMaxWidth()
+                    .padding(vertical=10.dp)
+                    .clickable {onClick()}
+                    .pointerInteropFilter {
+                        if(ContentCaptureManager.isEnabled) {
+                            when(it.action) {
+                                MotionEvent.ACTION_DOWN-> {
+                                    selected.value=true
+                                }
 
-                    }, 100)
-                }
-            })
-    }
+                                MotionEvent.ACTION_UP-> {
+                                    selected.value=false
+                                    onClick()
+                                }
+
+                                MotionEvent.ACTION_CANCEL-> {
+                                    selected.value=false
+                                }
+                            }
+                        }
+                        else selected.value=false
+                        true
+                    }
+                    .scale(scale.value)
+            ){
+                Image(
+                    painterResource(id=imgResource),
+                    contentDescription=name,
+                    modifier=Modifier
+                        .fillMaxSize()
+                        .border(
+                            width=if(isSelected) 3.dp else 0.dp,
+                            color=if(isSelected) colorSecondary() else Color.Transparent
+                        )
+                )
+            }
+
 }
-//endregion
-
-//region colors
-
 //endregion
