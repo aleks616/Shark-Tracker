@@ -1,4 +1,5 @@
 package com.example.rainbowcalendar
+/*
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -164,4 +165,4 @@ class RecoveryActivity : AppCompatActivity() {
         return string?.lowercase()?.replace(" ","")
     }
 
-}
+}*/

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary">
-
+<!--
     <LinearLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,7 +17,7 @@
             android:layout_margin="10sp"
             android:text="@string/intro2_header"
             android:textColor="?attr/colorSecondary"
-            android:textSize="30sp" /> <!-- change to "additional settings"-->
+            android:textSize="30sp" /> &lt;!&ndash; change to "additional settings"&ndash;&gt;
 
         <RadioGroup
             android:id="@+id/modes_radioGroup"
@@ -113,7 +113,7 @@
                 android:textSize="16sp"
                 android:visibility="gone" />
 
-        </RadioGroup> <!-- mode-->
+        </RadioGroup> &lt;!&ndash; mode&ndash;&gt;
 
         <CheckBox
             android:minHeight="48dp"
@@ -164,7 +164,7 @@
                 android:spinnersShown="true"
                 android:textColor="?attr/colorSecondary" />
 
-        </LinearLayout> <!-- birthday-->
+        </LinearLayout> &lt;!&ndash; birthday&ndash;&gt;
 
         <LinearLayout
             android:id="@+id/tStartDateLayout"
@@ -192,7 +192,7 @@
                 android:minDate="01-01-2000"
                 android:spinnersShown="true"
                 android:textColor="?attr/colorSecondary" />
-            <!--mm-dd-yyyy-->
+            &lt;!&ndash;mm-dd-yyyy&ndash;&gt;
 
             <TextView
                 android:id="@+id/lastDoseText"
@@ -285,8 +285,8 @@
                 android:layout_gravity="center"
                 android:minHeight="48dp"
                 android:text="@string/t_notif"
-                android:textColor="?attr/colorSecondary" /> <!--make string better-->
-        </LinearLayout> <!-- t options -->
+                android:textColor="?attr/colorSecondary" /> &lt;!&ndash;make string better&ndash;&gt;
+        </LinearLayout> &lt;!&ndash; t options &ndash;&gt;
 
         <LinearLayout
             android:id="@+id/startDatePicker"
@@ -325,7 +325,7 @@
                     android:textColor="?attr/colorSecondary" />
 
             </LinearLayout>
-        </LinearLayout> <!--approx start date picker-->
+        </LinearLayout> &lt;!&ndash;approx start date picker&ndash;&gt;
 
         <LinearLayout
             android:id="@+id/layoutSex"
@@ -365,7 +365,7 @@
                     android:textColor="?attr/colorSecondary" />
             </RadioGroup>
 
-        </LinearLayout> <!--sex-->
+        </LinearLayout> &lt;!&ndash;sex&ndash;&gt;
 
         <CheckBox
             android:id="@+id/sexCb"
@@ -376,7 +376,7 @@
             android:textColor="?attr/colorSecondary"
             android:textSize="18sp"
             android:visibility="gone" />
-        <!--todo: error text color? why isn't it visible?-->
+        &lt;!&ndash;todo: error text color? why isn't it visible?&ndash;&gt;
         <TextView
             android:textAllCaps="true"
             android:id="@+id/errorText"
@@ -385,7 +385,7 @@
             android:layout_margin="10sp"
             android:textColor="?attr/colorSecondary"
             android:textSize="20sp"
-            tools:text="test" /> <!--error text-->
+            tools:text="test" /> &lt;!&ndash;error text&ndash;&gt;
 
         <Button
             android:id="@+id/buttonNext"
@@ -399,7 +399,7 @@
             android:drawableTint="?attr/colorSecondary"
             android:text="@string/next"
             android:textAlignment="textEnd"
-            android:textColor="?attr/colorQuaternary" /> <!--button-->
+            android:textColor="?attr/colorQuaternary" /> &lt;!&ndash;button&ndash;&gt;
 
         <Button
             android:id="@+id/buttonNext1"
@@ -415,6 +415,6 @@
             android:text="@string/next"
             android:textAlignment="textEnd"
             android:textColor="?attr/colorQuaternary"
-            android:visibility="gone" /> <!--button1-->
-    </LinearLayout>
+            android:visibility="gone" /> &lt;!&ndash;button1&ndash;&gt;
+    </LinearLayout>-->
 </ScrollView>

@@ -6,6 +6,7 @@
     android:background="?attr/colorPrimary"
     android:orientation="vertical"
     tools:context=".IntroductionActivity">
+<!--
 
     <TextView
         android:layout_width="match_parent"
@@ -111,5 +112,6 @@
         android:text="@string/next"
         android:textAlignment="textEnd"
         android:textColor="?attr/colorQuaternary" />
+-->
 
 </LinearLayout>

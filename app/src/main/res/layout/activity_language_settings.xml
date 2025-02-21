@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".LanguageSettingsActivity">
 
-    <TextView
+  <!--  <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25sp"
@@ -37,6 +37,6 @@
         android:text="@string/next"
         android:textAlignment="textEnd"
         android:textColor="?attr/colorQuaternary" />
-
+-->
 
 </LinearLayout>

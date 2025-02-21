@@ -1,4 +1,5 @@
 package com.example.rainbowcalendar
+/*
 
 import android.content.Context
 import android.content.Intent
@@ -57,8 +58,10 @@ class LanguageSettingsActivity:AppCompatActivity(){
         val sharedPrefs=applicationContext.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
         sharedPrefs.edit().putString("lang",lang).apply()
     }
-   /* private fun toMainScreen(){
+   */
+/* private fun toMainScreen(){
         val intent=Intent(this, MainActivity::class.java)
         startActivity(intent)
-    }*/
-}
+    }*//*
+
+}*/

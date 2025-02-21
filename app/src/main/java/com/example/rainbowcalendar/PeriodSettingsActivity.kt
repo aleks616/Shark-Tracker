@@ -1,4 +1,5 @@
 package com.example.rainbowcalendar
+/*
 
 import android.content.Context
 import android.content.Intent
@@ -108,4 +109,4 @@ class PeriodSettingsActivity : AppCompatActivity() {
 
 
     }
-}
+}*/

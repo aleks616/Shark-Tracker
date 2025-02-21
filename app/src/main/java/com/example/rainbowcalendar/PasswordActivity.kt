@@ -1,5 +1,5 @@
 package com.example.rainbowcalendar
-import android.annotation.SuppressLint
+/*import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -98,10 +98,10 @@ class PasswordActivity : AppCompatActivity(){
                 passwordType=2
                 pinButtonType=1
             }
-            /*with(sharedPrefPasswordType.edit()){
+            *//*with(sharedPrefPasswordType.edit()){
                 putInt("com.example.rainbowcalendar_passwordType",passwordType)
                 apply()
-            }*/
+            }*//*
             sharedPrefs.edit().putInt("passwordType",passwordType).apply()
             sharedPrefTemp.edit().putInt("temp",pinButtonType).apply()
 
@@ -407,7 +407,7 @@ class PasswordActivity : AppCompatActivity(){
     fun isNumeric(word:String):Boolean{
         return word.all{char->char.isDigit()}
     }
-}
+}*/
 
 
 
