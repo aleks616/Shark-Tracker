@@ -6,7 +6,6 @@ plugins {
 android {
     namespace="com.example.rainbowcalendar"
     compileSdk=34
-
     androidResources {
         generateLocaleConfig=true
     }
@@ -63,6 +62,9 @@ android {
         }
     }
 }
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
 
 dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
@@ -71,12 +73,17 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material3:material3:1.3.1")
+    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    implementation("androidx.navigation:navigation-compose:2.8.6")
     androidTestImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
 
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
     implementation("androidx.room:room-paging:2.6.1")
     implementation("androidx.paging:paging-compose:3.3.5")
+
 
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
@@ -94,6 +101,9 @@ dependencies {
     implementation("sh.calvin.reorderable:reorderable:2.4.3")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material:material:1.7.6")
+    implementation("androidx.compose.foundation:foundation:1.7.7")
+    implementation("androidx.compose.animation:animation:1.5.4")
+
 
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.7.6")
     debugImplementation("androidx.compose.ui:ui-tooling")
