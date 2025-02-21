@@ -68,15 +68,15 @@ class SplashScreenActivity:AppCompatActivity(){
             createNotificationChannel(this)
             welcomeTextView.text=welcomeText
             delay=2000
-            val intent=Intent(this, LanguageSettingsActivity::class.java)
+            /*val intent=Intent(this, LanguageSettingsActivity::class.java)
             Handler(Looper.getMainLooper()).postDelayed({
                 startActivity(intent)
                 finish()
-            }, delay)
+            }, delay)*/
         }
         else{
             welcomeTextView.text=welcomeBackText
-            if(!sharedPrefs.getString("passwordValue","").isNullOrEmpty()){ //there is password
+            /*if(!sharedPrefs.getString("passwordValue","").isNullOrEmpty()){ //there is password
                 startActivity(Intent(this,PasswordActivity::class.java))
             }
             else{
@@ -86,7 +86,7 @@ class SplashScreenActivity:AppCompatActivity(){
                     startActivity(intent)
                     finish()
                 }, delay)
-            }
+            }*/
         }
     }
     private fun createNotificationChannel(context: Context){

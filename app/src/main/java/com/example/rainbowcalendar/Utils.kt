@@ -98,8 +98,8 @@ object Utils{
         dateFormat.isLenient=false
 
         try{
-            val startDate=dateFormat.parse(start)
-            val todayDate=dateFormat.parse(today)
+            val startDate=dateFormat.parse(start)!!
+            val todayDate=dateFormat.parse(today)!!
             val timeSinceStart=todayDate.time-startDate.time
             val daysSinceStart=timeSinceStart/(24*60*60*1000)
 

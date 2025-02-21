@@ -13,9 +13,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
-import com.example.rainbowcalendar.LanguageSettingsActivity
 import com.example.rainbowcalendar.MainActivity
-import com.example.rainbowcalendar.PeriodSettingsActivity
 import com.example.rainbowcalendar.R
 import com.example.rainbowcalendar.ThemesActivity
 
@@ -28,12 +26,12 @@ class SettingsFragment : Fragment() {
         val testButton=view.findViewById<Button>(R.id.testButton)
 
         testButton.setOnClickListener {
-            startActivity(Intent(requireContext(), PeriodSettingsActivity::class.java))
+           // startActivity(Intent(requireContext(), PeriodSettingsActivity::class.java))
         }
 
         val goToLanguageActivityButton=view.findViewById<Button>(R.id.goToLanguageActivityButton)
         goToLanguageActivityButton.setOnClickListener {
-            startActivity(Intent(requireContext(), LanguageSettingsActivity::class.java))
+           // startActivity(Intent(requireContext(), LanguageSettingsActivity::class.java))
         }
 
         val stealthModeToggle=view.findViewById<Button>(R.id.stealthModeToggle)

@@ -17,9 +17,7 @@ import androidx.fragment.app.Fragment
 import com.example.rainbowcalendar.CycleDao
 import com.example.rainbowcalendar.CycleRoomDatabase
 import com.example.rainbowcalendar.MainActivity
-import com.example.rainbowcalendar.PasswordActivity
 import com.example.rainbowcalendar.R
-import com.example.rainbowcalendar.RecoveryActivity
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -84,12 +82,12 @@ class HomeFragment:Fragment() {
             //popUpSpace.visibility=View.GONE
         }
 
-        goToActivity.setOnClickListener {
+        /*goToActivity.setOnClickListener {
             if(!passwordSet)
                 startActivity(Intent(requireContext(),PasswordActivity::class.java))
             else if(!recoverySet)
                 startActivity(Intent(requireContext(),RecoveryActivity::class.java))
-        }
+        }*/
 
         buttonClosePopup.setOnClickListener {
             popUpL.visibility=View.GONE
