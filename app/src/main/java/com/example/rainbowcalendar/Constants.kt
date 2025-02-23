@@ -94,4 +94,6 @@ object Constants{
     const val key_passwordValue="passwordValue"
     //endregion
 
+    /** if not, set them up by looking at gender and if taking T at start of app**/
+    const val metricsSetUp="metricsSetUp"
 }

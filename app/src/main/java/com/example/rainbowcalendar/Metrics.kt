@@ -41,6 +41,8 @@ import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -52,6 +54,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -70,6 +73,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.rainbowcalendar.db.Cycle
+import com.example.rainbowcalendar.db.CycleDao
+import com.example.rainbowcalendar.db.CycleRoomDatabase
+import com.example.rainbowcalendar.fragments.OldEnoughSelectableDates
+import com.example.rainbowcalendar.fragments.PastOrPresentSelectableDates
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
@@ -77,6 +85,8 @@ import kotlinx.coroutines.withContext
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.Calendar
 import java.util.Locale
 import kotlin.math.sqrt
@@ -140,6 +150,7 @@ data class MetricPersistence2(
     val selectedIndex:Int
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScrollableMetricsView(){
     val padding=12.dp
@@ -263,9 +274,26 @@ fun ScrollableMetricsView(){
     var customName3Input by remember{mutableStateOf("")}
 
     val showReorderView=remember{mutableStateOf(false)}
-    LazyColumn(modifier=Modifier
-        .fillMaxSize()
-        .background(colorPrimary())){
+
+    var showDialog by remember{mutableStateOf(false)}
+    val datePickerState=rememberDatePickerState(
+        selectableDates=Utils.MetricsSelectableDates,
+        initialSelectedDateMillis=LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+    )
+    val selectedDate=datePickerState.selectedDateMillis?.let{
+        Utils.convertMillisToDate(it)
+    }?:""
+
+    val theme=sharedPrefs.getString("theme","Black")
+    LazyColumn(
+        modifier=if(theme=="Pride")
+            Modifier
+                .fillMaxSize()
+                .paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
+        else Modifier
+            .fillMaxSize()
+            .background(colorPrimary())
+    ){
         item{
             Box(
                 contentAlignment=Alignment.Center,
@@ -307,7 +335,9 @@ fun ScrollableMetricsView(){
                             )
                         }
                         Button(
-                            onClick={},
+                            onClick={
+                                showDialog=true
+                            },
                             modifier=Modifier
                                 .padding(vertical=10.dp,horizontal=4.dp)
                                 .align(Alignment.CenterVertically)
@@ -348,6 +378,11 @@ fun ScrollableMetricsView(){
                 }
             }
         } //header
+        if(showDialog){
+            item{
+                CustomDatePickerDialog(state=datePickerState,confirmButton={usedDateState.value=selectedDate},onClose={showDialog=false})
+            }
+        }
         item{
             Box(
                 contentAlignment=Alignment.Center,
@@ -391,21 +426,27 @@ fun ScrollableMetricsView(){
             }
             item{
                 BetterHeader(text="Enter names for custom metrics to track",fontSize="MS",modifier=Modifier.fillMaxSize())
-                BetterHeader(text="4 levels will be available",fontSize="S",modifier=Modifier.fillMaxSize().padding(top=16.dp,bottom=8.dp))
+                BetterHeader(text="4 levels will be available",fontSize="S",modifier=Modifier
+                    .fillMaxSize()
+                    .padding(top=16.dp,bottom=8.dp))
                 BetterTextField(placeholderText="custom metric 1",value=customName1Input, onValueChange={
                     if(it.isNotEmpty()){
                         sharedPrefs.edit().putString("customMetric1",it).apply()
                         customName1Input=it
                     }
                 })
-                BetterHeader(text="5 levels will be available",fontSize="S",modifier=Modifier.fillMaxSize().padding(top=16.dp,bottom=8.dp))
+                BetterHeader(text="5 levels will be available",fontSize="S",modifier=Modifier
+                    .fillMaxSize()
+                    .padding(top=16.dp,bottom=8.dp))
                 BetterTextField(placeholderText="custom metric 2",value=customName2Input, onValueChange={
                     if(it.isNotEmpty()){
                         sharedPrefs.edit().putString("customMetric2",it).apply()
                         customName2Input=it
                     }
                 })
-                BetterHeader(text="5 levels will be available",fontSize="S",modifier=Modifier.fillMaxSize().padding(top=16.dp,bottom=8.dp))
+                BetterHeader(text="5 levels will be available",fontSize="S",modifier=Modifier
+                    .fillMaxSize()
+                    .padding(top=16.dp,bottom=8.dp))
                 BetterTextField(placeholderText="custom metric 3",value=customName3Input, onValueChange={
                     if(it.isNotEmpty()){
                         sharedPrefs.edit().putString("customMetric3",it).apply()
@@ -653,13 +694,19 @@ fun IconItem(iconResId:Int,label:String, modifier:Modifier=Modifier){
 @Composable
 fun MetricReorderView(metricRows:MutableState<List<MetricRowData>>,onOrderChanged:(List<MetricRowData>)->Unit){
     val lazyListState=rememberLazyListState()
+
+    val context=LocalContext.current
+    val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
+    val isSetUp=sharedPrefs.getBoolean(Constants.metricsSetUp,false)
+
     val reorderableLazyListState=rememberReorderableLazyListState(lazyListState){from,to->
         val updatedList=metricRows.value.toMutableList().apply{
             add(to.index,removeAt(from.index))
+            if(!isSetUp) sharedPrefs.edit().putBoolean(Constants.metricsSetUp,true).apply()
         }
         onOrderChanged(updatedList)
     }
-    val context=LocalContext.current
+
 
     LazyColumn(state=lazyListState){
         items(metricRows.value,key={it.title}){metric->

@@ -45,6 +45,7 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
@@ -633,6 +634,32 @@ fun MyDatePicker(
         colors=Utils.datePickerColors(),
         modifier=Modifier.padding(all=0.dp)
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomDatePickerDialog(
+    state:DatePickerState,
+    onClose:()->Unit,
+    confirmButton:@Composable ()->Unit,
+){
+    DatePickerDialog(
+        onDismissRequest={},
+        confirmButton={
+            BetterButton(onClick={onClose()}){}
+            confirmButton()
+        },
+        colors=Utils.datePickerColors()
+    ){
+        DatePicker(
+            title=null,
+            headline=null,
+            state=state,
+            showModeToggle=false,
+            colors=Utils.datePickerColors(),
+            modifier=Modifier.padding(all=0.dp)
+        )
+    }
 }
 
 

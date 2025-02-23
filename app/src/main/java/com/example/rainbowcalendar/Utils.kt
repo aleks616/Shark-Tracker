@@ -3,19 +3,28 @@ package com.example.rainbowcalendar
 import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.ComponentName
 import android.content.Context
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.material3.DatePickerColors
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SelectableDates
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.core.app.NotificationCompat
+import com.example.rainbowcalendar.db.CycleRoomDatabase
+import com.example.rainbowcalendar.db.Cycles
+import com.example.rainbowcalendar.db.DateCycle
 import com.example.rainbowcalendar.fragments.Screens
 import com.google.gson.Gson
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -45,6 +54,20 @@ object Utils{
 
     fun isStringANumber(text:String):Boolean{
         return text.all{it.isDigit()}
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    object MetricsSelectableDates:SelectableDates{
+        override fun isSelectableDate(utcTimeMillis:Long):Boolean{
+            return (System.currentTimeMillis()-946707780000..System.currentTimeMillis()).contains(utcTimeMillis)
+        }
+        override fun isSelectableYear(year:Int):Boolean{
+            return (LocalDate.now().year-30..LocalDate.now().year).contains(year)
+        }
+    }
+    fun convertMillisToDate(millis:Long):String{
+        val formatter=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault())
+        return formatter.format(Date(millis))
     }
     fun isValidPastOrPresentYear(year:Int):Boolean{
         val currentYear=Calendar.getInstance().get(Calendar.YEAR)
@@ -401,17 +424,16 @@ object Utils{
                 Screens.sNameBirthDayOptions->Screens.sGenderOptions
                 Screens.sStealthOptions->Screens.sNameBirthDayOptions
                 Screens.sTOptions->Screens.sStealthOptions
-               /* Screens.sPeriodOptions->"unknown"*/
-                Screens.sPeriodOptions->Screens.sTOptions
+                Screens.sPeriodOptions->"unknown"
                 Screens.sContraceptiveOptions->Screens.sPeriodOptions
                 else->""
             }
-            /*if(prefs=="unknown"){
+            if(previousScreen=="unknown"){
                 val sharedPrefs=context.getSharedPreferences(Constants.key_package, Context.MODE_PRIVATE)
                 val gender=sharedPrefs.getInt(Constants.key_gender,-1)
-                prefs=if(gender==2) Screens.sStealthOptions
+                previousScreen=if(gender==2) Screens.sStealthOptions
                 else Screens.sTOptions
-            }*/
+            }
         }
         Log.v("previous screen is",previousScreen)
         return previousScreen
@@ -545,8 +567,34 @@ object Utils{
             context.recreate()
         }
     }
+    fun isStealthModeOn(context:Context):Boolean{
+        val packageManager=context.packageManager
+        val stealth=ComponentName(context,"com.example.rainbowcalendar.MainActivityStealth")
+
+        return packageManager.getComponentEnabledSetting(stealth)==PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+    }
+
+    fun isPeriodCensored(context:Context):Boolean{
+        val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
+        return sharedPrefs.getBoolean(Constants.key_censorPeriod,false)
+    }
+    fun togglePeriodCensor(context: Context){
+        val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
+        val censorPeriod=sharedPrefs.getBoolean(Constants.key_censorPeriod,false)
+        if(censorPeriod) sharedPrefs.edit().putBoolean(Constants.key_censorPeriod,false).apply()
+        else sharedPrefs.edit().putBoolean(Constants.key_censorPeriod,true).apply()
+    }
 
 
+    fun toggleStealthMode(context:Context){
+        val packageManager=context.packageManager
+        val stealth=ComponentName(context,"com.example.rainbowcalendar.MainActivityStealth")
+        val default=ComponentName(context,"com.example.rainbowcalendar.MainActivity")
+
+        val stealthMode=packageManager.getComponentEnabledSetting(stealth)==PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+        packageManager.setComponentEnabledSetting((if(stealthMode) default else stealth),PackageManager.COMPONENT_ENABLED_STATE_ENABLED,PackageManager.DONT_KILL_APP)
+        packageManager.setComponentEnabledSetting((if(stealthMode) stealth else default),PackageManager.COMPONENT_ENABLED_STATE_DISABLED,PackageManager.DONT_KILL_APP)
+    }
 
     fun smth(context:Context){
         val sharedPrefs=context.getSharedPreferences("com.example.rainbowcalendar_pref",Context.MODE_PRIVATE)
@@ -575,37 +623,62 @@ object Utils{
         )
         //TODO: SWITCH ORDERS BASED ON SETTINGS, GENDER ETC, SWITCH 0-11 ORDER
 
-        checkOrder(metricRowsList)
 
         val metricsJson=gson.toJson(metricRowsList)
         sharedPrefs.edit().putString("metricsOrder",metricsJson).apply()
     }
 
-    private fun checkOrder(metricList:List<MetricPersistence>){
-        for(i in 0..11){
-            for(j in 0..11){
-                if(i!=j&&metricList[i].order==metricList[j].order)
-                    Log.e("metric error",metricList[i].metricName+" and "+metricList[j].metricName+" have same order value!!!")
-            }
+    fun setStartMetricsOrder(context:Context,gender:Int){
+        val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
+        val femaleMetrics=listOf(
+            MetricRowData(context.getString(R.string.metrics_OverallMoodTitle),"overallMood",-1),
+            MetricRowData(context.getString(R.string.metrics_headacheTitle),"headache",-1),
+            MetricRowData(context.getString(R.string.metrics_MusclePainTitle),"musclePain",-1),
+            MetricRowData(context.getString(R.string.metrics_SkinConditionTitle),"skinCondition",-1),
+            MetricRowData(context.getString(R.string.metrics_DigestiveIssuesTitle),"digestiveIssues",-1),
+            MetricRowData(context.getString(R.string.metrics_SleepQualityTitle),"sleepQuality",-1),
+            MetricRowData(context.getString(R.string.metrics_energyLevelTitle),"energyLevel",-1),
+            MetricRowData(context.getString(R.string.metrics_MoodSwingsTitle),"moodSwings",-1),
+            MetricRowData(context.getString(R.string.metrics_BleedingTitle),"bleeding",-1),
+            MetricRowData(context.getString(R.string.metrics_crampLevelTitle),"crampLevel",-1),
+            MetricRowData(context.getString(R.string.metrics_CravingsTitle),"cravings",-1),
+            MetricRowData(context.getString(R.string.metrics_DysphoriaTitle),"dysphoria",-1,visible=false),
+            MetricRowData(sharedPrefs.getString("customMetric1","custom1-missing")!!,"customColumn1",-1),
+            MetricRowData(sharedPrefs.getString("customMetric2","custom2-missing")!!,"customColumn2",-1),
+            MetricRowData(sharedPrefs.getString("customMetric3","custom3-missing")!!,"customColumn3",-1),
+        )
+        val transMetrics=listOf(
+            MetricRowData(context.getString(R.string.metrics_DysphoriaTitle),"dysphoria",-1),
+            MetricRowData(context.getString(R.string.metrics_OverallMoodTitle),"overallMood",-1),
+            MetricRowData(context.getString(R.string.metrics_headacheTitle),"headache",-1),
+            MetricRowData(context.getString(R.string.metrics_MusclePainTitle),"musclePain",-1),
+            MetricRowData(context.getString(R.string.metrics_SkinConditionTitle),"skinCondition",-1),
+            MetricRowData(context.getString(R.string.metrics_DigestiveIssuesTitle),"digestiveIssues",-1),
+            MetricRowData(context.getString(R.string.metrics_SleepQualityTitle),"sleepQuality",-1),
+            MetricRowData(context.getString(R.string.metrics_energyLevelTitle),"energyLevel",-1),
+            MetricRowData(context.getString(R.string.metrics_MoodSwingsTitle),"moodSwings",-1),
+            MetricRowData(context.getString(R.string.metrics_BleedingTitle),"bleeding",-1),
+            MetricRowData(context.getString(R.string.metrics_crampLevelTitle),"crampLevel",-1),
+            MetricRowData(context.getString(R.string.metrics_CravingsTitle),"cravings",-1),
+            MetricRowData(sharedPrefs.getString("customMetric1","custom1-missing")!!,"customColumn1",-1),
+            MetricRowData(sharedPrefs.getString("customMetric2","custom2-missing")!!,"customColumn2",-1),
+            MetricRowData(sharedPrefs.getString("customMetric3","custom3-missing")!!,"customColumn3",-1),
+        )
+
+
+
+        val metricRowsState=if(gender==0){mutableStateOf(femaleMetrics)} else{mutableStateOf(transMetrics)}
+
+
+
+        val gson=Gson()
+
+        val metricPersistence2List=metricRowsState.value.mapIndexed{index,metric->
+            MetricPersistence2(metricName=metric.metricName,order=index,visible=metric.visible,title=metric.title,selectedIndex=metric.selectedIndex)
         }
+        val metrics2Json=gson.toJson(metricPersistence2List)
+        sharedPrefs.edit().putString("metricsOrder2", metrics2Json).putBoolean(Constants.metricsSetUp,true).apply()
     }
 
-    private fun swapOrder(metricList:List<MetricPersistence>,pos1:Int,pos2:Int):MutableList<MetricPersistence>{
-        val metricList1=metricList.toMutableList()
-        val temp=pos1
-        metricList1[pos1]=metricList1[pos2]
-        metricList1[pos2]=metricList1[temp]
-        return metricList1
-    }
-    private fun setOrder(metricList:List<MetricPersistence>){
-        val orderList=listOf(8,0,5,4,9,2,3,6,11,10,7,1)
-        val maxIndex=11
-        /*if(period woman){
-            val orderList=listOf<Int>(8,0,5,4,9,2,3,6,11,10,7,1)
-            val maxIndex=10
-            for(i in 0..maxIndex){
-                //switch items around so there are no holes
-            }
-        }*/
-    }
+
 }

@@ -14,8 +14,8 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import com.example.rainbowcalendar.CycleDao
-import com.example.rainbowcalendar.CycleRoomDatabase
+import com.example.rainbowcalendar.db.CycleDao
+import com.example.rainbowcalendar.db.CycleRoomDatabase
 import com.example.rainbowcalendar.MainActivity
 import com.example.rainbowcalendar.R
 import java.text.SimpleDateFormat
