@@ -17,6 +17,17 @@
         <item name="colorOutline">@color/black</item>
     </style>
 
+
+    <style name="Pride.RainbowCalendar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/gray13</item>
+        <item name="colorSecondary">@color/very_dark_gray</item>
+        <item name="colorTertiary">@color/gray90</item>
+        <item name="colorQuaternary">@color/very_dark_gray</item>
+        <item name="itemTextColor">@color/very_dark_gray</item>
+        <item name="colorOutline">@color/black</item>
+    </style>
+
+
     <style name="Gray.RainbowCalendar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/gray6</item>
         <item name="colorSecondary">@color/grayE3</item>

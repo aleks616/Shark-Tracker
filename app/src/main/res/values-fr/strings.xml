@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Rainbow Calendar</string>
     <string name="welcome_text">Hi! Bienvenue sur Rainbow Calendar</string>
-    <string name="choose_language">Choisir la langue </string>
+  <!--  <string name="choose_language">Choisir la langue </string>
     <string name="welcome_back">Re-bonjour</string>
     <string name="enter_name">Comment voudrais-tu être appelé?</string>
     <string name="enter_name_hint">Name</string>
@@ -12,12 +12,12 @@
     <string name="choose_gender_mode">Choisis ton genre/mode, les détails s\'afficheront. Tu pourras le changer dans les paramètres.</string>
     <string name="gender_mode_tm">Homme trans, nous essaierons de ne pas te rendre dysphorique, et ne mentionnerons pas de sujets pouvant trigger</string>
     <string name="gender_mode_f">Femme, nous utiliserons des termes traditionnellement fèminins</string>
-    <string name="gender_mode_n">Neutre, pour les personnes non-binaires, en questionnement tous les autres, qui ne veulent pas être genrés</string>
+    <string name="gender_mode_n">Neutre, pour les personnes non-binaires, en questionnement tous les autres, qui ne veulent pas être genrés</string>-->
     <string name="home_button_name">Accueil</string>
     <string name="account_button_name">Compte</string>
     <string name="add_button_text">Ajout</string>
     <string name="calendar_button_text">Calendrier</string>
-    <string name="intro2_header"> Choisis une option qui te correspond le mieux</string>
+    <!--<string name="intro2_header"> Choisis une option qui te correspond le mieux</string>
     <string name="intro2_young_n">Je n\'en suis qu\'à mes premières règles et ne pense pas encore à la grossesse. (Pour les mineurs)</string>
     <string name="intro2_gay">Je suis dans une relation et ne peux pas tomber enceint.e(((this is a gendered term, I put it in gender neutral, remove this, just telling ya))) /Je ne peux physiquement pas tomber enceint.e</string>
     <string name="intro2_ftm"> Je suis une personne transmasculine pré-T ayant l\'intention d\'en prendre un jour</string>
@@ -56,7 +56,7 @@
     <string name="intro2_ftm_n">I\'m a trans masculine-leaning person planning on taking T someday.</string>
     <string name="gender_mode_m">Man mode, pregnancy won\'t ever be mentioned</string>
     <string name="minor_consent">By selecting this option, I confirm that I am of legal age to discuss sexual activity according to the laws of my country or state.</string>
-    <string name="error_minor_consent">You didn\'t confirm you are of legal age, age option automatically has been switched to \'minor\'</string>
+    <string name="error_minor_consent">You didn\'t confirm you are of legal age, age option automatically has been switched to \'minor\'</string>-->
     <string name="pin_length_error">Wrong pin length\n</string>
     <string name="password">password</string>
     <string name="enter_pin">Enter pin</string>
@@ -75,7 +75,7 @@
     <string name="password_confirm_type">Confirm password type</string>
     <string name="password_warning">Remember this password!\nApp isn\'t connected to cloud, if you forget it, you\'ll lose all data!</string>
     <string name="password_show">temporarily show password</string>
-    <string name="enter_the_app">Enter the app</string>
+   <!-- <string name="enter_the_app">Enter the app</string>-->
     <string name="password_repeat">Enter same password again</string>
     <string name="recovery_answer_empty">Answers can\'t be empty</string>
     <string name="recovery_wrong_answer">"Wrong answer to question  "</string>
@@ -88,10 +88,10 @@
     <string name="create_password">Create a password</string>
     <string name="passwords_different_error">Passwords aren\'t the same</string>
     <string name="password_length_error">This is for your safety, password has to be at least 6 characters.</string>
-    <string name="password_digit_error">Oh come on, if you want a digit only password, set a pin instead</string>
+   <!-- <string name="password_digit_error">Oh come on, if you want a digit only password, set a pin instead</string>-->
     <string name="wrong_pin_try_again">Wrong pin, try again</string>
     <string name="pins_different_error">Pins are different, try again</string>
-    <string name="no_birthday">I don\'t want to enter my birthday</string>
+  <!--  <string name="no_birthday">I don\'t want to enter my birthday</string>
     <string name="settings">settings</string>
     <string name="tReminderText">It\'s T time innit</string>
     <string name="period_settings_f">Menstrual cycle settings</string>
@@ -102,7 +102,7 @@
     <string name="period_length_question_m">How long does your shark cycle usually last?</string>
     <string name="cycle_length_question_f">How long does your cycle usually last?</string>
     <string name="cycle_length_question_m">How long does your blahaj cycle usually last?</string>
-    <string name="last_start_question">How many days ago did it last start?</string>
+    <string name="last_start_question">How many days ago did it last start?</string>-->
 
 
     <string name="metrics_crampLevelTitle">Niveau de crampes menstruelles</string>
@@ -175,10 +175,10 @@
     <string name="metrics_musclePain0">Pas de douleur</string>
     <string name="metrics_musclePain1">Douleur modérée</string>
     <string name="metrics_musclePain2">Douleur sévère</string>
-    <string name="legal_adult">I\'m legally adult</string>
+<!--    <string name="legal_adult">I\'m legally adult</string>-->
     <string name="dont_want_password">I don\'t want to use password</string>
-    <string name="close_popup">close popup</string>
-    <string name="it_started">It started</string>
+<!--    <string name="close_popup">close popup</string>
+    <string name="it_started">It started</string>-->
     <string name="wrong_password_wait">Wrong password 3 times, wait 30 seconds before next attempt</string>
 
     <string name="save">Save</string>

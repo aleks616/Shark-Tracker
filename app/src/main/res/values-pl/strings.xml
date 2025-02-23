@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Tęczowy kalendarz</string>
     <string name="welcome_text">Cześć! Witamy w tęczowym kalendarzu</string>
-    <string name="choose_language">Wybierz język aplikacji</string>
+<!--    <string name="choose_language">Wybierz język aplikacji</string>
     <string name="welcome_back">Witamy ponownie</string>
     <string name="enter_name">Wprowadź imię/ksywę, tak będziemy się do Ciebie zwracać.</string>
     <string name="enter_name_hint">Imię</string>
@@ -11,12 +11,12 @@
     <string name="choose_gender_mode">Wybierz tryb/płeć, na następnym ekranie będzie więcej opcji. Możesz zmienić te ustawienia później.</string>
     <string name="gender_mode_tm">Tryb transmęski, będziemy używać męskich zwrotów, i postaramy się unikać triggerujących tematów.</string>
     <string name="gender_mode_f">Tryb kobiecy, będziemy używać żeńskich zwrotów.</string>
-    <string name="gender_mode_n">"Tryb neutralny, dla osób niebinarnych, i tych które wolą neutralne zwroty. "</string>
+    <string name="gender_mode_n">"Tryb neutralny, dla osób niebinarnych, i tych które wolą neutralne zwroty. "</string>-->
     <string name="home_button_name">Główna</string>
     <string name="account_button_name">Konto</string>
     <string name="add_button_text">Dodaj</string>
     <string name="calendar_button_text">Kalendarz</string>
-    <string name="intro2_header">Wybierz najbardziej pasującą opcję.</string>
+<!--    <string name="intro2_header">Wybierz najbardziej pasującą opcję.</string>
     <string name="intro2_young_n">Mam okres od niedawna i nie myśle o ciąży. (wersja przyjazna nieletnim, jeśli jesteś dorosł*, wybierz ostatnią opcję)</string>
     <string name="intro2_young_f">Mam okres od niedawna i nie myśle o ciąży. (wersja przyjazna nieletnim, jeśli jesteś dorosła, wybierz ostatnią opcję)</string>
     <string name="intro2_young_m">Mam okres od niedawna i nie myśle o ciąży. (wersja przyjazna nieletnim, jeśli jesteś dorosły, wybierz ostatnią opcję)</string>
@@ -55,7 +55,7 @@
     <string name="intro2_ftm_n">I\'m a trans masculine-leaning person planning on taking T someday.</string>
     <string name="gender_mode_m">Odblokowałeś sekretny tryb prawdziwego mężczyzny!</string>
     <string name="minor_consent">By selecting this option, I confirm that I am of legal age to discuss sexual activity according to the laws of my country or state.</string>
-    <string name="error_minor_consent">You didn\'t confirm you are of legal age, age option automatically has been switched to \'minor\'</string>
+    <string name="error_minor_consent">You didn\'t confirm you are of legal age, age option automatically has been switched to \'minor\'</string>-->
     <string name="pin_length_error">Niepoprawna długość pinu</string>
     <string name="password">hasło</string>
     <string name="enter_pin">Wrpowadź pin</string>
@@ -74,7 +74,7 @@
     <string name="password_confirm_type">Potwierdź rodzaj hasła</string>
     <string name="password_warning">Pamiętaj to hasło, jeśli je zapomnisz, stracisz dostęp do aplikacji.</string>
     <string name="password_show">pokaż hasło</string>
-    <string name="enter_the_app">Wejdź do aplikacji</string>
+<!--    <string name="enter_the_app">Wejdź do aplikacji</string>-->
     <string name="password_repeat">Wprowadź to samo hasło ponownie</string>
     <string name="recovery_answer_empty">Odpowiedzi nie mogą być puste</string>
     <string name="recovery_wrong_answer">"Zła odpowiedź na pytanie   "</string>
@@ -87,11 +87,13 @@
     <string name="create_password">Utwórz hasło</string>
     <string name="passwords_different_error">Hasła się różnią</string>
     <string name="password_length_error">Hasło musi mieć conajmniej 6 znaków</string>
-    <string name="password_digit_error">Jeśli chcesz hasło złożone z cyfr, użyj pinu</string>
+<!--    <string name="password_digit_error">Jeśli chcesz hasło złożone z cyfr, użyj pinu</string>-->
     <string name="wrong_pin_try_again">Zły pin, spróbuj ponownie</string>
     <string name="pins_different_error">Piny się różnią, spróbuj ponownie</string>
+<!--
     <string name="no_birthday">Nie chcę podaweać daty urodzenia</string>
     <string name="settings">Ustawienia</string>
+-->
 
 
     <string-array name="recoveryQuestions">
@@ -119,7 +121,7 @@
         <item>Jak ma na drugie imię tw*j* najstarsz* kuzyn/kuzynka?</item>
         <item>Gdzie poznali się twoji rodzice?</item>
     </string-array>
-    <string name="tReminderText">czas na testosteron</string>
+   <!-- <string name="tReminderText">czas na testosteron</string>
     <string name="period_settings_f">Menstrual cycle settings</string>
     <string name="period_settings_m">Shark cycle settings</string>
     <string name="period_regular_cb_f">Is your period regular?</string>
@@ -129,7 +131,7 @@
     <string name="cycle_length_question_f">How long does your cycle usually last?</string>
     <string name="cycle_length_question_m">How long does your blahaj cycle usually last?</string>
     <string name="last_start_question">How many days ago did it last start?</string>
-
+-->
 
 
     <string name="metrics_crampLevelTitle">Skórcze</string>
@@ -202,10 +204,10 @@
     <string name="metrics_musclePain0">No Pain</string>
     <string name="metrics_musclePain1">Mild Pain</string>
     <string name="metrics_musclePain2">Severe Pain</string>
-    <string name="legal_adult">I\'m legally adult</string>
+<!--    <string name="legal_adult">I\'m legally adult</string>-->
     <string name="dont_want_password">I don\'t want to use password</string>
-    <string name="close_popup">close popup</string>
-    <string name="it_started">It started</string>
+  <!--  <string name="close_popup">close popup</string>
+    <string name="it_started">It started</string>-->
     <string name="wrong_password_wait">Wrong password 3 times, wait 30 seconds before next attempt</string>
 
     <string name="save">Save</string>

@@ -3,7 +3,7 @@
     <string name="app_name">Rainbow Calendar</string>
 
     <string name="welcome_text">Hi! Welcome to Rainbow Calendar</string>
-    <string name="choose_language">Выберите язык приложения</string>
+  <!--  <string name="choose_language">Выберите язык приложения</string>
     <string name="welcome_back">Welcome back</string>
     <string name="enter_name">Enter your (nick)name, how do you want to be addressed.</string>
     <string name="enter_name_hint">Name</string>
@@ -12,13 +12,13 @@
     <string name="gender_mode_tm">Transmasculine mode, masculine terms will be used, and potentially triggering topics will be avoided. Pregnancy won\'t be ever mentioned.</string>
     <string name="gender_mode_m">Man mode, congrats gigachad, you unlocked real transmed man mode! You won\'t see inclusive tucute bullshit!</string>
     <string name="gender_mode_f">Woman mode, Feminine terms will be used.</string>
-    <string name="gender_mode_n">Neutral mode, gender-neutral terms will be used, suitable for non-binary, questioning, and other users.</string>
+    <string name="gender_mode_n">Neutral mode, gender-neutral terms will be used, suitable for non-binary, questioning, and other users.</string>-->
     <string name="home_button_name">Home</string>
     <string name="account_button_name">Account</string>
     <string name="add_button_text">Add</string>
     <string name="calendar_button_text">Calendar</string>
 
-    <string name="period_settings_f">Menstrual cycle settings</string>
+ <!--   <string name="period_settings_f">Menstrual cycle settings</string>
     <string name="period_settings_m">Blahaj cycle settings</string>
     <string name="period_regular_cb_f">Is your period regular?</string>
     <string name="period_regular_cb_m">Is your blahaj week regular?</string>
@@ -68,7 +68,7 @@
     <string name="choose_birthday_m">If you want to, enter your birthday, (you\'ll get birthday wishes). Advised if you\'re a minor, the age setting will change automatically.</string>
     <string name="intro2_ftm_m">I\'m a pre-T trans guy (trans masculine-leaning person) planning on taking T someday.</string>
     <string name="minor_consent">By selecting this option, I confirm that I am of legal age to discuss sexual activity according to the laws of my country or state.</string>
-    <string name="error_minor_consent">You didn\'t confirm you are of legal age, age option automatically has been switched to \'minor\'</string>
+    <string name="error_minor_consent">You didn\'t confirm you are of legal age, age option automatically has been switched to \'minor\'</string>-->
     <string name="pin_length_error">Wrong pin length</string>
     <string name="password">password</string>
     <string name="enter_pin">Enter pin</string>
@@ -87,7 +87,7 @@
     <string name="password_confirm_type">Confirm password type</string>
     <string name="password_warning">Remember this password!\nApp isn\'t connected to cloud, if you forget it, you\'ll lose all data!</string>
     <string name="password_show">temporarily show password</string>
-    <string name="enter_the_app">Enter the app</string>
+<!--    <string name="enter_the_app">Enter the app</string>-->
     <string name="password_repeat">Enter same password again</string>
     <string name="recovery_answer_empty">Answers can\'t be empty</string>
     <string name="recovery_wrong_answer">"Wrong answer to question  "</string>
@@ -100,13 +100,15 @@
     <string name="create_password">Create a password</string>
     <string name="passwords_different_error">Passwords aren\'t the same</string>
     <string name="password_length_error">This is for your safety, password has to be at least 6 characters.</string>
-    <string name="password_digit_error">Oh come on, if you want a digit only password, set a pin instead</string>
+ <!--   <string name="password_digit_error">Oh come on, if you want a digit only password, set a pin instead</string>-->
     <string name="wrong_pin_try_again">Wrong pin, try again</string>
     <string name="pins_different_error">Pins are different, try again</string>
+<!--
     <string name="no_birthday">I don\'t want to enter my birthday</string>
     <string name="settings">settings</string>
     <string name="tReminderText">"It's T time innit"</string>
 
+-->
 
     <string name="metrics_crampLevelTitle">Спазмы</string>
     <string name="metrics_crampLevel0">Нет спазмов</string>
@@ -178,10 +180,10 @@
     <string name="metrics_musclePain0">Нет боли</string>
     <string name="metrics_musclePain1">Небольшая боль</string>
     <string name="metrics_musclePain2">Сильная боль</string>
-    <string name="legal_adult">I\'m legally adult</string>
+<!--    <string name="legal_adult">I\'m legally adult</string>-->
     <string name="dont_want_password">I don\'t want to use password</string>
-    <string name="close_popup">close popup</string>
-    <string name="it_started">It started</string>
+<!--    <string name="close_popup">close popup</string>
+    <string name="it_started">It started</string>-->
     <string name="wrong_password_wait">Wrong password 3 times, wait 30 seconds before next attempt</string>
     <string name="save">Save</string>
     <string name="weight">Weight</string>
