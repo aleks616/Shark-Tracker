@@ -23,10 +23,10 @@ To this end, Communists of various nationalities have assembled in London, and s
         android:supportsRtl="true"
         android:theme="@style/Black.RainbowCalendar"
         tools:targetApi="s">
-        <activity
+        <!--<activity
             android:name=".ThemesActivity"
-            android:exported="false" />
-        <activity
+            android:exported="false" />-->
+      <!--  <activity
             android:name=".PeriodSettingsActivity"
             android:exported="false" />
         <activity
@@ -43,13 +43,13 @@ To this end, Communists of various nationalities have assembled in London, and s
             android:exported="false" />
         <activity
             android:name=".LanguageSettingsActivity"
-            android:exported="false" />
-        <activity
+            android:exported="false" />-->
+        <!--<activity
             android:name=".SplashScreenActivity"
             android:enabled="true"
             android:exported="true">
         </activity>
-
+-->
         <activity
             android:name=".MainActivity"
             android:enabled="true"
@@ -89,6 +89,7 @@ To this end, Communists of various nationalities have assembled in London, and s
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
     </application>
 
 </manifest>

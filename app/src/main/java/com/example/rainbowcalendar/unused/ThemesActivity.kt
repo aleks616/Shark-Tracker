@@ -1,6 +1,6 @@
 package com.example.rainbowcalendar
 
-import android.content.Context
+/*import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.compose.runtime.getValue
@@ -24,4 +24,4 @@ class ThemesActivity:AppCompatActivity(){
         }
     }
 
-}
+}*/

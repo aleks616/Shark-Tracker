@@ -1,5 +1,5 @@
 package com.example.rainbowcalendar
-
+/*
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -50,13 +50,15 @@ class SplashScreenActivity:AppCompatActivity(){
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
+*/
 /*
         Thread{
             val shortcutManager=getSystemService(ShortcutManager::class.java)
             val shortcut=ShortcutInfo.Builder(this,"id_1").setShortLabel("Shark Tracker").setIcon(Icon.createWithResource(this,R.drawable.icon_shark_trans))
                 .setIntent(Intent(Intent.ACTION_MAIN).setComponent(ComponentName(this, SplashScreenActivity::class.java))).build()
             shortcutManager?.dynamicShortcuts=listOf(shortcut)
-        }.start()*/
+        }.start()*//*
+
 
         val welcomeTextView=findViewById<TextView>(R.id.welcome)
         val setupDone=sharedPrefs.getBoolean("setup",false)
@@ -68,15 +70,18 @@ class SplashScreenActivity:AppCompatActivity(){
             createNotificationChannel(this)
             welcomeTextView.text=welcomeText
             delay=2000
-            /*val intent=Intent(this, LanguageSettingsActivity::class.java)
+            */
+/*val intent=Intent(this, LanguageSettingsActivity::class.java)
             Handler(Looper.getMainLooper()).postDelayed({
                 startActivity(intent)
                 finish()
-            }, delay)*/
+            }, delay)*//*
+
         }
         else{
             welcomeTextView.text=welcomeBackText
-            /*if(!sharedPrefs.getString("passwordValue","").isNullOrEmpty()){ //there is password
+            */
+/*if(!sharedPrefs.getString("passwordValue","").isNullOrEmpty()){ //there is password
                 startActivity(Intent(this,PasswordActivity::class.java))
             }
             else{
@@ -86,7 +91,8 @@ class SplashScreenActivity:AppCompatActivity(){
                     startActivity(intent)
                     finish()
                 }, delay)
-            }*/
+            }*//*
+
         }
     }
     private fun createNotificationChannel(context: Context){
@@ -97,4 +103,4 @@ class SplashScreenActivity:AppCompatActivity(){
         val notificationManager=context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
     }
-}
+}*/
