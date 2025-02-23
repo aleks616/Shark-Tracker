@@ -1,4 +1,4 @@
-package com.example.rainbowcalendar
+package com.example.rainbowcalendar.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
@@ -35,7 +35,7 @@ interface CycleDao {
     fun updateCycleDay(date:String,cycleDay:Int?)*/
 
     @Insert
-    fun addNewCycle(cycle: Cycles)
+    fun addNewCycle(cycle:Cycles)
 
     @Query("SELECT * FROM Cycles")
     fun getAllCyclesTypes():List<Cycles>?

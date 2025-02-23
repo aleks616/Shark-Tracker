@@ -15,7 +15,6 @@ import android.widget.Button
 import android.widget.Spinner
 import com.example.rainbowcalendar.MainActivity
 import com.example.rainbowcalendar.R
-import com.example.rainbowcalendar.ThemesActivity
 
 class SettingsFragment : Fragment() {
 
@@ -91,10 +90,10 @@ class SettingsFragment : Fragment() {
             startActivity(Intent(requireContext(), MainActivity::class.java))
         }
 
-        val custom2:Button=view.findViewById(R.id.custom2)
+       /* val custom2:Button=view.findViewById(R.id.custom2)
         custom2.setOnClickListener{
             startActivity(Intent(requireContext(), ThemesActivity::class.java))
-        }
+        }*/
     }
 
 

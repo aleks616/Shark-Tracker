@@ -1,4 +1,4 @@
-package com.example.rainbowcalendar
+package com.example.rainbowcalendar.db
 
 import android.content.Context
 import androidx.room.Database
@@ -14,8 +14,9 @@ abstract class CycleRoomDatabase:RoomDatabase() {
         private var INSTANCE:CycleRoomDatabase?=null
 
         fun getDatabase(context:Context):CycleRoomDatabase {
-            return INSTANCE?: synchronized(this){
-                val instance=Room.databaseBuilder(context.applicationContext,CycleRoomDatabase::class.java,"RainbowCalendar.db").fallbackToDestructiveMigration().build()
+            return INSTANCE ?: synchronized(this){
+                val instance=Room.databaseBuilder(context.applicationContext,
+                    CycleRoomDatabase::class.java,"RainbowCalendar.db").fallbackToDestructiveMigration().build()
                 INSTANCE=instance
                 instance
             }

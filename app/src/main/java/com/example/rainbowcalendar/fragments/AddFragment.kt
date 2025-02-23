@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
-import com.example.rainbowcalendar.CycleDao
-import com.example.rainbowcalendar.CycleRoomDatabase
+import com.example.rainbowcalendar.db.CycleDao
+import com.example.rainbowcalendar.db.CycleRoomDatabase
 import com.example.rainbowcalendar.R
 import com.example.rainbowcalendar.ScrollableMetricsView
 
