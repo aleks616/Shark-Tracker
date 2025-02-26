@@ -1,4 +1,5 @@
-package com.example.rainbowcalendar.fragments
+package com.example.rainbowcalendar.unused
+/*
 
 import android.os.Bundle
 import android.util.Log
@@ -10,7 +11,7 @@ import androidx.compose.ui.platform.ComposeView
 import com.example.rainbowcalendar.db.CycleDao
 import com.example.rainbowcalendar.db.CycleRoomDatabase
 import com.example.rainbowcalendar.R
-import com.example.rainbowcalendar.ScrollableMetricsView
+import com.example.rainbowcalendar.MetricsScreen
 
 class AddFragment : Fragment() {
     private lateinit var cycleDao:CycleDao
@@ -26,7 +27,7 @@ class AddFragment : Fragment() {
         super.onViewCreated(view,savedInstanceState)
         val composeView=requireActivity().findViewById<ComposeView>(R.id.composeView)
         composeView.setContent{
-            ScrollableMetricsView()
+            MetricsScreen()
         }
     }
 
@@ -44,4 +45,4 @@ class AddFragment : Fragment() {
             }
         }
     }
-}
+}*/

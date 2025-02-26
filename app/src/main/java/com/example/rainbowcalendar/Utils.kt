@@ -14,13 +14,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SelectableDates
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.core.app.NotificationCompat
 import com.example.rainbowcalendar.db.CycleRoomDatabase
 import com.example.rainbowcalendar.db.Cycles
 import com.example.rainbowcalendar.db.DateCycle
-import com.example.rainbowcalendar.fragments.Screens
 import com.google.gson.Gson
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -30,7 +28,6 @@ import java.util.Date
 import java.util.Locale
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
-
 
 enum class TIMEUNIT{
     ERROR,
@@ -54,6 +51,28 @@ object Utils{
 
     fun isStringANumber(text:String):Boolean{
         return text.all{it.isDigit()}
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    object PastOrPresentSelectableDates:SelectableDates{
+        override fun isSelectableDate(utcTimeMillis:Long):Boolean{
+            return utcTimeMillis<=System.currentTimeMillis()
+        }
+        override fun isSelectableYear(year:Int):Boolean{
+            return year<=LocalDate.now().year
+        }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    object OldEnoughSelectableDates:SelectableDates{
+        override fun isSelectableDate(utcTimeMillis:Long):Boolean{
+            return (System.currentTimeMillis()-22090320000000..System.currentTimeMillis()-410240038000).contains(utcTimeMillis)
+            //return utcTimeMillis<=System.currentTimeMillis()-410240038000
+        }
+        override fun isSelectableYear(year:Int):Boolean{
+            return (LocalDate.now().year-70..LocalDate.now().year-13).contains(year)
+            //return year<=LocalDate.now().year-13
+        }
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -507,42 +526,29 @@ object Utils{
     fun simplify(string: String?):String?{
         return string?.lowercase()?.replace(" ","")
     }
-    fun langToCode(lang: String): String{
-        return when(lang){
-            "English" -> "en"
-            "Polski" -> "pl"
-            "Francais" -> "fr"
-            "Português (Brasil)" -> "pt-BR"
-            "Русский" -> "ru"
-            "українська" -> "uk"
-            else ->{
-                "en"
-            }
-        }
-    }
     fun langToCodeNew(lang: String): String{
         return when(lang.lowercase()){
-            "english" -> "en"
-            "polski" -> "pl"
-            "français" -> "fr"
-            "português" -> "pt-BR"
-            "русский" -> "ru"
-            "українська" -> "uk"
-            else ->{
+            "english"->"en"
+            "polski"->"pl"
+            "français"->"fr"
+            "português"->"pt-BR"
+            "русский"->"ru"
+            "українська"->"uk"
+            else-> {
                 "en"
             }
         }
     }
     fun codeToLanguage(code:String):String{
         return when(code.lowercase()){
-            "en" -> "English"
-            "pl" -> "Polski"
-            "fr" -> "Français"
-            "pt" -> "Português"
-            "pt-br" -> "Português"
-            "ru" -> "Русский"
-            "uk" -> "Українська"
-            else->{
+            "en"->"English"
+            "pl"->"Polski"
+            "fr"->"Français"
+            "pt"->"Português"
+            "pt-br"->"Português"
+            "ru"->"Русский"
+            "uk"->"Українська"
+            else-> {
                 "English"
             }
         }
@@ -589,43 +595,11 @@ object Utils{
     fun toggleStealthMode(context:Context){
         val packageManager=context.packageManager
         val stealth=ComponentName(context,"com.example.rainbowcalendar.MainActivityStealth")
-        val default=ComponentName(context,"com.example.rainbowcalendar.MainActivity")
+        val default=ComponentName(context,"com.example.rainbowcalendar.fragments.MainActivity")
 
         val stealthMode=packageManager.getComponentEnabledSetting(stealth)==PackageManager.COMPONENT_ENABLED_STATE_ENABLED
         packageManager.setComponentEnabledSetting((if(stealthMode) default else stealth),PackageManager.COMPONENT_ENABLED_STATE_ENABLED,PackageManager.DONT_KILL_APP)
         packageManager.setComponentEnabledSetting((if(stealthMode) stealth else default),PackageManager.COMPONENT_ENABLED_STATE_DISABLED,PackageManager.DONT_KILL_APP)
-    }
-
-    fun smth(context:Context){
-        val sharedPrefs=context.getSharedPreferences("com.example.rainbowcalendar_pref",Context.MODE_PRIVATE)
-        val gson=Gson()
-        val customName1=sharedPrefs.getString("customMetric1","custom1-missing")!!
-        val customName2=sharedPrefs.getString("customMetric2","custom2-missing")!!
-        val customName3=sharedPrefs.getString("customMetric3","custom-missing")!!
-
-
-        val metricRowsList=listOf(
-            MetricPersistence(context.getString(R.string.metrics_crampLevelTitle),8,false),
-            MetricPersistence(context.getString(R.string.metrics_headacheTitle),0,true),
-            MetricPersistence(context.getString(R.string.metrics_energyLevelTitle),5,true),
-            MetricPersistence(context.getString(R.string.metrics_SleepQualityTitle),4,true),
-            MetricPersistence(context.getString(R.string.metrics_CravingsTitle),9,true),
-            MetricPersistence(context.getString(R.string.metrics_SkinConditionTitle),2,true),
-            MetricPersistence(context.getString(R.string.metrics_DigestiveIssuesTitle),3,true),
-            MetricPersistence(context.getString(R.string.metrics_MoodSwingsTitle),6,true),
-            MetricPersistence(context.getString(R.string.metrics_OverallMoodTitle),11,true),
-            MetricPersistence(context.getString(R.string.metrics_DysphoriaTitle),10,true),
-            MetricPersistence(context.getString(R.string.metrics_BleedingTitle),7,true),
-            MetricPersistence(context.getString(R.string.metrics_MusclePainTitle),1,true),
-            MetricPersistence(customName1,12,false),
-            MetricPersistence(customName2,13,false),
-            MetricPersistence(customName3,14,false)
-        )
-        //TODO: SWITCH ORDERS BASED ON SETTINGS, GENDER ETC, SWITCH 0-11 ORDER
-
-
-        val metricsJson=gson.toJson(metricRowsList)
-        sharedPrefs.edit().putString("metricsOrder",metricsJson).apply()
     }
 
     fun setStartMetricsOrder(context:Context,gender:Int){
@@ -665,10 +639,7 @@ object Utils{
             MetricRowData(sharedPrefs.getString("customMetric3","custom3-missing")!!,"customColumn3",-1),
         )
 
-
-
         val metricRowsState=if(gender==0){mutableStateOf(femaleMetrics)} else{mutableStateOf(transMetrics)}
-
 
 
         val gson=Gson()
@@ -678,6 +649,19 @@ object Utils{
         }
         val metrics2Json=gson.toJson(metricPersistence2List)
         sharedPrefs.edit().putString("metricsOrder2", metrics2Json).putBoolean(Constants.metricsSetUp,true).apply()
+    }
+
+
+    fun calculateIntermediateColors(colorMin:Color,colorMax:Color,numberOfColors:Int):MutableList<Color>{
+        val colors=mutableListOf<Color>()
+        for(i in 0 until numberOfColors) {
+            val fraction=i.toFloat()/(numberOfColors-1)
+            val red=colorMin.red+(colorMax.red-colorMin.red)*fraction
+            val green=colorMin.green+(colorMax.green-colorMin.green)*fraction
+            val blue=colorMin.blue+(colorMax.blue-colorMin.blue)*fraction
+            colors.add(Color(red,green,blue))
+        }
+        return colors
     }
 
 

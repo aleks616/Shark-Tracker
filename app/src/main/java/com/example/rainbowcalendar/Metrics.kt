@@ -1,5 +1,6 @@
 package com.example.rainbowcalendar
 
+import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.util.TypedValue
@@ -76,8 +77,6 @@ import androidx.compose.ui.unit.sp
 import com.example.rainbowcalendar.db.Cycle
 import com.example.rainbowcalendar.db.CycleDao
 import com.example.rainbowcalendar.db.CycleRoomDatabase
-import com.example.rainbowcalendar.fragments.OldEnoughSelectableDates
-import com.example.rainbowcalendar.fragments.PastOrPresentSelectableDates
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
@@ -85,8 +84,6 @@ import kotlinx.coroutines.withContext
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.ZoneId
 import java.util.Calendar
 import java.util.Locale
 import kotlin.math.sqrt
@@ -96,7 +93,7 @@ fun getColor(color: Int): Color{
     return colorResource(LocalContext.current.getColorFromAttrs(color).resourceId)
 }
 
-fun Context.getColorFromAttrs(attr: Int):TypedValue {
+fun Context.getColorFromAttrs(attr: Int):TypedValue{
     return TypedValue().apply{
         theme.resolveAttribute(attr,this,true)
     }
@@ -136,11 +133,11 @@ data class MetricRowData(
     var visible:Boolean=true
 )
 
-data class MetricPersistence(
+/*data class MetricPersistence(
     val metricName: String,
     var order: Int,
     val visible: Boolean
-)
+)*/
 
 data class MetricPersistence2(
     val metricName: String,
@@ -152,7 +149,7 @@ data class MetricPersistence2(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScrollableMetricsView(){
+fun MetricsScreen(){
     val padding=12.dp
     val selectedPositions=remember{mutableStateOf(MutableList(15){-1})}
     val weight=remember{mutableStateOf("")}
@@ -177,6 +174,12 @@ fun ScrollableMetricsView(){
     val customName2=sharedPrefs.getString("customMetric2","custom2-missing")!!
     val customName3=sharedPrefs.getString("customMetric3","custom3-missing")!!
 
+    val customNames=listOf(
+        sharedPrefs.getString("customMetric1","custom1-missing")!!,
+        sharedPrefs.getString("customMetric2","custom2-missing")!!,
+        sharedPrefs.getString("customMetric3","custom3-missing")!!
+    )
+
     val metricRows=listOf(
         MetricRowData(context.getString(R.string.metrics_crampLevelTitle),"crampLevel",selectedPositions.value[0]),
         MetricRowData(context.getString(R.string.metrics_headacheTitle),"headache",selectedPositions.value[1]),
@@ -195,23 +198,18 @@ fun ScrollableMetricsView(){
         MetricRowData(customName3,"customColumn3",selectedPositions.value[14])
     )
     val metricRowsState=remember{mutableStateOf(metricRows)}
-
-
     val loadedMetrics=loadMetricsJson(context)
     if(loadedMetrics!=null){
-        /*val updatedMetrics=metricRowsState.value.map{metric->
-            val savedMetric=loadedMetrics.firstOrNull{it.metricName==metric.metricName}
-            if(savedMetric!=null){
-                metric.copy(visible=savedMetric.visible)
+        metricRowsState.value=loadedMetrics.map{savedMetric->
+            val realTitle:String=when(savedMetric.metricName){
+                "customColumn1"->customName1
+                "customColumn2"->customName2
+                "customColumn3"->customName3
+                else->savedMetric.title
             }
-            else{
-                metric
-            }
-        }
-        metricRowsState.value=updatedMetrics*/
-        metricRowsState.value=loadedMetrics.map {savedMetric->
+
             MetricRowData(
-                title=savedMetric.title,
+                title=realTitle,
                 metricName=savedMetric.metricName,
                 selectedIndex=savedMetric.selectedIndex,
                 visible=savedMetric.visible
@@ -258,31 +256,27 @@ fun ScrollableMetricsView(){
             }
         }
     }
-    //todo: custom names
-    if(customName1=="custom1-missing"){
+    if(customNames[0]=="custom1-missing"){
         metricRowsState.value[12].visible=false
     }
-    if(customName2=="custom2-missing"){
+    if(customNames[1]=="custom2-missing"){
         metricRowsState.value[13].visible=false
     }
-    if(customName3=="custom3-missing"){
+    if(customNames[2]=="custom3-missing"){
         metricRowsState.value[14].visible=false
     }
-
-    var customName1Input by remember{mutableStateOf("")}
-    var customName2Input by remember{mutableStateOf("")}
-    var customName3Input by remember{mutableStateOf("")}
-
     val showReorderView=remember{mutableStateOf(false)}
 
     var showDialog by remember{mutableStateOf(false)}
     val datePickerState=rememberDatePickerState(
         selectableDates=Utils.MetricsSelectableDates,
-        initialSelectedDateMillis=LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+        initialSelectedDateMillis=System.currentTimeMillis()
     )
     val selectedDate=datePickerState.selectedDateMillis?.let{
         Utils.convertMillisToDate(it)
     }?:""
+
+
 
     val theme=sharedPrefs.getString("theme","Black")
     LazyColumn(
@@ -297,9 +291,7 @@ fun ScrollableMetricsView(){
         item{
             Box(
                 contentAlignment=Alignment.Center,
-                modifier=Modifier
-                    .fillMaxSize()
-                    .padding(bottom=20.dp)
+                modifier=Modifier.fillMaxSize() .padding(bottom=20.dp)
             ){
                 Column(horizontalAlignment=Alignment.CenterHorizontally){
                     Text(
@@ -308,8 +300,7 @@ fun ScrollableMetricsView(){
                         fontSize=35.sp,
                         textAlign=TextAlign.Center,
                         fontWeight=FontWeight.W500,
-                        modifier=Modifier
-                            .padding(vertical=10.dp)
+                        modifier=Modifier.padding(vertical=10.dp)
                     )
                     Row(
                         modifier=Modifier.fillMaxWidth(),
@@ -352,9 +343,10 @@ fun ScrollableMetricsView(){
                                 fontSize=28.sp,
                                 textAlign=TextAlign.Center,
 
-                            )
+                                )
                         }
-                        Button(// right button
+                        Button(
+                            // right button
                             onClick={changeDate(amount=1)},
                             Modifier
                                 .height(48.dp)
@@ -377,10 +369,10 @@ fun ScrollableMetricsView(){
                     }
                 }
             }
-        } //header
+        }//header
         if(showDialog){
             item{
-                CustomDatePickerDialog(state=datePickerState,confirmButton={usedDateState.value=selectedDate},onClose={showDialog=false})
+                CustomDatePickerDialog(state=datePickerState,confirmButton={usedDateState.value=selectedDate},onClose={showDialog=false},onDismissRequest={showDialog=false})
             }
         }
         item{
@@ -424,37 +416,6 @@ fun ScrollableMetricsView(){
             item{
                 VerticalSpacer()
             }
-            item{
-                BetterHeader(text="Enter names for custom metrics to track",fontSize="MS",modifier=Modifier.fillMaxSize())
-                BetterHeader(text="4 levels will be available",fontSize="S",modifier=Modifier
-                    .fillMaxSize()
-                    .padding(top=16.dp,bottom=8.dp))
-                BetterTextField(placeholderText="custom metric 1",value=customName1Input, onValueChange={
-                    if(it.isNotEmpty()){
-                        sharedPrefs.edit().putString("customMetric1",it).apply()
-                        customName1Input=it
-                    }
-                })
-                BetterHeader(text="5 levels will be available",fontSize="S",modifier=Modifier
-                    .fillMaxSize()
-                    .padding(top=16.dp,bottom=8.dp))
-                BetterTextField(placeholderText="custom metric 2",value=customName2Input, onValueChange={
-                    if(it.isNotEmpty()){
-                        sharedPrefs.edit().putString("customMetric2",it).apply()
-                        customName2Input=it
-                    }
-                })
-                BetterHeader(text="5 levels will be available",fontSize="S",modifier=Modifier
-                    .fillMaxSize()
-                    .padding(top=16.dp,bottom=8.dp))
-                BetterTextField(placeholderText="custom metric 3",value=customName3Input, onValueChange={
-                    if(it.isNotEmpty()){
-                        sharedPrefs.edit().putString("customMetric3",it).apply()
-                        customName3Input=it
-                    }
-                })
-                VerticalSpacer()
-            }
         }
         if(!showReorderView.value){
             items(metricRowsState.value, key={it.metricName}){metric ->
@@ -496,7 +457,7 @@ fun ScrollableMetricsView(){
                         onClick={saveToDB(content=selectedPositions.value,context,weight.value,kcalBalance.value,notes.value)},
                         colors=buttonColors(backgroundColor=colorTertiary()),
                     ){
-                        Text(text=stringResource(id=R.string.save),color=colorQuaternary()) //todo: MAKE WEIGHT FLOAT IMPORTANT!!!!
+                        Text(text=stringResource(id=R.string.save),color=colorQuaternary(),fontSize=20.sp) //todo: MAKE WEIGHT FLOAT IMPORTANT!!!!
                     }
                 }
             }
@@ -559,7 +520,6 @@ fun MetricRow(title: String,metricName: String,modifier:Modifier=Modifier,visibl
 
     LaunchedEffect(selectedIndex1){
         selectedIndex=selectedIndex1
-        Log.v("item:",metricName)
     }
     if(visible){
         Column(modifier=modifier){
@@ -581,7 +541,7 @@ fun MetricRow(title: String,metricName: String,modifier:Modifier=Modifier,visibl
                             color=if(selectedIndex==index) colorSecondary() else Color.Transparent,
                             shape=CircleShape
                         )
-                        .clickable {
+                        .clickable{
                             selectedIndex=if(selectedIndex==index) -1 else index
                             onSelectionChange(selectedIndex)
                         }
@@ -603,11 +563,7 @@ fun InputRow(
     height:Dp=Dp.Unspecified
 ){
     Column(
-        modifier=modifier
-            .fillMaxSize()
-            .padding(
-                start=20.dp,top=10.dp,end=0.dp,bottom=10.dp
-            )
+        modifier=modifier.fillMaxSize().padding(start=20.dp,top=10.dp,end=0.dp,bottom=10.dp)
     ){
         Text(
             color=colorSecondary(),
@@ -618,9 +574,7 @@ fun InputRow(
         TextField(
             value=value,
             onValueChange=onValueChange,
-            modifier=Modifier
-                .width(width)
-                .height(height),
+            modifier=Modifier.width(width).height(height),
             shape=RoundedCornerShape(5.dp),
             keyboardOptions=KeyboardOptions(
                 keyboardType=KeyboardType.Number,
@@ -660,20 +614,12 @@ fun IconItem(iconResId:Int,label:String, modifier:Modifier=Modifier){
     ){
         Box(
             contentAlignment=Alignment.Center,
-            modifier=modifier
-                .size(circleSize)
-                .clip(CircleShape)
-                .background(colorTertiary())
+            modifier=modifier.size(circleSize).clip(CircleShape).background(colorTertiary())
         ){
             Icon(
                 painter=painterResource(id=iconResId),
                 contentDescription=null,
-                modifier=Modifier
-                    .then(
-                        Modifier
-                            .sizeIn(maxWidth=imgSize,maxHeight=imgSize)
-                            .aspectRatio(1f,false)
-                    ),
+                modifier=Modifier.then(Modifier.sizeIn(maxWidth=imgSize,maxHeight=imgSize).aspectRatio(1f,false)),
                 tint=Color.Unspecified
             )
         }
@@ -696,6 +642,7 @@ fun MetricReorderView(metricRows:MutableState<List<MetricRowData>>,onOrderChange
     val lazyListState=rememberLazyListState()
 
     val context=LocalContext.current
+    val contextAct=context as Activity
     val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
     val isSetUp=sharedPrefs.getBoolean(Constants.metricsSetUp,false)
 
@@ -708,16 +655,15 @@ fun MetricReorderView(metricRows:MutableState<List<MetricRowData>>,onOrderChange
     }
 
 
+    var customNamesInput by remember{mutableStateOf(mutableListOf("","",""))}
+
     LazyColumn(state=lazyListState){
         items(metricRows.value,key={it.title}){metric->
             ReorderableItem(reorderableLazyListState,key=metric.title){isDragging->
                 val elevation by animateDpAsState(if(isDragging) 4.dp else 0.dp,label="")
                 Surface(elevation=elevation){
                     Row(
-                        modifier=Modifier
-                            .border(1.dp,colorTertiary(),RectangleShape)
-                            .fillMaxWidth()
-                            .background(color=colorPrimary())
+                        modifier=Modifier.border(1.dp,colorTertiary(),RectangleShape).fillMaxWidth().background(color=colorPrimary())
                     ){
                         Checkbox(
                             checked=metric.visible,
@@ -737,9 +683,7 @@ fun MetricReorderView(metricRows:MutableState<List<MetricRowData>>,onOrderChange
                             color=colorSecondary(),
                             fontSize=20.sp,
                             text=metric.title,
-                            modifier=Modifier
-                                .weight(1f)
-                                .align(Alignment.CenterVertically)
+                            modifier=Modifier.weight(1f).align(Alignment.CenterVertically)
                         )
                         IconButton(
                             modifier=Modifier.draggableHandle(),
@@ -762,6 +706,53 @@ fun MetricReorderView(metricRows:MutableState<List<MetricRowData>>,onOrderChange
                 }
             }
         }
+
+        item{
+            BetterHeader(text="Enter names for custom metrics to track",fontSize="MS",modifier=Modifier.fillMaxSize().padding(top=14.dp,start=12.dp,end=12.dp))
+            BetterHeader(text="Changes will be visible after pressing the \"refresh\" button!", fontSize="S",modifier=Modifier.fillMaxSize().padding(vertical=14.dp,horizontal=12.dp))
+
+            customNamesInput.forEachIndexed{index,_->
+                BetterTextField(textFieldModifier=Modifier.padding(6.dp),placeholderText="custom metric"+(index+1),value=customNamesInput[index], onValueChange={new->
+                    val updatedList=customNamesInput.toMutableList().apply{
+                        this[index]=new
+                    }
+                    customNamesInput=updatedList
+                })
+                Row(modifier=Modifier.fillMaxWidth().padding(end=16.dp,bottom=10.dp), horizontalArrangement=Arrangement.End){
+                    BetterButton(
+                        onClick={
+                            if(customNamesInput[index].isNotEmpty()){
+                                sharedPrefs.edit().putString(("customMetric"+(index+1)),customNamesInput[index]).apply()
+                                val updatedMetrics=metricRows.value.toMutableList().apply{
+                                    for(i in 0..14){
+                                        if(this[i].metricName==("customMetric"+(index+1)))
+                                            this[i]=this[i].copy(title=customNamesInput[index])
+                                    }
+                                }
+                                metricRows.value=updatedMetrics.toList()
+                                saveMetricsJson(context,updatedMetrics)
+                                customNamesInput[index]=""
+                                onOrderChanged(updatedMetrics)
+                            }
+                        }
+                    ){
+                        BetterText(text="save")
+                    }
+                }
+            }
+            Row(
+                modifier=Modifier.fillMaxWidth(),
+                horizontalArrangement=Arrangement.Center){
+                BetterButton(
+                    modifier=Modifier.padding(bottom=25.dp,top=20.dp,start=20.dp,end=20.dp).height(50.dp).width(200.dp),
+                    onClick={
+                        contextAct.recreate()
+                    }
+                ){
+                    BetterText(text="refresh",fontSize=20.sp)
+                }
+            }
+        }
     }
 }
 
@@ -770,6 +761,7 @@ fun saveMetricsJson(context: Context, metrics: List<MetricRowData>){
     val gson=Gson()
 
     val metricPersistence2List=metrics.mapIndexed{index,metric->
+        Log.v("custom name?",metric.metricName)
         MetricPersistence2(metricName=metric.metricName,order=index,visible=metric.visible,title=metric.title,selectedIndex=metric.selectedIndex)
     }
     val metrics2Json=gson.toJson(metricPersistence2List)

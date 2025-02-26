@@ -1,4 +1,5 @@
-package com.example.rainbowcalendar.fragments
+package com.example.rainbowcalendar.unused
+/*
 
 import android.content.ComponentName
 import android.content.Context
@@ -13,7 +14,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
-import com.example.rainbowcalendar.MainActivity
+import com.example.rainbowcalendar.fragments.MainActivity
 import com.example.rainbowcalendar.R
 
 class SettingsFragment : Fragment() {
@@ -90,10 +91,12 @@ class SettingsFragment : Fragment() {
             startActivity(Intent(requireContext(), MainActivity::class.java))
         }
 
-       /* val custom2:Button=view.findViewById(R.id.custom2)
+        */
+/*val custom2:Button=view.findViewById(R.id.custom2)
         custom2.setOnClickListener{
             startActivity(Intent(requireContext(), ThemesActivity::class.java))
-        }*/
+        }*//*
+
     }
 
 
@@ -101,4 +104,4 @@ class SettingsFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_settings, container, false)
     }
 
-}
+}*/

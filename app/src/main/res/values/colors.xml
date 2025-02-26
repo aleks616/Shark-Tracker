@@ -36,4 +36,11 @@
     <color name="siam_khaki">#696852</color>
     <color name="lilac">#b2a5d3</color>
     <color name="light_violet">#8E84A9</color>
+
+
+    <!--for calendar view!-->
+    <color name="colorMin">#770000</color>
+    <color name="colorMax">#004A00</color>
+
+
 </resources>

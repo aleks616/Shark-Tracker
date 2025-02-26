@@ -1,4 +1,5 @@
-package com.example.rainbowcalendar.fragments
+package com.example.rainbowcalendar.unused
+/*
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -32,4 +33,4 @@ class CalendarFragment : Fragment(){
     ): View? {
         return inflater.inflate(R.layout.fragment_calendar, container, false)
     }
-}
+}*/

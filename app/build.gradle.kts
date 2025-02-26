@@ -81,7 +81,9 @@ dependencies {
     androidTestImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
-
+    //implementation("com.himanshoe:kalendar:1.3.2")
+    //implementation("com.himanshoe:kalendar-endlos:1.3.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
 
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
@@ -111,13 +113,13 @@ dependencies {
     implementation("com.github.vsnappy1:ComposeDatePicker:2.2.0")
 
 
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.7.6")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.7.8")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.1")
 
 
-    testImplementation("androidx.compose.ui:ui-test-junit4:1.7.6")
+    testImplementation("androidx.compose.ui:ui-test-junit4:1.7.8")
     testImplementation("org.mockito:mockito-android:5.10.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
     testImplementation("com.google.truth:truth:1.1.5")

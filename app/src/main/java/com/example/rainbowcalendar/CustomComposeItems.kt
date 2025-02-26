@@ -17,6 +17,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -27,10 +28,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
@@ -82,6 +88,10 @@ import com.vsnappy1.datepicker.data.DefaultDatePickerConfig
 import com.vsnappy1.timepicker.TimePicker
 import com.vsnappy1.timepicker.data.model.TimePickerTime
 import com.vsnappy1.timepicker.ui.model.TimePickerConfiguration
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.YearMonth
+import java.util.Locale
 
 @Composable
 fun VerticalSpacer(){
@@ -525,7 +535,8 @@ fun BetterText(
     modifier:Modifier=Modifier,
     textAlign:TextAlign=TextAlign.Start,
     fontSize:TextUnit=16.sp,
-    fontStyle:FontStyle=FontStyle.Normal
+    fontStyle:FontStyle=FontStyle.Normal,
+    color:Color=colorSecondary()
 ){
     Text(
         fontSize=fontSize,
@@ -533,7 +544,7 @@ fun BetterText(
         textAlign=textAlign,
         modifier=modifier,
         letterSpacing=0.sp,
-        color=colorSecondary(),
+        color=color,
         fontStyle=fontStyle
     )
 }
@@ -642,11 +653,22 @@ fun CustomDatePickerDialog(
     state:DatePickerState,
     onClose:()->Unit,
     confirmButton:@Composable ()->Unit,
+    onDismissRequest:()->Unit={}
 ){
     DatePickerDialog(
-        onDismissRequest={},
+        onDismissRequest={onDismissRequest()},
         confirmButton={
-            BetterButton(onClick={onClose()}){}
+            Row(modifier=Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.Center){
+                BetterButton(
+                    onClick={onClose()},
+                    modifier=Modifier
+                        .padding(bottom=10.dp,start=30.dp,end=30.dp)
+                        .fillMaxWidth()
+                        .height(40.dp)
+                ){
+                    BetterText(text="Close",fontSize=18.sp)
+                }
+            }
             confirmButton()
         },
         colors=Utils.datePickerColors()
@@ -824,4 +846,69 @@ fun colorTertiary():Color{
 @Composable
 fun colorQuaternary():Color{
     return getColor(color=com.google.android.material.R.attr.itemTextColor)
+}
+@Composable
+fun colorMin():Color{
+    return getColor(color=com.google.android.material.R.attr.colorPrimaryVariant)
+}
+@Composable
+fun colorMax():Color{
+    return getColor(color=com.google.android.material.R.attr.colorSecondaryVariant)
+}
+
+@Composable
+fun VerticalCalendar(
+    dayContent:@Composable (LocalDate)->Unit,
+    modifier:Modifier=Modifier
+){
+    val currentDate=LocalDate.now()
+    val startMonth=YearMonth.from(currentDate)
+    LazyColumn(
+        modifier=modifier
+            .background(color=colorPrimary())
+            .padding(horizontal=8.dp)
+            .fillMaxWidth(),
+        horizontalAlignment=Alignment.CenterHorizontally,
+        reverseLayout=true
+    ){
+        items(10){i->
+            val month=startMonth.minusMonths(i.toLong())
+            MonthBlock(
+                month=month,
+                dayContent=dayContent
+            )
+        }
+    }
+}
+
+@Composable
+fun MonthBlock(
+    month:YearMonth,
+    dayContent:@Composable (LocalDate)->Unit
+){
+    val firstDayOfMonth=month.atDay(1)
+    val offset=firstDayOfMonth.dayOfWeek.value-1
+    val daysInMonth=month.lengthOfMonth()
+    val locale=Locale.getDefault()
+    val dayNames=(1..7).map{DayOfWeek.of(it).getDisplayName(java.time.format.TextStyle.NARROW,locale)}
+    Column(
+        modifier=Modifier.sizeIn(minHeight=200.dp).padding(vertical=24.dp).fillMaxWidth(),
+        horizontalAlignment=Alignment.CenterHorizontally
+    ){
+        BetterHeader(month.month.getDisplayName(java.time.format.TextStyle.FULL,Locale.getDefault())+" "+month.year,Modifier.fillMaxWidth().padding(bottom=24.dp),fontSize="L")
+        LazyVerticalGrid(columns=GridCells.Fixed(7),modifier=Modifier.fillMaxWidth().heightIn(max=1000.dp,min=100.dp)){
+            items(7){i->
+                BetterHeader(text=dayNames[i],fontSize="S")
+            }
+            items(offset){
+                Spacer(modifier=Modifier.size(24.dp))
+            }
+            items(daysInMonth){day->
+                val date=month.atDay(day+1)
+                Box(modifier=Modifier.padding(vertical=16.dp,horizontal=1.dp)){
+                    dayContent(date)
+                }
+            }
+        }
+    }
 }
