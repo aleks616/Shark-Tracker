@@ -66,6 +66,7 @@ object Screens{
 }
 @Composable
 fun MainComposable(){
+    Utils.setLanguage(LocalContext.current)
     var currentScreen by remember{mutableStateOf(Screens.sWelcome)}
     Log.v("currentScreen",currentScreen)
 
@@ -93,6 +94,7 @@ fun MainComposable(){
 
 @Composable
 fun MainScreen(onNavigate:(String)->Unit){
+    Utils.setLanguage(LocalContext.current)
     //val context=LocalContext.current
     data class BottomNavItem(
         val icon:Int,
@@ -163,6 +165,7 @@ fun MainScreen(onNavigate:(String)->Unit){
 
 @Composable
 fun HomeScreen(){
+    Utils.setLanguage(LocalContext.current)
     Text("Home")
 }
 data class DayColor(
@@ -171,7 +174,13 @@ data class DayColor(
 )
 @Composable
 fun CalendarScreen(){
+    val context=LocalContext.current
+    Utils.setLanguage(context)
     val colors=Utils.calculateIntermediateColors(colorMin(),colorMax(),4)
+
+    val temp=Utils.getAllMoodData(context)
+    Log.v("mood data2",temp[1].date+" "+temp[1].overallMood)
+
     val days=listOf(
         DayColor(LocalDate.of(2025,2,26),colors[3]),
         DayColor(LocalDate.of(2025,2,25),colors[2]),
@@ -218,12 +227,14 @@ fun CalendarScreen(){
 
 @Composable
 fun AddScreen(){
+    Utils.setLanguage(LocalContext.current)
     MetricsScreen()
 }
 
 @Composable
 fun SettingsScreen(onButtonClick:(String)->Unit){
     val context=LocalContext.current
+    Utils.setLanguage(context)
     Column(modifier=Modifier
         .background(colorPrimary())
         .fillMaxSize()
@@ -275,7 +286,7 @@ fun SettingsScreen(onButtonClick:(String)->Unit){
 @Composable
 fun WelcomeScreen(onNavigate:(String)->Unit){
     val context=LocalContext.current
-
+    Utils.setLanguage(context)
     val sharedPrefs=context.getSharedPreferences(Constants.key_package, Context.MODE_PRIVATE)
     val setupDone=sharedPrefs.getBoolean(Constants.key_isSetupDone,false)
 

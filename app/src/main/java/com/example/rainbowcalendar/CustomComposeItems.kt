@@ -895,7 +895,7 @@ fun MonthBlock(
         modifier=Modifier.sizeIn(minHeight=200.dp).padding(vertical=24.dp).fillMaxWidth(),
         horizontalAlignment=Alignment.CenterHorizontally
     ){
-        BetterHeader(month.month.getDisplayName(java.time.format.TextStyle.FULL,Locale.getDefault())+" "+month.year,Modifier.fillMaxWidth().padding(bottom=24.dp),fontSize="L")
+        BetterHeader(month.month.getDisplayName(java.time.format.TextStyle.FULL_STANDALONE,Locale.getDefault())+" "+month.year,Modifier.fillMaxWidth().padding(bottom=24.dp),fontSize="L")
         LazyVerticalGrid(columns=GridCells.Fixed(7),modifier=Modifier.fillMaxWidth().heightIn(max=1000.dp,min=100.dp)){
             items(7){i->
                 BetterHeader(text=dayNames[i],fontSize="S")

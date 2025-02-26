@@ -20,6 +20,8 @@ class MainActivity: AppCompatActivity(){
             Locale("pt","BR")
         else
             Locale(lang)
+
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
