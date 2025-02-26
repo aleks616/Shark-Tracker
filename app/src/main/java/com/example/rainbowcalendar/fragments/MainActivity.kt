@@ -27,18 +27,8 @@ class MainActivity: AppCompatActivity(){
         composeView.setContent{
             MainComposable()
         }
-
-
-
-        val homeFragment=HomeFragment()
-        makeCurrentFragment(homeFragment)
     }
 
-    private fun makeCurrentFragment(fragment:Fragment)=
-        supportFragmentManager.beginTransaction().apply{
-            replace(R.id.fl_wrapper,fragment)
-            commit()
-        }
 }
 
 

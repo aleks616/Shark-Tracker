@@ -34,7 +34,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -320,8 +322,12 @@ fun WelcomeScreen(onNavigate:(String)->Unit){
     }
 //    sharedPrefs.edit().putBoolean("setup",false).apply()
 
-
-    Column(modifier=Modifier.fillMaxSize()){
+    val theme=sharedPrefs.getString("theme","Gray")
+    Column(
+        modifier=if(theme=="Pride")
+            Modifier.fillMaxSize().paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
+        else Modifier.fillMaxSize().background(colorPrimary())
+    ){
         Image(
             painter=painterResource(id=R.drawable.icon_shark_normal),
             contentDescription=null,

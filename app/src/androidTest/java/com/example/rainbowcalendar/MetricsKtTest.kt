@@ -68,16 +68,6 @@ class MetricsKtTest{
         }
     }
 
-    @Test
-    fun getLocal_should_return_correct_string_from_resources(){
-        val stringId=R.string.metrics
-        Thread{
-            composeTestRule.activity.setContent{
-                val result=getLocal(stringId)
-                assertEquals(result,context.getString(stringId))
-            }
-        }
-    }
 
 //wont work idk why
 /*
