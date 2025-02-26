@@ -25,6 +25,9 @@ interface CycleDao {
     @Query("SELECT * FROM metrics ORDER BY date ASC")
     fun getAllMetricData():LiveData<List<Cycle>>
 
+    @Query("SELECT * FROM metrics ORDER BY date DESC")
+    fun getAllMetricsSync():List<Cycle>
+
     @Query("SELECT * FROM metrics WHERE date=:date LIMIT 1")
     fun getCycleByDate(date:String):Cycle?
 
@@ -67,6 +70,9 @@ interface CycleDao {
 
     @Query("UPDATE datecycle SET cycleDay=:cycleDay AND cycleId=:cycleId WHERE date=:date")
     fun updateDateCycle(cycleId:Int,cycleDay:Int,date:String)
+
+    @Query("SELECT date, overallMood FROM metrics")
+    fun getMoodData():List<Cycle>
 
     @Query(
         """UPDATE metrics SET crampLevel=:crampLevel,headache=:headache,

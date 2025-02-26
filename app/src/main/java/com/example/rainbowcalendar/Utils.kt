@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.core.app.NotificationCompat
+import com.example.rainbowcalendar.db.Cycle
 import com.example.rainbowcalendar.db.CycleRoomDatabase
 import com.example.rainbowcalendar.db.Cycles
 import com.example.rainbowcalendar.db.DateCycle
@@ -380,6 +381,17 @@ object Utils{
         )
     }
 
+    fun getAllMoodData(context:Context):List<Cycle>{
+        var data=listOf(Cycle(""))
+        cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
+        val thread=Thread{
+            data=cycleDao.getAllMetricsSync()
+        }
+        thread.start()
+        thread.join()
+        return data
+    }
+
     fun addNewCycleType(context:Context,cycleName:String,correctInterval:Int,active:Boolean=true):String{
         cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
         var canInsert=true
@@ -437,7 +449,7 @@ object Utils{
             Log.v("current screen in function",currentScreen)
             previousScreen=when(currentScreen){
                 Screens.sLanguage->""
-                Screens.sTheme->Screens.sLanguage;
+                Screens.sTheme->Screens.sLanguage
                 Screens.sAgeConsentOptions->Screens.sTheme
                 Screens.sGenderOptions->Screens.sAgeConsentOptions
                 Screens.sNameBirthDayOptions->Screens.sGenderOptions
@@ -485,6 +497,8 @@ object Utils{
         thread.join()
         return result.get()
     }
+
+
 
     fun deleteAllCycleTypes(context:Context,areYouSure:Boolean){
         if(areYouSure){
@@ -567,11 +581,27 @@ object Utils{
         context.createConfigurationContext(config)
         resources.updateConfiguration(config, resources.displayMetrics)
 
-        val sharedPrefs=context.getSharedPreferences("com.example.rainbowcalendar_pref", Context.MODE_PRIVATE)
+        val sharedPrefs=context.getSharedPreferences(Constants.key_package, Context.MODE_PRIVATE)
         sharedPrefs.edit().putString("lang",lang).apply()
         if (context is Activity){
             context.recreate()
         }
+    }
+    fun setLanguage(context:Context){
+        val sharedPrefs=context.getSharedPreferences("com.example.rainbowcalendar_pref",Context.MODE_PRIVATE)
+        val lang=sharedPrefs.getString("lang","en")!!
+        val locale:Locale=if(lang=="pt-BR")
+            Locale("pt","BR")
+        else
+            Locale(lang)
+        Locale.setDefault(locale)
+
+        val resources=context.resources
+        val config=Configuration(resources.configuration)
+        config.setLocale(locale)
+
+        context.createConfigurationContext(config)
+        resources.updateConfiguration(config, resources.displayMetrics)
     }
     fun isStealthModeOn(context:Context):Boolean{
         val packageManager=context.packageManager
@@ -640,8 +670,6 @@ object Utils{
         )
 
         val metricRowsState=if(gender==0){mutableStateOf(femaleMetrics)} else{mutableStateOf(transMetrics)}
-
-
         val gson=Gson()
 
         val metricPersistence2List=metricRowsState.value.mapIndexed{index,metric->

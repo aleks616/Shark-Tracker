@@ -133,11 +133,6 @@ data class MetricRowData(
     var visible:Boolean=true
 )
 
-/*data class MetricPersistence(
-    val metricName: String,
-    var order: Int,
-    val visible: Boolean
-)*/
 
 data class MetricPersistence2(
     val metricName: String,
@@ -151,7 +146,8 @@ data class MetricPersistence2(
 @Composable
 fun MetricsScreen(){
     val padding=12.dp
-    val selectedPositions=remember{mutableStateOf(MutableList(15){-1})}
+    //val selectedPositions=remember{mutableStateOf(MutableList(15){-1})}
+    val selectedPositions=remember{mutableStateOf<Map<String,Int>>(emptyMap())}
     val weight=remember{mutableStateOf("")}
     val kcalBalance=remember{mutableStateOf("")}
     val notes=remember{mutableStateOf("")}
@@ -181,21 +177,21 @@ fun MetricsScreen(){
     )
 
     val metricRows=listOf(
-        MetricRowData(context.getString(R.string.metrics_crampLevelTitle),"crampLevel",selectedPositions.value[0]),
-        MetricRowData(context.getString(R.string.metrics_headacheTitle),"headache",selectedPositions.value[1]),
-        MetricRowData(context.getString(R.string.metrics_energyLevelTitle),"energyLevel",selectedPositions.value[2]),
-        MetricRowData(context.getString(R.string.metrics_SleepQualityTitle),"sleepQuality",selectedPositions.value[3]),
-        MetricRowData(context.getString(R.string.metrics_CravingsTitle),"cravings",selectedPositions.value[4]),
-        MetricRowData(context.getString(R.string.metrics_SkinConditionTitle),"skinCondition",selectedPositions.value[5]),
-        MetricRowData(context.getString(R.string.metrics_DigestiveIssuesTitle),"digestiveIssues",selectedPositions.value[6]),
-        MetricRowData(context.getString(R.string.metrics_MoodSwingsTitle),"moodSwings",selectedPositions.value[7]),
-        MetricRowData(context.getString(R.string.metrics_OverallMoodTitle),"overallMood",selectedPositions.value[8]),
-        MetricRowData(context.getString(R.string.metrics_DysphoriaTitle),"dysphoria",selectedPositions.value[9]),
-        MetricRowData(context.getString(R.string.metrics_BleedingTitle),"bleeding",selectedPositions.value[10]),
-        MetricRowData(context.getString(R.string.metrics_MusclePainTitle),"musclePain",selectedPositions.value[11]),
-        MetricRowData(customName1,"customColumn1",selectedPositions.value[12]),
-        MetricRowData(customName2,"customColumn2",selectedPositions.value[13]),
-        MetricRowData(customName3,"customColumn3",selectedPositions.value[14])
+        MetricRowData(context.getString(R.string.metrics_crampLevelTitle),"crampLevel",selectedPositions.value["crampLevel"]?:-1),
+        MetricRowData(context.getString(R.string.metrics_headacheTitle),"headache",selectedPositions.value["headache"]?:-1),
+        MetricRowData(context.getString(R.string.metrics_energyLevelTitle),"energyLevel",selectedPositions.value["energyLevel"]?:-1),
+        MetricRowData(context.getString(R.string.metrics_SleepQualityTitle),"sleepQuality",selectedPositions.value["sleepQuality"]?:-1),
+        MetricRowData(context.getString(R.string.metrics_CravingsTitle),"cravings",selectedPositions.value["cravings"]?:-1),
+        MetricRowData(context.getString(R.string.metrics_SkinConditionTitle),"skinCondition",selectedPositions.value["skinCondition"]?:-1),
+        MetricRowData(context.getString(R.string.metrics_DigestiveIssuesTitle),"digestiveIssues",selectedPositions.value["digestiveIssues"]?:-1),
+        MetricRowData(context.getString(R.string.metrics_MoodSwingsTitle),"moodSwings",selectedPositions.value["moodSwings"]?:-1),
+        MetricRowData(context.getString(R.string.metrics_OverallMoodTitle),"overallMood",selectedPositions.value["overallMood"]?:-1),
+        MetricRowData(context.getString(R.string.metrics_DysphoriaTitle),"dysphoria",selectedPositions.value["dysphoria"]?:-1),
+        MetricRowData(context.getString(R.string.metrics_BleedingTitle),"bleeding",selectedPositions.value["bleeding"]?:-1),
+        MetricRowData(context.getString(R.string.metrics_MusclePainTitle),"musclePain",selectedPositions.value["musclePain"]?:-1),
+        MetricRowData(customName1,"customColumn1",selectedPositions.value["customColumn1"]?:-1),
+        MetricRowData(customName2,"customColumn2",selectedPositions.value["customColumn2"]?:-1),
+        MetricRowData(customName3,"customColumn3",selectedPositions.value["customColumn3"]?:-1)
     )
     val metricRowsState=remember{mutableStateOf(metricRows)}
     val loadedMetrics=loadMetricsJson(context)
@@ -221,7 +217,40 @@ fun MetricsScreen(){
         withContext(Dispatchers.IO){
             val cycle=cycleDao.getCycleByDate(usedDateState.value)
             if(cycle!=null){
-                selectedPositions.value=mutableListOf(
+                selectedPositions.value=mapOf(
+                    "crampLevel" to cycle.crampLevel,
+                    "headache" to cycle.headache,
+                    "energyLevel" to cycle.energyLevel,
+                    "sleepQuality" to cycle.sleepQuality,
+                    "cravings" to cycle.cravings,
+                    "skinCondition" to cycle.skinCondition,
+                    "digestiveIssues" to cycle.digestiveIssues,
+                    "moodSwings" to cycle.moodSwings,
+                    "overallMood" to cycle.overallMood,
+                    "dysphoria" to cycle.dysphoria,
+                    "bleeding" to cycle.bleeding,
+                    "musclePain" to cycle.musclePain,
+                    "customColumn1" to cycle.customColumn1,
+                    "customColumn2" to cycle.customColumn2,
+                    "customColumn3" to cycle.customColumn3
+                ).mapValues{it.value?:-1}
+                weight.value=(cycle.weight ?: "").toString()
+                kcalBalance.value=(cycle.kcalBalance?:"").toString()
+                notes.value=cycle.notes?:""
+            }
+            else{
+                selectedPositions.value=emptyMap()
+                weight.value=""
+                kcalBalance.value=""
+                notes.value=""
+            }
+          /*  if(cycle!=null){
+
+                selectedPositions.value=metricRowsState.value.map {row->
+                    selectionMap[row.metricName]?: -1
+                }.toMutableList()
+
+               *//* selectedPositions.value=mutableListOf(
                     cycle.crampLevel,
                     cycle.headache,
                     cycle.energyLevel,
@@ -237,11 +266,11 @@ fun MetricsScreen(){
                     cycle.customColumn1,
                     cycle.customColumn2,
                     cycle.customColumn3
-                ).map{it ?: -1}.toMutableList()
+                ).map{it ?: -1}.toMutableList()*//*
 
-                metricRowsState.value=metricRowsState.value.mapIndexed{index,metric->
+               *//* metricRowsState.value=metricRowsState.value.mapIndexed{index,metric->
                     metric.copy(selectedIndex=selectedPositions.value[index])
-                }
+                }*//*
 
                 weight.value=(cycle.weight ?: "").toString()
                 kcalBalance.value=(cycle.kcalBalance?:"").toString()
@@ -253,7 +282,7 @@ fun MetricsScreen(){
                 weight.value=""
                 kcalBalance.value=""
                 notes.value=""
-            }
+            }*/
         }
     }
     if(customNames[0]=="custom1-missing"){
@@ -419,8 +448,8 @@ fun MetricsScreen(){
         }
         if(!showReorderView.value){
             items(metricRowsState.value, key={it.metricName}){metric ->
-                MetricRow(title=metric.title, metricName=metric.metricName,modifier=Modifier.padding(padding),visible=metric.visible,selectedIndex1=metric.selectedIndex,
-                    onSelectionChange={selectedIndex->val index=metricRowsState.value.indexOf(metric)
+                MetricRow(title=metric.title, metricName=metric.metricName,modifier=Modifier.padding(padding),visible=metric.visible,selectedIndex1=selectedPositions.value[metric.metricName]?:-1,
+                    onSelectionChange={/*selectedIndex->val index=metricRowsState.value.indexOf(metric)
                         if(index!=-1){
                             selectedPositions.value=selectedPositions.value.toMutableList().apply{
                                 this[index]=selectedIndex}
@@ -429,8 +458,11 @@ fun MetricsScreen(){
                                 this[index]=this[index].copy(selectedIndex=selectedIndex)
                             }
                             metricRowsState.value=updatedMetrics
+                        }*/
+                        newIndex->
+                        selectedPositions.value=selectedPositions.value.toMutableMap().apply{
+                            put(metric.metricName,newIndex)
                         }
-
                     }
                 )
 
@@ -454,7 +486,7 @@ fun MetricsScreen(){
                             .padding(bottom=25.dp,top=20.dp,start=20.dp,end=20.dp)
                             .height(50.dp)
                             .width(200.dp),
-                        onClick={saveToDB(content=selectedPositions.value,context,weight.value,kcalBalance.value,notes.value)},
+                        onClick={saveToDB(selectedPositions.value,context,weight.value,kcalBalance.value,notes.value)},
                         colors=buttonColors(backgroundColor=colorTertiary()),
                     ){
                         Text(text=stringResource(id=R.string.save),color=colorQuaternary(),fontSize=20.sp) //todo: MAKE WEIGHT FLOAT IMPORTANT!!!!
@@ -465,14 +497,14 @@ fun MetricsScreen(){
     }
 }
 
-fun saveToDB(content:List<Int>,context:Context,weight:String,kcalBalance:String,notes:String){
+fun saveToDB(/*content:List<Int>*/selections:Map<String,Int>,context:Context,weight:String,kcalBalance:String,notes:String){
     cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
     
     Thread{
         val existingCycle=cycleDao.getCycleByDate(usedDateState.value)
         val newCycle=Cycle(
             date=usedDateState.value,
-            crampLevel=content[0].takeIf{it!=-1},
+            /*crampLevel=content[0].takeIf{it!=-1},
             headache=content[1].takeIf{it!=-1},
             energyLevel=content[2].takeIf{it!=-1},
             sleepQuality=content[3].takeIf{it!=-1},
@@ -486,7 +518,22 @@ fun saveToDB(content:List<Int>,context:Context,weight:String,kcalBalance:String,
             musclePain=content[11].takeIf{it!=-1},
             customColumn1=content[12].takeIf{it!=-1},
             customColumn2=content[13].takeIf{it!=-1},
-            customColumn3=content[14].takeIf{it!=-1},
+            customColumn3=content[14].takeIf{it!=-1},*/
+            crampLevel=selections["crampLevel"],
+            headache=selections["headache"],
+            energyLevel=selections["energyLevel"],
+            sleepQuality=selections["sleepQuality"],
+            cravings=selections["cravings"],
+            skinCondition=selections["skinCondition"],
+            digestiveIssues=selections["digestiveIssues"],
+            moodSwings=selections["moodSwings"],
+            overallMood=selections["overallMood"],
+            dysphoria=selections["dysphoria"],
+            bleeding=selections["bleeding"],
+            musclePain=selections["musclePain"],
+            customColumn1=selections["customColumn1"],
+            customColumn2=selections["customColumn2"],
+            customColumn3=selections["customColumn3"],
             weight=weight.toIntOrNull(),
             kcalBalance=kcalBalance.toIntOrNull(),
             notes=notes.ifBlank{null}
