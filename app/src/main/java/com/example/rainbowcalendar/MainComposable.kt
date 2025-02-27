@@ -43,6 +43,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.rainbowcalendar.Utils.localDateString
 import java.time.LocalDate
 
 
@@ -68,7 +69,7 @@ object Screens{
 fun MainComposable(){
     Utils.setLanguage(LocalContext.current)
     var currentScreen by remember{mutableStateOf(Screens.sWelcome)}
-    Log.v("currentScreen",currentScreen)
+    //Log.v("currentScreen",currentScreen)
 
     when(currentScreen){
         Screens.sWelcome->WelcomeScreen{screen->currentScreen=screen}
@@ -128,10 +129,7 @@ fun MainScreen(onNavigate:(String)->Unit){
                 },
                 bottomBar={
                     Row(
-                        modifier=Modifier
-                            .fillMaxWidth()
-                            .background(colorTertiary())
-                            .heightIn(min=50.dp),
+                        modifier=Modifier.fillMaxWidth().background(colorTertiary()).heightIn(min=50.dp),
                         horizontalArrangement=Arrangement.SpaceAround,
                         Alignment.CenterVertically
                     ){
@@ -176,53 +174,49 @@ data class DayColor(
 fun CalendarScreen(){
     val context=LocalContext.current
     Utils.setLanguage(context)
-    val colors=Utils.calculateIntermediateColors(colorMin(),colorMax(),4)
+    val colors5=Utils.calculateIntermediateColors(colorMin(),colorMax(),5)
+    val colors10=Utils.calculateIntermediateColors(colorMin(),colorMax(),11)
+    val colors4=Utils.calculateIntermediateColors(colorMin(),colorMax(),4)
+    val colors3=Utils.calculateIntermediateColors(colorMin(),colorMax(),3)
 
     val temp=Utils.getAllMoodData(context)
-    Log.v("mood data2",temp[1].date+" "+temp[1].overallMood)
+    //Log.v("mood data2",temp[0].date+" "+temp[0].overallMood)
 
-    val days=listOf(
-        DayColor(LocalDate.of(2025,2,26),colors[3]),
-        DayColor(LocalDate.of(2025,2,25),colors[2]),
-        DayColor(LocalDate.of(2025,2,24),colors[3]),
-        DayColor(LocalDate.of(2025,2,23),colors[2]),
-        DayColor(LocalDate.of(2025,2,22),colors[1]),
-        DayColor(LocalDate.of(2025,2,21),colors[1]),
-        DayColor(LocalDate.of(2025,2,20),colors[2]),
-        DayColor(LocalDate.of(2025,2,19),colors[1]),
-        DayColor(LocalDate.of(2025,2,18),colors[0]),
-        DayColor(LocalDate.of(2025,2,17),colors[0]),
-        DayColor(LocalDate.of(2025,2,16),colors[1]),
-        DayColor(LocalDate.of(2025,2,15),colors[2]),
-        DayColor(LocalDate.of(2025,2,14),colors[1]),
-        DayColor(LocalDate.of(2025,2,13),colors[2]),
-        DayColor(LocalDate.of(2025,2,12),colors[2]),
-        DayColor(LocalDate.of(2025,2,11),colors[1]),
-        DayColor(LocalDate.of(2025,2,10),colors[3]),
-        DayColor(LocalDate.of(2025,2,9),colors[2]),
-        DayColor(LocalDate.of(2025,2,8),colors[3]),
-        DayColor(LocalDate.of(2025,2,7),colors[3]),
-        DayColor(LocalDate.of(2025,2,6),colors[2]),
-        DayColor(LocalDate.of(2025,2,5),colors[1]),
-        DayColor(LocalDate.of(2025,2,4),colors[1]),
-        DayColor(LocalDate.of(2025,2,3),colors[0]),
-        DayColor(LocalDate.of(2025,2,2),colors[1]),
-        DayColor(LocalDate.of(2025,2,1),colors[1]),
-    )
+    val dates=mutableListOf<DayColor>()
 
-    VerticalCalendar(
-        dayContent={date->
-            val backgroundColor=days.find{it.date==date}?.color?:colorPrimary()
-            val dateInFuture=date.isAfter(LocalDate.now())
-            Box(modifier=Modifier.background(backgroundColor,CircleShape).aspectRatio(1f)
-            ){
-                Column(verticalArrangement=Arrangement.Center,modifier=Modifier.fillMaxSize()){
-                    BetterText(text=date.dayOfMonth.toString(),fontSize=30.sp,modifier=Modifier.fillMaxWidth(),textAlign=TextAlign.Center,color=if(dateInFuture)colorTertiary() else colorSecondary())
+    temp.forEach{
+        val avg=Utils.avgFeel(context,it)
+        //val color=colors10[(avg*10).toInt()]
+        val color=if(it.overallMood!=null&&it.overallMood!=-1) colors5[it.overallMood] else colorPrimary()
+        dates+=DayColor(localDateString(it.date),color)
+    }
+
+
+    val firstDate=Utils.getFirstMetricDate(context)
+    val months=if(firstDate.isNotEmpty()) Utils.monthsSinceFirstDate(firstDate) else 12
+
+    val theme=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE).getString("theme","Black")
+    Column(
+        modifier=if(theme=="Pride")
+            Modifier.paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
+        else Modifier.background(colorPrimary())
+            .fillMaxSize()
+    ){
+        BetterHeader(text="Average",fontSize="L",modifier=Modifier.fillMaxWidth().padding(top=16.dp,bottom=10.dp))
+        VerticalCalendar(
+            dayContent={date->
+                val backgroundColor=dates.find{it.date==date}?.color?:colorPrimary()
+                val dateInFuture=date.isAfter(LocalDate.now())
+                Box(modifier=Modifier.background(backgroundColor,CircleShape).aspectRatio(1f)
+                ){
+                    Column(verticalArrangement=Arrangement.Center,modifier=Modifier.fillMaxSize()){
+                        BetterText(text=date.dayOfMonth.toString(),fontSize=30.sp,modifier=Modifier.fillMaxWidth(),textAlign=TextAlign.Center,color=if(dateInFuture)colorTertiary() else colorSecondary())
+                    }
                 }
-            }
-        }
-    )
-
+            },
+            monthsQuantity=months
+        )
+    }
 }
 
 @Composable
@@ -235,37 +229,22 @@ fun AddScreen(){
 fun SettingsScreen(onButtonClick:(String)->Unit){
     val context=LocalContext.current
     Utils.setLanguage(context)
-    Column(modifier=Modifier
-        .background(colorPrimary())
-        .fillMaxSize()
-    ){
+    Column(modifier=Modifier.background(colorPrimary()).fillMaxSize()){
         BetterButton(
             onClick={onButtonClick(Screens.sTheme)},
-            modifier=Modifier
-                .height(100.dp)
-                .width(150.dp)
-                .align(Alignment.CenterHorizontally)
-                .padding(vertical=15.dp)
+            modifier=Modifier.height(100.dp).width(150.dp).align(Alignment.CenterHorizontally).padding(vertical=15.dp)
         ){
             BetterText(text="CHANGE THEME",textAlign=TextAlign.Center)
         }
         BetterButton(
             onClick={onButtonClick(Screens.sLanguage)},
-            modifier=Modifier
-                .height(100.dp)
-                .width(150.dp)
-                .align(Alignment.CenterHorizontally)
-                .padding(vertical=15.dp)
+            modifier=Modifier.height(100.dp).width(150.dp) .align(Alignment.CenterHorizontally).padding(vertical=15.dp)
         ){
             BetterText(text="CHANGE LANGUAGE",textAlign=TextAlign.Center)
         }
         BetterButton(
             onClick={Utils.toggleStealthMode(context)},
-            modifier=Modifier
-                .height(100.dp)
-                .width(150.dp)
-                .align(Alignment.CenterHorizontally)
-                .padding(vertical=15.dp)
+            modifier=Modifier.height(100.dp).width(150.dp).align(Alignment.CenterHorizontally).padding(vertical=15.dp)
         ){
             BetterText(text="TOGGLE STEALTH MODE",textAlign=TextAlign.Center)
         }

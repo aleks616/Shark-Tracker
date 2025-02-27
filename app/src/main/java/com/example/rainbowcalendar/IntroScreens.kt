@@ -862,7 +862,7 @@ fun PeriodOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
         val previousKey=Utils.previousScreenKey(prevScreen)
 
         if(thisScreen!=null&&previousKey!=""){
-            Log.v("previous screen key",previousKey)
+            //Log.v("previous screen key",previousKey)
             if(previousKey==Constants.key_gender)
                 item{GoBackButtonRow(onClick={sharedPrefs.edit().putInt(Utils.previousScreenKey(prevScreen),0).apply();onNavigate(prevScreen)})}
             else
@@ -1179,7 +1179,7 @@ fun ContraceptiveOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?=null
             val previousKey=Utils.previousScreenKey(prevScreen)
 
             if(thisScreen!=null&&previousKey!=""){
-                Log.v("previous screen key",previousKey)
+                //Log.v("previous screen key",previousKey)
                 if(previousKey==Constants.key_gender)
                     item{GoBackButtonRow(onClick={sharedPrefs.edit().putInt(Utils.previousScreenKey(prevScreen),0).apply();onNavigate(prevScreen)})}
                 else

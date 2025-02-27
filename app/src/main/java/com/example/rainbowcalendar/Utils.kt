@@ -76,13 +76,75 @@ object Utils{
         }
     }
 
+    private fun hasDysphoria(context:Context):Boolean{
+        val data=getAllMoodData(context)
+        var hasDysphoria=false
+        data.forEach{day->
+            if(day.dysphoria!=null)
+                hasDysphoria=true
+        }
+        return hasDysphoria
+    }
+    fun avgFeel(context:Context,date:Cycle):Float{
+        val values=arrayOf(
+            //max value, importance
+            intArrayOf(4,4), //reverse
+            intArrayOf(4,3),
+            intArrayOf(4,2),
+            intArrayOf(2,2),
+            intArrayOf(2,1),
+            intArrayOf(3,2),
+            intArrayOf(2,2),//reverse
+            intArrayOf(4,3),//reverse
+            intArrayOf(2,2),
+            intArrayOf(4,0),//reverse
+            intArrayOf(2,3),//reverse
+            intArrayOf(2,1),
+        )
+        val data=intArrayOf(
+            date.overallMood?:2,
+            date.dysphoria?:0,
+            date.headache?:0,
+            date.musclePain?:0,
+            date.skinCondition?:0,
+            date.digestiveIssues?:0,
+            date.sleepQuality?:1,
+            date.energyLevel?:2,
+            date.moodSwings?:0,
+            date.bleeding?:0,
+            date.crampLevel?:0,
+            date.cravings?:0
+        )
+
+
+        var score=
+            data[0]*(values[0][1])/(values[0][0])+
+            values[2][0]-data[2]*(values[2][1])/(values[2][0])+
+            values[3][0]-data[3]*(values[3][1])/(values[3][0])+
+            values[4][0]-data[4]*(values[4][1])/(values[4][0])+
+            values[5][0]-data[5]*(values[5][1])/(values[5][0])+
+            data[6]*(values[6][1])/(values[6][0])+
+            data[7]*(values[7][1])/(values[7][0])
+            values[8][0]-data[8]*(values[8][1])/(values[8][0])+
+            values[10][0]-data[10]*(values[10][1])/(values[10][0])+
+            values[11][0]-data[11]*(values[11][1])/(values[11][0])
+            //not included: bleeding!!!
+
+        val max=if(hasDysphoria(context)) 25 else 22
+
+        if(hasDysphoria(context))
+            score+=values[1][0]-data[1]*(values[1][1]).div(values[1][0])
+
+        return score.toFloat()/max.toFloat()
+    }
+
     @OptIn(ExperimentalMaterial3Api::class)
     object MetricsSelectableDates:SelectableDates{
         override fun isSelectableDate(utcTimeMillis:Long):Boolean{
-            return (System.currentTimeMillis()-946707780000..System.currentTimeMillis()).contains(utcTimeMillis)
+            return (System.currentTimeMillis()-315569510000..System.currentTimeMillis()).contains(utcTimeMillis)
         }
         override fun isSelectableYear(year:Int):Boolean{
-            return (LocalDate.now().year-30..LocalDate.now().year).contains(year)
+            return (LocalDate.now().year-10..LocalDate.now().year).contains(year)
         }
     }
     fun convertMillisToDate(millis:Long):String{
@@ -115,6 +177,13 @@ object Utils{
 
     fun createDateFromIntegers(year:Int,month:Int,day:Int):String{
         return "%04d-%02d-%02d".format(year, month, day)
+    }
+
+    fun localDateString(date:String):LocalDate{
+        val year=date.split("-")[0].toInt()
+        val month=date.split("-")[1].toInt()
+        val day=date.split("-")[2].toInt()
+        return LocalDate.of(year,month,day)
     }
 
     fun isDate1AfterDate2(date1:String,date2:String):Boolean{
@@ -392,6 +461,23 @@ object Utils{
         return data
     }
 
+    fun getFirstMetricDate(context:Context):String{
+        var date:String=""
+        cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
+        val thread=Thread{
+            date=cycleDao.getFirstDate()
+        }
+        thread.start()
+        thread.join()
+        return date
+    }
+
+    fun monthsSinceFirstDate(date:String):Int{
+        val today=LocalDate.now()
+        val date1=LocalDate.parse(date)
+        return((today.year-date1.year)*12)+(today.monthValue-date1.monthValue)+1
+    }
+
     fun addNewCycleType(context:Context,cycleName:String,correctInterval:Int,active:Boolean=true):String{
         cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
         var canInsert=true
@@ -425,7 +511,7 @@ object Utils{
     fun previousScreenKey(previousScreen:String?):String{
         var prefs=""
         if(previousScreen!=null){
-            Log.v("previous screen in function",previousScreen)
+            //Log.v("previous screen in function",previousScreen)
             prefs=when(previousScreen){
                 Screens.sLanguage->Constants.key_isLanguageSetUp
                 Screens.sTheme->Constants.key_isThemeSetUp
@@ -439,14 +525,14 @@ object Utils{
                 else->""
             }
         }
-        Log.v("screen will be",prefs)
+        //Log.v("screen will be",prefs)
         return prefs
     }
 
     fun getPreviousScreen(currentScreen:String?,context:Context):String{
         var previousScreen=""
         if(currentScreen!=null){
-            Log.v("current screen in function",currentScreen)
+            //Log.v("current screen in function",currentScreen)
             previousScreen=when(currentScreen){
                 Screens.sLanguage->""
                 Screens.sTheme->Screens.sLanguage
@@ -466,7 +552,7 @@ object Utils{
                 else Screens.sTOptions
             }
         }
-        Log.v("previous screen is",previousScreen)
+        //Log.v("previous screen is",previousScreen)
         return previousScreen
     }
 

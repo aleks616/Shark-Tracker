@@ -338,32 +338,21 @@ fun MetricsScreen(){
                         Button(
                             //left button
                             onClick={changeDate(amount=-1)},
-                            Modifier
-                                .height(48.dp)
-                                .width(80.dp)
-                                .align(Alignment.CenterVertically)
-                                .padding(start=10.dp),
+                            Modifier.height(48.dp).width(80.dp).align(Alignment.CenterVertically).padding(start=10.dp),
                             colors=buttonColors(backgroundColor=colorTertiary()),
                         ){
                             Image(
                                 painter=painterResource(id=R.drawable.icon_arrow_left_triangle),
                                 contentDescription=null,
                                 contentScale=ContentScale.FillHeight,
-                                modifier=Modifier
-                                    .fillMaxSize()
-                                    .scale(2.0f)
+                                modifier=Modifier.fillMaxSize().scale(2.0f)
                             )
                         }
                         Button(
                             onClick={
                                 showDialog=true
                             },
-                            modifier=Modifier
-                                .padding(vertical=10.dp,horizontal=4.dp)
-                                .align(Alignment.CenterVertically)
-                                .border(width=2.dp,color=colorTertiary())
-                                .fillMaxSize()
-                                .weight(1f),
+                            modifier=Modifier.padding(vertical=10.dp,horizontal=4.dp).align(Alignment.CenterVertically).border(width=2.dp,color=colorTertiary()).fillMaxSize().weight(1f),
                             colors=buttonColors(backgroundColor=colorPrimary()),
                         ){
                             Text(
@@ -371,25 +360,17 @@ fun MetricsScreen(){
                                 text=usedDateState.value,
                                 fontSize=28.sp,
                                 textAlign=TextAlign.Center,
-
                                 )
                         }
                         Button(
                             // right button
                             onClick={changeDate(amount=1)},
-                            Modifier
-                                .height(48.dp)
-                                .width(80.dp)
-                                .align(Alignment.CenterVertically)
-                                .padding(end=10.dp)
-                                .alpha(if(usedDateState.value>=today) 0f else 1f),
+                            Modifier.height(48.dp).width(80.dp).align(Alignment.CenterVertically).padding(end=10.dp).alpha(if(usedDateState.value>=today) 0f else 1f),
                             enabled=usedDateState.value<today,
                             colors=buttonColors(backgroundColor=colorTertiary()),
                         ){
                             Image(
-                                modifier=Modifier
-                                    .fillMaxSize()
-                                    .scale(2.0f),
+                                modifier=Modifier.fillMaxSize().scale(2.0f),
                                 painter=painterResource(id=R.drawable.icon_arrow_right_triangle),
                                 contentDescription=null,
                                 contentScale=ContentScale.FillHeight,
@@ -407,9 +388,7 @@ fun MetricsScreen(){
         item{
             Box(
                 contentAlignment=Alignment.Center,
-                modifier=Modifier
-                    .fillMaxSize()
-                    .padding(bottom=20.dp)
+                modifier=Modifier.fillMaxSize().padding(bottom=20.dp)
             ){
                 Column(horizontalAlignment=Alignment.CenterHorizontally){
                     Row(
@@ -703,6 +682,7 @@ fun MetricReorderView(metricRows:MutableState<List<MetricRowData>>,onOrderChange
 
 
     var customNamesInput by remember{mutableStateOf(mutableListOf("","",""))}
+    var errorMessage by remember{mutableStateOf("")}
 
     LazyColumn(state=lazyListState){
         items(metricRows.value,key={it.title}){metric->
@@ -758,6 +738,12 @@ fun MetricReorderView(metricRows:MutableState<List<MetricRowData>>,onOrderChange
             BetterHeader(text="Enter names for custom metrics to track",fontSize="MS",modifier=Modifier.fillMaxSize().padding(top=14.dp,start=12.dp,end=12.dp))
             BetterHeader(text="Changes will be visible after pressing the \"refresh\" button!", fontSize="S",modifier=Modifier.fillMaxSize().padding(vertical=14.dp,horizontal=12.dp))
 
+            val customNames=listOf(
+                sharedPrefs.getString("customMetric1","custom1-missing")!!,
+                sharedPrefs.getString("customMetric2","custom2-missing")!!,
+                sharedPrefs.getString("customMetric3","custom3-missing")!!
+            )
+
             customNamesInput.forEachIndexed{index,_->
                 BetterTextField(textFieldModifier=Modifier.padding(6.dp),placeholderText="custom metric"+(index+1),value=customNamesInput[index], onValueChange={new->
                     val updatedList=customNamesInput.toMutableList().apply{
@@ -768,7 +754,8 @@ fun MetricReorderView(metricRows:MutableState<List<MetricRowData>>,onOrderChange
                 Row(modifier=Modifier.fillMaxWidth().padding(end=16.dp,bottom=10.dp), horizontalArrangement=Arrangement.End){
                     BetterButton(
                         onClick={
-                            if(customNamesInput[index].isNotEmpty()){
+                            if(customNamesInput[index].isNotEmpty()&&!customNames.contains(customNamesInput[index])){
+                                errorMessage=""
                                 sharedPrefs.edit().putString(("customMetric"+(index+1)),customNamesInput[index]).apply()
                                 val updatedMetrics=metricRows.value.toMutableList().apply{
                                     for(i in 0..14){
@@ -781,12 +768,15 @@ fun MetricReorderView(metricRows:MutableState<List<MetricRowData>>,onOrderChange
                                 customNamesInput[index]=""
                                 onOrderChanged(updatedMetrics)
                             }
+                            else
+                                errorMessage="Custom names have to be unique, and can't be empty."
                         }
                     ){
                         BetterText(text="save")
                     }
                 }
             }
+            ErrorText(text=errorMessage)
             Row(
                 modifier=Modifier.fillMaxWidth(),
                 horizontalArrangement=Arrangement.Center){
@@ -808,7 +798,6 @@ fun saveMetricsJson(context: Context, metrics: List<MetricRowData>){
     val gson=Gson()
 
     val metricPersistence2List=metrics.mapIndexed{index,metric->
-        Log.v("custom name?",metric.metricName)
         MetricPersistence2(metricName=metric.metricName,order=index,visible=metric.visible,title=metric.title,selectedIndex=metric.selectedIndex)
     }
     val metrics2Json=gson.toJson(metricPersistence2List)

@@ -28,6 +28,9 @@ interface CycleDao {
     @Query("SELECT * FROM metrics ORDER BY date DESC")
     fun getAllMetricsSync():List<Cycle>
 
+    @Query("SELECT date FROM metrics ORDER BY date(date) ASC LIMIT 1")
+    fun getFirstDate():String
+
     @Query("SELECT * FROM metrics WHERE date=:date LIMIT 1")
     fun getCycleByDate(date:String):Cycle?
 

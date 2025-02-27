@@ -63,12 +63,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.contentcapture.ContentCaptureManager.Companion.isEnabled
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.pointer.pointerInteropFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -661,10 +663,7 @@ fun CustomDatePickerDialog(
             Row(modifier=Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.Center){
                 BetterButton(
                     onClick={onClose()},
-                    modifier=Modifier
-                        .padding(bottom=10.dp,start=30.dp,end=30.dp)
-                        .fillMaxWidth()
-                        .height(40.dp)
+                    modifier=Modifier.padding(bottom=10.dp,start=30.dp,end=30.dp).fillMaxWidth().height(40.dp)
                 ){
                     BetterText(text="Close",fontSize=18.sp)
                 }
@@ -687,14 +686,12 @@ fun CustomDatePickerDialog(
 
 @Composable
 fun DateInputField(
-    onDayValueChange:(String) -> Unit,
-    onMonthValueChange:(String) -> Unit,
-    onYearValueChange:(String) -> Unit,
-){
+    onDayValueChange:(String)->Unit,
+    onMonthValueChange:(String)->Unit,
+    onYearValueChange:(String)->Unit){
     val year=remember{mutableStateOf("")}
     val month=remember{mutableStateOf("")}
     val day=remember{mutableStateOf("")}
-
 
     val focusManager=LocalFocusManager.current
     val yearFocusRequester=remember{FocusRequester()}
@@ -859,19 +856,20 @@ fun colorMax():Color{
 @Composable
 fun VerticalCalendar(
     dayContent:@Composable (LocalDate)->Unit,
-    modifier:Modifier=Modifier
+    modifier:Modifier=Modifier,
+    monthsQuantity:Int=12,
+    pride:Boolean=false
 ){
     val currentDate=LocalDate.now()
     val startMonth=YearMonth.from(currentDate)
     LazyColumn(
-        modifier=modifier
-            .background(color=colorPrimary())
-            .padding(horizontal=8.dp)
-            .fillMaxWidth(),
+        modifier=if(pride) modifier.paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
+                else modifier.background(color=colorPrimary())
+            .padding(horizontal=8.dp).fillMaxWidth(),
         horizontalAlignment=Alignment.CenterHorizontally,
         reverseLayout=true
     ){
-        items(10){i->
+        items(monthsQuantity){i->
             val month=startMonth.minusMonths(i.toLong())
             MonthBlock(
                 month=month,
