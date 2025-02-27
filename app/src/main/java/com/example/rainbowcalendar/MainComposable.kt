@@ -9,6 +9,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,8 +23,11 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Divider
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -45,6 +49,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.rainbowcalendar.Utils.localDateString
 import java.time.LocalDate
+import kotlin.math.floor
+import kotlin.math.roundToInt
 
 
 @Suppress("UsingMaterialAndMaterial3Libraries")
@@ -175,25 +181,51 @@ fun CalendarScreen(){
     val context=LocalContext.current
     Utils.setLanguage(context)
     val colors5=Utils.calculateIntermediateColors(colorMin(),colorMax(),5)
-    val colors10=Utils.calculateIntermediateColors(colorMin(),colorMax(),11)
+    val colors10=Utils.calculateIntermediateColors(colorMin(),colorMax(),10)
     val colors4=Utils.calculateIntermediateColors(colorMin(),colorMax(),4)
     val colors3=Utils.calculateIntermediateColors(colorMin(),colorMax(),3)
 
-    val temp=Utils.getAllMoodData(context)
+
     //Log.v("mood data2",temp[0].date+" "+temp[0].overallMood)
 
-    val dates=mutableListOf<DayColor>()
 
-    temp.forEach{
-        val avg=Utils.avgFeel(context,it)
-        //val color=colors10[(avg*10).toInt()]
-        val color=if(it.overallMood!=null&&it.overallMood!=-1) colors5[it.overallMood] else colorPrimary()
-        dates+=DayColor(localDateString(it.date),color)
-    }
 
 
     val firstDate=Utils.getFirstMetricDate(context)
     val months=if(firstDate.isNotEmpty()) Utils.monthsSinceFirstDate(firstDate) else 12
+
+    var expanded by remember{mutableStateOf(false)}
+    var menuText by remember{mutableStateOf("Average")}
+    val questions=mutableListOf("Average","Overall Mood","Headache","Muscle/back pain",
+        "Skin condition", "Digestive issues","Sleep quality","Energy level","Mood swings",
+        "Bleeding","Cramps","Cravings")
+    if(Utils.hasDysphoria(context)) questions.add(1,"Dysphoria")
+
+    val data=Utils.getAllMoodData(context)
+    val dates=mutableListOf<DayColor>()
+    data.forEach{
+        val avg=Utils.avgFeel(context,it)
+        Log.v("avg for date: "+it.date,avg.toString())
+        val color=if(menuText=="Average") if(avg.toInt()==1) colors10[9] else colors10[floor((avg*10)).toInt()]
+        else if(menuText=="Overall Mood")if(it.overallMood!=null&&it.overallMood!=-1) colors5[it.overallMood] else colorPrimary()
+        else if(menuText=="Headache")if(it.headache!=null&&it.headache!=-1) colors5[4-it.headache] else colorPrimary()
+        else if(menuText=="Dysphoria")if(it.dysphoria!=null&&it.dysphoria!=-1) colors5[4-it.dysphoria] else colorPrimary()
+        else if(menuText=="Muscle/back pain")if(it.musclePain!=null&&it.musclePain!=-1) colors3[2-it.musclePain] else colorPrimary()
+
+        else if(menuText=="Skin condition")if(it.skinCondition!=null&&it.skinCondition!=-1) colors3[2-it.skinCondition] else colorPrimary()
+        else if(menuText=="Digestive issues")if(it.digestiveIssues!=null&&it.digestiveIssues!=-1) colors4[3-it.digestiveIssues] else colorPrimary()
+        else if(menuText=="Sleep quality")if(it.sleepQuality!=null&&it.sleepQuality!=-1) colors3[it.sleepQuality] else colorPrimary()
+        else if(menuText=="Energy level")if(it.energyLevel!=null&&it.energyLevel!=-1) colors5[it.energyLevel] else colorPrimary()
+
+        else if(menuText=="Mood swings")if(it.moodSwings!=null&&it.moodSwings!=-1) colors3[2-it.moodSwings] else colorPrimary()
+        else if(menuText=="Bleeding")if(it.bleeding!=null&&it.bleeding!=-1) colors5[4-it.bleeding] else colorPrimary()
+        else if(menuText=="Cramps")if(it.crampLevel!=null&&it.crampLevel!=-1) colors3[2-it.crampLevel] else colorPrimary()
+        else if(menuText=="Cravings")if(it.cravings!=null&&it.cravings!=-1) colors3[2-it.cravings] else colorPrimary()
+        else colorPrimary()
+
+        dates+=DayColor(localDateString(it.date),color)
+    }
+
 
     val theme=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE).getString("theme","Black")
     Column(
@@ -202,7 +234,27 @@ fun CalendarScreen(){
         else Modifier.background(colorPrimary())
             .fillMaxSize()
     ){
-        BetterHeader(text="Average",fontSize="L",modifier=Modifier.fillMaxWidth().padding(top=16.dp,bottom=10.dp))
+        BetterButton(
+            modifier=Modifier.fillMaxWidth().padding(horizontal=10.dp,vertical=15.dp).height(50.dp).border(width=2.dp,color=colorTertiary()),
+            onClick={expanded=true},){
+            BetterText(text=menuText)
+            DropdownMenu(
+                expanded=expanded,
+                onDismissRequest={expanded=false},
+                modifier=Modifier.background(colorPrimary()).fillMaxWidth().padding(horizontal=10.dp).heightIn(max=250.dp)){
+                questions.forEach{question->
+                    DropdownMenuItem(
+                        text={BetterText(text=question)},
+                        onClick={
+                            expanded=false
+                            menuText=question
+                        }
+                    )
+                    Divider(color=colorTertiary(),thickness=1.dp)
+                }
+            }
+        }
+        BetterHeader(text=menuText,fontSize="L",modifier=Modifier.fillMaxWidth().padding(top=16.dp,bottom=10.dp))
         VerticalCalendar(
             dayContent={date->
                 val backgroundColor=dates.find{it.date==date}?.color?:colorPrimary()

@@ -76,7 +76,7 @@ object Utils{
         }
     }
 
-    private fun hasDysphoria(context:Context):Boolean{
+    fun hasDysphoria(context:Context):Boolean{
         val data=getAllMoodData(context)
         var hasDysphoria=false
         data.forEach{day->
@@ -88,54 +88,69 @@ object Utils{
     fun avgFeel(context:Context,date:Cycle):Float{
         val values=arrayOf(
             //max value, importance
-            intArrayOf(4,4), //reverse
-            intArrayOf(4,3),
-            intArrayOf(4,2),
-            intArrayOf(2,2),
-            intArrayOf(2,1),
-            intArrayOf(3,2),
-            intArrayOf(2,2),//reverse
-            intArrayOf(4,3),//reverse
-            intArrayOf(2,2),
-            intArrayOf(4,0),//reverse
-            intArrayOf(2,3),//reverse
-            intArrayOf(2,1),
+            floatArrayOf(4f,4f), //reverse
+            floatArrayOf(4f,3f),
+            floatArrayOf(4f,2f),
+            floatArrayOf(2f,2f),
+            floatArrayOf(2f,1f),
+            floatArrayOf(3f,2f),
+            floatArrayOf(2f,2f),//reverse
+            floatArrayOf(4f,3f),//reverse
+            floatArrayOf(2f,2f),
+            floatArrayOf(4f,0f),
+            floatArrayOf(2f,3f),
+            floatArrayOf(2f,1f),
         )
         val data=intArrayOf(
-            date.overallMood?:2,
-            date.dysphoria?:0,
-            date.headache?:0,
-            date.musclePain?:0,
-            date.skinCondition?:0,
-            date.digestiveIssues?:0,
-            date.sleepQuality?:1,
-            date.energyLevel?:2,
-            date.moodSwings?:0,
-            date.bleeding?:0,
-            date.crampLevel?:0,
-            date.cravings?:0
+            if(date.overallMood==null||date.overallMood==-1) 2 else date.overallMood,
+            if(date.dysphoria==null||date.dysphoria==-1) 0 else date.dysphoria,
+            if(date.headache==null||date.headache==-1) 0 else date.headache,
+            if(date.musclePain==null||date.musclePain==-1) 0 else date.musclePain,
+            if(date.skinCondition==null||date.skinCondition==-1) 0 else date.skinCondition,
+            if(date.digestiveIssues==null||date.digestiveIssues==-1) 0 else date.digestiveIssues,
+            if(date.sleepQuality==null||date.sleepQuality==-1) 1 else date.sleepQuality,
+            if(date.energyLevel==null||date.energyLevel==-1) 2 else date.energyLevel,
+            if(date.moodSwings==null||date.moodSwings==-1) 0 else date.moodSwings,
+            if(date.bleeding==null||date.bleeding==-1) 0 else date.bleeding,
+            if(date.crampLevel==null||date.crampLevel==-1) 0 else date.crampLevel,
+            if(date.cravings==null||date.cravings==-1) 0 else date.cravings,
         )
+        //Log.i("data",data.toString())
 
 
         var score=
             data[0]*(values[0][1])/(values[0][0])+
-            values[2][0]-data[2]*(values[2][1])/(values[2][0])+
-            values[3][0]-data[3]*(values[3][1])/(values[3][0])+
-            values[4][0]-data[4]*(values[4][1])/(values[4][0])+
-            values[5][0]-data[5]*(values[5][1])/(values[5][0])+
+            (values[2][0]-data[2])*(values[2][1])/(values[2][0])+
+            (values[3][0]-data[3])*(values[3][1])/(values[3][0])+
+            (values[4][0]-data[4])*(values[4][1])/(values[4][0])+
+            (values[5][0]-data[5])*(values[5][1])/(values[5][0])+
             data[6]*(values[6][1])/(values[6][0])+
-            data[7]*(values[7][1])/(values[7][0])
-            values[8][0]-data[8]*(values[8][1])/(values[8][0])+
-            values[10][0]-data[10]*(values[10][1])/(values[10][0])+
-            values[11][0]-data[11]*(values[11][1])/(values[11][0])
+            data[7]*(values[7][1])/(values[7][0])+
+            (values[8][0]-data[8])*(values[8][1])/(values[8][0])+
+            (values[10][0]-data[10])*(values[10][1])/(values[10][0])+
+            (values[11][0]-data[11])*(values[11][1])/(values[11][0])
             //not included: bleeding!!!
 
         val max=if(hasDysphoria(context)) 25 else 22
 
-        if(hasDysphoria(context))
-            score+=values[1][0]-data[1]*(values[1][1]).div(values[1][0])
+        //Log.v("has dysphoria",hasDysphoria(context).toString())
+        //Log.v("score without dysphoria",(score.toFloat()/22).toString())
 
-        return score.toFloat()/max.toFloat()
+        if(hasDysphoria(context)){
+            score+=(values[1][0]-data[1])*((values[1][1])/(values[1][0]))
+            val tempVal=values[1][0]-data[1]
+            val tempMulti=(values[1][1])/(values[1][0])
+            //Log.v("dysphoria value",(values[1][0]-data[1]).toString())
+            //Log.v("dysphoria multiply",((values[1][1])/(values[1][0])).toString())
+            //Log.v("temp dysphoria multiply",tempMulti.toString())
+            Log.v("dysphoria result",((values[1][0]-data[1])*(values[1][1])/(values[1][0])).toString())
+            //Log.v("temp dysphoria result",(tempVal*tempMulti).toString())
+        }
+
+
+        //Log.v("score with dysphoria",(score.toFloat()/25).toString())
+
+        return score/max.toFloat()
     }
 
     @OptIn(ExperimentalMaterial3Api::class)

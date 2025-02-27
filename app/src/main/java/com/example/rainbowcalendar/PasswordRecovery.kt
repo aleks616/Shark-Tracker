@@ -643,11 +643,7 @@ fun RecoveryScreen(onNavigate:(String)->Unit){
         questionFieldIndex.forEach{field->
             if(!recoverySet){
                 Button(
-                    modifier=Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal=10.dp,vertical=15.dp)
-                        .height(50.dp)
-                        .border(width=2.dp,color=colorTertiary()),
+                    modifier=Modifier.fillMaxWidth().padding(horizontal=10.dp,vertical=15.dp).height(50.dp).border(width=2.dp,color=colorTertiary()),
                     onClick={menuExpanded=menuExpanded.copyOf().apply{this[field]=true}},
                     colors=ButtonDefaults.buttonColors(backgroundColor=colorPrimary()),
                 ){
@@ -655,12 +651,7 @@ fun RecoveryScreen(onNavigate:(String)->Unit){
                     DropdownMenu(
                         expanded=menuExpanded[field],
                         onDismissRequest={menuExpanded[field]=false},
-                        modifier=Modifier
-                            .background(colorPrimary())
-                            .fillMaxWidth()
-                            .padding(horizontal=10.dp),
-
-                        ){
+                        modifier=Modifier.background(colorPrimary()).fillMaxWidth().padding(horizontal=10.dp),){
                         questionsOptions.forEach{question->
                             DropdownMenuItem(
                                 text={BetterText(text=question)},
@@ -678,18 +669,13 @@ fun RecoveryScreen(onNavigate:(String)->Unit){
                 BetterText(
                     text=savedQuestions[field],
                     fontSize=20.sp,
-                    modifier=Modifier
-                        .fillMaxWidth()
-                        .padding(top=20.dp,start=10.dp,end=10.dp)
-
-
+                    modifier=Modifier.fillMaxWidth().padding(top=20.dp,start=10.dp,end=10.dp)
                 ) //read questionsOptions //idk what that means anymore
             }
             TextField(
                 value=enteredAnswers[field],
                 onValueChange={enteredAnswers=enteredAnswers.copyOf().apply{this[field]=it}},
-                modifier=Modifier
-                    .padding(horizontal=10.dp),
+                modifier=Modifier.padding(horizontal=10.dp),
                 colors=TextFieldDefaults.textFieldColors(
                     placeholderColor=colorSecondary(),
                     textColor=colorSecondary(),
@@ -700,9 +686,7 @@ fun RecoveryScreen(onNavigate:(String)->Unit){
                 textStyle=TextStyle(fontSize=24.sp),
                 placeholder={
                     BetterText(
-                        text=
-                        if(recoverySet) enterAnswer
-                        else menuText[field] ,
+                        text=if(recoverySet) enterAnswer else menuText[field],
                         modifier=Modifier.fillMaxWidth(),
                     )},
                 maxLines=1,
@@ -772,14 +756,11 @@ fun RecoveryScreen(onNavigate:(String)->Unit){
                     }
                 }
             },
-                modifier=Modifier
-                    .fillMaxWidth()
-                    .padding(30.dp)){
+                modifier=Modifier.fillMaxWidth().padding(30.dp)){
                 Image(
                     painter=painterResource(id=R.drawable.icon_checkmark_circle),
                     contentDescription=null,
-                    modifier=Modifier
-                        .scale(3f)
+                    modifier=Modifier.scale(3f)
                 )
             }
         }

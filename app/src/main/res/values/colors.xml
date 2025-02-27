@@ -39,8 +39,8 @@
 
 
     <!--for calendar view!-->
-    <color name="colorMin">#770000</color>
-    <color name="colorMax">#004A00</color>
+    <color name="colorMin">#850000</color>
+    <color name="colorMax">#005E00</color>
 
 
 </resources>
