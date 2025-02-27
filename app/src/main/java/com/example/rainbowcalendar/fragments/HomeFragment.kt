@@ -14,12 +14,9 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import com.example.rainbowcalendar.CycleDao
-import com.example.rainbowcalendar.CycleRoomDatabase
-import com.example.rainbowcalendar.MainActivity
-import com.example.rainbowcalendar.PasswordActivity
+import com.example.rainbowcalendar.db.CycleDao
+import com.example.rainbowcalendar.db.CycleRoomDatabase
 import com.example.rainbowcalendar.R
-import com.example.rainbowcalendar.RecoveryActivity
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -41,7 +38,7 @@ class HomeFragment:Fragment() {
             cycleDao.insert(Cycle(date="2025-01-25",overallMood=3, crampLevel=2, digestiveIssues=1))
         }.start()*/
 
-        cycleDao.getAllCycles().observe(viewLifecycleOwner){cycles->
+        cycleDao.getAllMetricData().observe(viewLifecycleOwner){cycles->
             cycles.forEach {
                 Log.v("all ROOM data","${it.date} ${it.crampLevel} ${it.headache} ${it.energyLevel}")
             }
@@ -84,12 +81,12 @@ class HomeFragment:Fragment() {
             //popUpSpace.visibility=View.GONE
         }
 
-        goToActivity.setOnClickListener {
+        /*goToActivity.setOnClickListener {
             if(!passwordSet)
                 startActivity(Intent(requireContext(),PasswordActivity::class.java))
             else if(!recoverySet)
                 startActivity(Intent(requireContext(),RecoveryActivity::class.java))
-        }
+        }*/
 
         buttonClosePopup.setOnClickListener {
             popUpL.visibility=View.GONE

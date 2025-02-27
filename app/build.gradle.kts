@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
 }
+
 android {
     namespace="com.example.rainbowcalendar"
     compileSdk=34
@@ -61,6 +62,7 @@ android {
 
         }
     }
+    lint.disable+="UsingMaterialAndMaterial3Libraries"
 }
 tasks.withType<Test> {
     useJUnitPlatform()
@@ -78,6 +80,10 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.8.6")
     androidTestImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
+    //implementation("com.himanshoe:kalendar:1.3.2")
+    //implementation("com.himanshoe:kalendar-endlos:1.3.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
 
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
@@ -103,15 +109,17 @@ dependencies {
     implementation("androidx.compose.material:material:1.7.6")
     implementation("androidx.compose.foundation:foundation:1.7.7")
     implementation("androidx.compose.animation:animation:1.5.4")
+    implementation("com.github.commandiron:WheelPickerCompose:1.1.11")
+    implementation("com.github.vsnappy1:ComposeDatePicker:2.2.0")
 
 
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.7.6")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.7.8")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.1")
 
 
-    testImplementation("androidx.compose.ui:ui-test-junit4:1.7.6")
+    testImplementation("androidx.compose.ui:ui-test-junit4:1.7.8")
     testImplementation("org.mockito:mockito-android:5.10.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
     testImplementation("com.google.truth:truth:1.1.5")
@@ -129,11 +137,12 @@ dependencies {
     androidTestImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
     androidTestImplementation("org.junit.jupiter:junit-jupiter-api:5.10.1")
     androidTestImplementation("androidx.arch.core:core-testing:2.2.0")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.7.6")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.7.7")
     androidTestImplementation("org.mockito:mockito-android:5.10.0")
     androidTestImplementation("org.mockito:mockito-core:5.10.0")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+
 //    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0")
 //    testImplementation("io.mockk:mockk:1.13.2")
 

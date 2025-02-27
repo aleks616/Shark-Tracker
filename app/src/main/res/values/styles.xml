@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="ButtonPin">
+   <!-- <style name="ButtonPin">
         <item name="android:textColor">?attr/colorSecondary</item>
         <item name="android:layout_width">100sp</item>
         <item name="android:layout_height">100sp</item>
@@ -19,5 +19,5 @@
     <style name="DatePicker" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:textColorPrimary">?attr/colorSecondary</item>
         <item name="colorControlNormal">?attr/colorSecondary</item>
-    </style>
+    </style>-->
 </resources>

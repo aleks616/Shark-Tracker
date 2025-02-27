@@ -8,6 +8,7 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.rainbowcalendar.fragments.MainActivity
 import com.google.gson.Gson
 import org.junit.Assert.*
 import org.junit.Before
@@ -67,16 +68,6 @@ class MetricsKtTest{
         }
     }
 
-    @Test
-    fun getLocal_should_return_correct_string_from_resources(){
-        val stringId=R.string.metrics
-        Thread{
-            composeTestRule.activity.setContent{
-                val result=getLocal(stringId)
-                assertEquals(result,context.getString(stringId))
-            }
-        }
-    }
 
 //wont work idk why
 /*
