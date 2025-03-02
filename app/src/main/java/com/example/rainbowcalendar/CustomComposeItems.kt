@@ -104,7 +104,7 @@ fun VerticalSpacer(){
 
 @Composable
 fun AutoComplete(testosteroneName:String,placeholderText:String,onValueChange:(String)->Unit,bc:Boolean=false){
-    val testosteroneVersions=if(bc) Utils.getBCVersions() else Utils.getTestosteroneVersions()
+    val testosteroneVersions=if(bc) Constants.birthControlVersions else Constants.testosteroneVersions
 
     var category by remember{mutableStateOf(testosteroneName)}
     var textFieldSize by remember{mutableStateOf(Size.Zero)}
@@ -112,9 +112,7 @@ fun AutoComplete(testosteroneName:String,placeholderText:String,onValueChange:(S
     val interactionSource=remember{MutableInteractionSource()}
 
     Column(
-        modifier=Modifier
-            .padding(vertical=10.dp)
-            .fillMaxWidth()
+        modifier=Modifier.padding(vertical=10.dp).fillMaxWidth()
             .clickable(
                 interactionSource=interactionSource,
                 indication=null,
@@ -148,9 +146,7 @@ fun AutoComplete(testosteroneName:String,placeholderText:String,onValueChange:(S
                         }
                     ){
                         Icon(
-                            modifier=Modifier
-                                .size(58.dp)
-                                .padding(end=10.dp),
+                            modifier=Modifier.size(58.dp).padding(end=10.dp),
                             imageVector=Icons.Rounded.KeyboardArrowDown,
                             contentDescription="",
                             tint=colorSecondary()
@@ -165,26 +161,21 @@ fun AutoComplete(testosteroneName:String,placeholderText:String,onValueChange:(S
             exit=fadeOut(animationSpec=tween(durationMillis=150))+shrinkVertically()
         ){
             Card(
-                modifier=Modifier
-                    .padding(horizontal=15.dp)
-                    .fillMaxWidth(),
+                modifier=Modifier.padding(horizontal=15.dp).fillMaxWidth(),
                 shape=RectangleShape
             ){
                 LazyColumn(
-                    modifier=Modifier
-                        .heightIn(max=200.dp)
-                        .background(colorPrimary()),
+                    modifier=Modifier.heightIn(max=200.dp).background(colorPrimary()),
                 ){
                     if(category.isNotEmpty()){
                         items(
                             testosteroneVersions.filter{
-                                it.lowercase()
-                                    .contains(category.lowercase())||it.lowercase()
-                                    .contains("others")
+                                it.lowercase().contains(category.lowercase())
                             }.sorted()
                         ){
                             ItemsCategory(title=it){title->
                                 category=title
+                                onValueChange(title)
                                 expanded=false
                             }
                         }
@@ -206,6 +197,22 @@ fun AutoComplete(testosteroneName:String,placeholderText:String,onValueChange:(S
     }
 }
 @Composable
+fun ItemsCategory(
+    title:String,
+    onSelect:(String)->Unit){
+    Row(
+        modifier=Modifier.fillMaxWidth().padding(10.dp)
+            .clickable{
+                onSelect(title)
+            }
+    ){
+        Text(text=title,fontSize=18.sp,color=colorSecondary())
+    }
+    androidx.compose.material.Divider(color=colorTertiary())
+}
+
+
+@Composable
 fun StyledTimePicker(
     onTimeSelected:(Int,Int)->Unit,
     time:TimePickerTime
@@ -226,22 +233,7 @@ fun StyledTimePicker(
         onTimeSelected=onTimeSelected
     )
 }
-@Composable
-fun ItemsCategory(
-    title:String,
-    onSelect:(String)->Unit){
-    Row(
-        modifier=Modifier
-            .fillMaxWidth()
-            .clickable {
-                onSelect(title)
-            }
-            .padding(10.dp)
-    ){
-        Text(text=title,fontSize=18.sp,color=colorSecondary())
-    }
-    androidx.compose.material.Divider(color=colorTertiary())
-}
+
 
 
 /**
@@ -644,7 +636,7 @@ fun MyDatePicker(
         headline=null,
         state=state,
         showModeToggle=false,
-        colors=Utils.datePickerColors(),
+        colors=TimeUtils.datePickerColors(),
         modifier=Modifier.padding(all=0.dp)
     )
 }
@@ -670,14 +662,14 @@ fun CustomDatePickerDialog(
             }
             confirmButton()
         },
-        colors=Utils.datePickerColors()
+        colors=TimeUtils.datePickerColors()
     ){
         DatePicker(
             title=null,
             headline=null,
             state=state,
             showModeToggle=false,
-            colors=Utils.datePickerColors(),
+            colors=TimeUtils.datePickerColors(),
             modifier=Modifier.padding(all=0.dp)
         )
     }
@@ -731,7 +723,7 @@ fun DateInputField(
                 if(newValue.length<=4&&Utils.isStringANumber(newValue)){
                     year.value=newValue
                     if(Utils.canBeIntParsed(newValue)){
-                        if(Utils.isValidPastOrPresentYear(newValue.toInt())){
+                        if(TimeUtils.isValidPastOrPresentYear(newValue.toInt())){
                             monthFocusRequester.requestFocus()
                             yearFocused=false
                             onYearValueChange(newValue)

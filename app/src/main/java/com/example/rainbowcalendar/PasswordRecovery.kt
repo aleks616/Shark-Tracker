@@ -38,10 +38,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
@@ -90,11 +92,16 @@ fun PasswordScreen(onNavigate:(String)->Unit){
     var digitsEntered by remember{mutableStateOf(0)}
     var enteredPin by remember{mutableStateOf("")}
 
-
+    val theme=sharedPrefs.getString("theme","Black")
     when(passwordScreenType){
         0->{
             //display choose type
-            Column(modifier=Modifier.fillMaxWidth()){
+            Column(
+                modifier=
+                if(theme=="Pride") Modifier.paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
+                else Modifier.background(colorPrimary())
+                    .fillMaxSize()
+            ){
                 BetterText(
                     text=stringResource(id=R.string.password_type_title),
                     fontSize=38.sp,
@@ -169,7 +176,12 @@ fun PasswordScreen(onNavigate:(String)->Unit){
         }
         1->{
             val creatingPassword=passwordValue.isNullOrEmpty()
-            Column(modifier=Modifier.fillMaxWidth()){
+            Column(
+                modifier=
+                if(theme=="Pride") Modifier.paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
+                else Modifier.background(colorPrimary())
+                    .fillMaxSize()
+            ){
                 BetterText(
                     text=if(creatingPassword) stringResource(id=R.string.create_password)
                     else stringResource(id=R.string.enter_password),
@@ -371,7 +383,10 @@ fun PasswordScreen(onNavigate:(String)->Unit){
         }
         2->{
             Column(
-                modifier=Modifier.fillMaxSize(),
+                modifier=
+                if(theme=="Pride") Modifier.paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
+                else Modifier.background(colorPrimary())
+                    .fillMaxSize(),
                 horizontalAlignment=Alignment.CenterHorizontally
             ){
                 BetterText(
@@ -628,16 +643,20 @@ fun RecoveryScreen(onNavigate:(String)->Unit){
     val enterAnswer=stringResource(id=R.string.enter_answer)
 
     val questionFieldIndex=arrayOf(0,1,2)
-    Column{
+    val theme=sharedPrefs.getString("theme","Black")
+    Column(
+        modifier=
+        if(theme=="Pride") Modifier.paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
+        else Modifier.background(colorPrimary())
+            .fillMaxSize()
+    ){
         BetterText(
             text=
             if(recoverySet) stringResource(id=R.string.answer_recovery_questions)
             else stringResource(id=R.string.recovery_setup_title),
             fontSize=34.sp,
             textAlign=TextAlign.Center,
-            modifier=Modifier
-                .padding(15.dp)
-                .fillMaxWidth()
+            modifier=Modifier.padding(15.dp).fillMaxWidth()
         )
 
         questionFieldIndex.forEach{field->

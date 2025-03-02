@@ -12,9 +12,6 @@ data class Cycle(
     @ColumnInfo(name="date")
     val date:String,
 
-/*    @ColumnInfo(name="cycleDay")
-    val cycleDay:Int?=null,*/
-
     @ColumnInfo(name="crampLevel")
     val crampLevel:Int?=null,
 
@@ -99,4 +96,11 @@ data class DateCycle(
     val date:String,
     val cycleId:Int,
     val cycleDay:Int
+)
+
+data class CyclesDateCycle(
+    val cycleName:String,
+    val isActive:Boolean,
+    val cycleDay:Int,
+    val correctLength:Int
 )

@@ -96,4 +96,112 @@ object Constants{
 
     /** if not, set them up by looking at gender and if taking T at start of app**/
     const val metricsSetUp="metricsSetUp"
+
+
+
+
+
+
+
+
+    val testosteroneVersions=listOf(
+        "Agovirin Depot",
+        "Andractim",
+        "Andriol",
+        "AndroGel",
+        "AndroPatch",
+        "Androderm",
+        "Androject",
+        "Andronaq",
+        "Aveed",
+        "Axiron",
+        "Delatestryl",
+        "Depo-Testosterone",
+        "Dianabol",
+        "Halotestin",
+        "Jatenzo",
+        "Metandren",
+        "Nebido",
+        "Omnadren",
+        "Ora-Testryl",
+        "Oreton Methyl",
+        "Perandren",
+        "Prolongatum",
+        "Proviron",
+        "Rektandron",
+        "Sterotate",
+        "Striant",
+        "Sustanon 100",
+        "Sustanon 250",
+        "Testim",
+        "TestoGel",
+        "TestoPatch",
+        "Testopel",
+        "Testoral",
+        "Testoviron",
+        "Testred",
+        "Ultandren",
+        "Virosterone",
+        "Xyosted"
+    )
+
+    val birthControlVersions=listOf(
+        "Algestone acetophenide",
+        "Azagly-nafarelin",
+        "Chlormadinone acetate",
+        "Cymegesolate",
+        "Desogestrel",
+        "Dienogest",
+        "Diosgenin",
+        "Drospirenone",
+        "Estetrol",
+        "Estradiol benzoate",
+        "Estradiol cypionate",
+        "Estradiol enantate",
+        "Estradiol valerate",
+        "Ethinylestradiol",
+        "Ethinylestradiol sulfonate",
+        "Etonogestrel",
+        "Gestodene",
+        "Hydroxyprogesterone caproate",
+        "Levonorgestrel",
+        "Levonorgestrel butanoate",
+        "Levonorgestrel-releasing implant",
+        "Medroxyprogesterone acetate",
+        "Megestrol acetate",
+        "Mestranol",
+        "Nomegestrol acetate",
+        "Norelgestromin",
+        "Norethisterone",
+        "Norethisterone acetate",
+        "Noretynodrel",
+        "Norgesterone",
+        "Norgestimate",
+        "Norgestrel",
+        "Norvinisterone",
+        "Ormeloxifene",
+        "Oxogestone",
+        "Oxogestone phenpropionate",
+        "Quingestanol acetate",
+        "Quingestrone",
+        "Segesterone acetate",
+        "Tosagestin",
+        "Trestolone",
+        "Ulipristal acetate",
+        "Yuzpe regimen",
+        "Plan B",
+        "Next Choice",
+        "Depo-Provera",
+        "NuvaRing",
+        "Mirena",
+        "Skyla",
+        "Implanon",
+        "Jadelle",
+        "Norplant",
+        "Seasonale",
+        "Yasmin",
+        "Marvelon"
+    )
+
+
 }

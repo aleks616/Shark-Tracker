@@ -47,10 +47,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.rainbowcalendar.Utils.localDateString
+import com.example.rainbowcalendar.db.DBUtils
 import java.time.LocalDate
 import kotlin.math.floor
-import kotlin.math.roundToInt
 
 
 @Suppress("UsingMaterialAndMaterial3Libraries")
@@ -169,8 +168,37 @@ fun MainScreen(onNavigate:(String)->Unit){
 
 @Composable
 fun HomeScreen(){
-    Utils.setLanguage(LocalContext.current)
-    Text("Home")
+    val context=LocalContext.current
+    Utils.setLanguage(context)
+
+    //todo: if there is no cycleData-CYCLEDAY FOR ALL ACTIVE CYCLES for today, calculate them
+    // check if this works for T and BC too! update: it doesn't lmao
+    Utils.autoAddCycleDayData(context)
+
+
+
+    val cycles=DBUtils.getCyclesDataDate(context,"2025-03-01")
+
+
+    val theme=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE).getString("theme","Black")
+    Column(
+        modifier=
+        if(theme=="Pride") Modifier.paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
+        else Modifier.background(colorPrimary())
+            .fillMaxSize()
+    ){
+        BetterHeader("Home",fontSize="L")
+        cycles.forEach{
+            BetterText("cycleName: "+it.cycleName,fontSize=32.sp)
+            BetterText("today is day of cycle:  "+it.cycleDay.toString(),fontSize=28.sp)
+            BetterText(
+                text="correct length is: "+if(it.correctLength!=0) it.correctLength.toString() else "none",
+                fontSize=29.sp
+            )
+            if(it.cycleDay>it.correctLength-1) BetterText("CYCLE DIDN'T START", fontSize=40.sp)
+            VerticalSpacer()
+        }
+    }
 }
 data class DayColor(
     val date:LocalDate,
@@ -186,22 +214,20 @@ fun CalendarScreen(){
     val colors3=Utils.calculateIntermediateColors(colorMin(),colorMax(),3)
 
 
-    //Log.v("mood data2",temp[0].date+" "+temp[0].overallMood)
+    val firstDate=DBUtils.getFirstMetricDate(context)
+    val months=if(!firstDate.isNullOrEmpty()) TimeUtils.monthsSinceFirstDate(firstDate) else 12
 
-
-
-
-    val firstDate=Utils.getFirstMetricDate(context)
-    val months=if(firstDate.isNotEmpty()) Utils.monthsSinceFirstDate(firstDate) else 12
 
     var expanded by remember{mutableStateOf(false)}
     var menuText by remember{mutableStateOf("Average")}
-    val questions=mutableListOf("Average","Overall Mood","Headache","Muscle/back pain",
+
+    val metrics=mutableListOf("Average","Overall Mood","Headache","Muscle/back pain",
         "Skin condition", "Digestive issues","Sleep quality","Energy level","Mood swings",
         "Bleeding","Cramps","Cravings")
-    if(Utils.hasDysphoria(context)) questions.add(1,"Dysphoria")
+    if(DBUtils.hasDysphoria(context)) metrics.add(1,"Dysphoria")
 
-    val data=Utils.getAllMoodData(context)
+    val data=DBUtils.getAllMoodData(context)
+    if(data.isNotEmpty()){
     val dates=mutableListOf<DayColor>()
     data.forEach{
         val avg=Utils.avgFeel(context,it)
@@ -223,7 +249,7 @@ fun CalendarScreen(){
         else if(menuText=="Cravings")if(it.cravings!=null&&it.cravings!=-1) colors3[2-it.cravings] else colorPrimary()
         else colorPrimary()
 
-        dates+=DayColor(localDateString(it.date),color)
+        dates+=DayColor(TimeUtils.localDateString(it.date),color)
     }
 
 
@@ -242,7 +268,7 @@ fun CalendarScreen(){
                 expanded=expanded,
                 onDismissRequest={expanded=false},
                 modifier=Modifier.background(colorPrimary()).fillMaxWidth().padding(horizontal=10.dp).heightIn(max=250.dp)){
-                questions.forEach{question->
+                metrics.forEach{question->
                     DropdownMenuItem(
                         text={BetterText(text=question)},
                         onClick={
@@ -268,6 +294,7 @@ fun CalendarScreen(){
             },
             monthsQuantity=months
         )
+    }
     }
 }
 
@@ -306,12 +333,11 @@ fun SettingsScreen(onButtonClick:(String)->Unit){
 }
 
 
-//TODO BIG:
+//TODO:
 // 1 FIX PASSWORD ERRORS NOT SHOWING!
 // 2. ADD RECOVERY WHEN FORGOT PASSWORD
-// 3. BRING BACK CREATE PASSWORD/RECOVERY POPUP
 // 4. SOCIALS/CREDITS TAB
-//: TODO FROM OLD ACTIVITIES: home_fragment
+//: TODO FROM OLD ACTIVITIES: home_fragment/cycles
 
 
 @Composable
@@ -330,6 +356,8 @@ fun WelcomeScreen(onNavigate:(String)->Unit){
         if(setupDone){
             if(!sharedPrefs.getString(Constants.key_passwordValue,"").isNullOrEmpty())//there is password
                 onNavigate(Screens.sPassword)
+            else
+                onNavigate(Screens.sMain)
         }
         else{
             Handler(Looper.getMainLooper()).postDelayed({

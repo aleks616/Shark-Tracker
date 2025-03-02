@@ -6,6 +6,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 
 
 @Dao
@@ -28,17 +29,21 @@ interface CycleDao {
     @Query("SELECT * FROM metrics ORDER BY date DESC")
     fun getAllMetricsSync():List<Cycle>
 
+    @Query("SELECT * FROM cycles WHERE isActive=1")
+    fun getActiveCycleTypes():List<Cycles>
+
+    @Query("SELECT c.cycleName,c.isActive,d.cycleDay,c.correctLength FROM cycles c JOIN datecycle d ON c.cycleId=d.cycleId WHERE d.date=:date")
+    fun getAllCyclesDataDate(date:String):List<CyclesDateCycle>
+
+    @Query("SELECT cycleId,date,cycleDay FROM datecycle WHERE cycleId=:cycleId ORDER BY date(date) DESC LIMIT 1")
+    fun getLastCycleDay(cycleId:Int):DateCycle
+
+
     @Query("SELECT date FROM metrics ORDER BY date(date) ASC LIMIT 1")
-    fun getFirstDate():String
+    fun getFirstDate():String?
 
     @Query("SELECT * FROM metrics WHERE date=:date LIMIT 1")
     fun getCycleByDate(date:String):Cycle?
-
-/*    @Query("SELECT * FROM metrics WHERE cycleDay=:cycleDay")
-    fun getCyclesByCycleDay(cycleDay:Int):LiveData<List<Cycle>>
-
-    @Query("UPDATE metrics SET cycleDay=:cycleDay WHERE date=:date")
-    fun updateCycleDay(date:String,cycleDay:Int?)*/
 
     @Insert
     fun addNewCycle(cycle:Cycles)
@@ -67,6 +72,9 @@ interface CycleDao {
 
     @Query("SELECT EXISTS(SELECT 1 FROM datecycle WHERE date=:date)")
     fun doesDateExist(date:String):Boolean
+
+    @Query("SELECT EXISTS(SELECT 1 FROM datecycle WHERE date=:date AND cycleId=:cycleId)")
+    fun doesDateExistForCycleId(date:String,cycleId:Int):Boolean
 
     @Query("SELECT EXISTS(SELECT 1 FROM Cycles WHERE cycleId=:cycleId)")
     fun doesCycleExist(cycleId:Int):Boolean

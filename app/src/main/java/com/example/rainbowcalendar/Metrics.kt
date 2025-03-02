@@ -298,11 +298,11 @@ fun MetricsScreen(){
 
     var showDialog by remember{mutableStateOf(false)}
     val datePickerState=rememberDatePickerState(
-        selectableDates=Utils.MetricsSelectableDates,
+        selectableDates=TimeUtils.MetricsSelectableDates,
         initialSelectedDateMillis=System.currentTimeMillis()
     )
     val selectedDate=datePickerState.selectedDateMillis?.let{
-        Utils.convertMillisToDate(it)
+        TimeUtils.convertMillisToDate(it)
     }?:""
 
 
