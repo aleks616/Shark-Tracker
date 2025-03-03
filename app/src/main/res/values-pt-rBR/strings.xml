@@ -226,4 +226,62 @@
     <string name="langPolish">Polonês</string>
 
 
+    <string name="genderTransMan">Homem trans</string>
+    <string name="genderNB">Não binário</string>
+    <string name="genderWoman">Mulher</string>
+    <string name="tmanDescription">homem trans, T/opções de transição estarão disponíveis</string>
+    <string name="nbDescription">não binário, outro, T/opções de transição estarão disponíveis</string>
+    <string name="womanDescription">mulher, T/opções de transição NÃO estarão disponíveis</string>
+    <string name="noGenderNeutral">Desculpe, modo de gênero neutro ainda não está disponível para esta língua, escolha Inglês</string>
+    <string name="noGenderNeutralSuggestion">você pode mandar uma sugestão após completar o setup</string>
+    <string name="go_to_language_screen">Vá para a tela de linguagem</string>
+    <string name="yourIdentityHeader">Sua identidade</string>
+    <string name="chooseMostFittingOption">Escolha a opção mais adequada</string>
+    <string name="useStealthModeQuestion">Usar "modo furtivo"?</string>
+    <string name="stealthModeDescription">Aplicativo aparecerá como "Shark Idle 2" e notificações serão discretas</string>
+    <string name="censorPeriodQuestion">Gostaria de usar o termo "shark week" ao invés de menstruação?</string>
+    <string name="usePeriod">Usar "menstruação"</string>
+    <string name="useCensorPeriod">Usar shark week</string>
+    <string name="errorUnknown">Um erro occorreu, desculpe</string>
+
+
+
+    <string name="chooseAppTheme">Escolher tema do aplicativo</string>
+
+
+    <string name="nameIsEmptyError">nome não pode ficar em branco</string>
+    <string name="intervalIsEmptyError">intervalo não pode ficar em branco</string>
+    <string name="lastDoseIsEmptyError">data da última dose não pode ficar em branco</string>
+    <string name="intervalNotANumberError">Intervalo deve ser um número inteiro maior do que 0</string>
+    <string name="birthControlQuestion">Você está tomando anticoncepcional atualmente?</string>
+    <string name="birthControlName">Insira o nome do teu anticoncepcional</string>
+    <string name="contraceptive">anticoncepcional</string>
+    <string name="howOftenDoYouTakeIt">Com que frequência você o toma?</string>
+    <string name="daysSpecify">em dias, 1->diariamente</string>
+    <string name="lastDoseQuestion">Quando foi tua última dose?</string>
+    <string name="getRemindersQuestion">Ativar lembretes??</string>
+
+    <string name="datesNotDescendingError">Datas não estão ordenadas de mais recentes para mais antigas</string>    <string name="invalidDaysBeforePeriod">Dias antes da menstruação devem ser um número inteiro.</string>
+    <string name="invalidDatesError">"Datas devem estar válidas, formato é ano mes dia, datas devem ser passadas."</string>
+    <string name="notNumberDatesError">Cada ano, mês, e dia deve ser um número inteiro.</string>
+    <string name="periodLengthNotANumberError">Duração da menstruação deve ser um número inteiro.</string>
+    <string name="cycleLengthNotANumberError">Duração do ciclo deve ser um número inteiro.</string>
+    <string name="skipLater">Não sei/Colocarei depois</string>
+    <string name="testosteroneQuestion">Está usando testosterona atualmente?</string>
+    <string name="enterTestosteroneName">Insira o nome de tua testosterona</string>
+    <string name="testosterone">testosterona</string>
+    <string name="firstTestosteroneQuestion">Quando começou a usar testosterona?</string>
+    <string name="enterDateDescription">Esta data ajuda a marcar conquistas. Se você fez intervalos sem testosterona, insira a data que considera sua data de início.</string>
+    <string name="microdosing">Faço microdosagem</string>
+    <string name="testostroneInFutureQuestion">Planeja utilizar testosterona no futuro?</string>
+    <string name="testostroneInFutureDescription">"se não tem certeza, escolha "sim" e será questionado novamente no futuro""</string>
+    <string name="normal">NORMAL</string>
+    <string name="stealth">FURTIVO</string>
+
+    <string name="termsAndConditions1">Confirmo que sou maior de 18 anos, ou maior que 13 e tenho permissão de meus pais ou guardião legal para usar este aplicativo.</string>
+    <string name="termsAndConditions2">Entendo que este aplicativo não coleta, guarda, ou compartilha nenhum de meus dados externamente e que todos os dados permanecem neste dispositivo.</string>
+    <string name="termsAndConditions3">Entendo que este aplicativo não tem funcão médica e não substitui conselho médico profissional..</string>
+    <string name="termsAndConditions4">Entendo que sou responsável pela seguranca e backup de meus próprios dados, e que o desenvolvedor deste aplicativo não é responsável por qualquer perda de dados ou mal uso.</string>
+    <string name="termsAndConditionsTitle">Termos e condições</string>
+
 </resources>
