@@ -8,11 +8,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.util.Log
-import androidx.compose.material3.DatePickerColors
-import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SelectableDates
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.core.app.NotificationCompat
@@ -21,15 +16,11 @@ import com.example.rainbowcalendar.db.CycleRoomDatabase
 import com.example.rainbowcalendar.db.DBUtils
 import com.example.rainbowcalendar.db.DateCycle
 import com.google.gson.Gson
-import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 
 object Utils{
-
     fun avgFeel(context:Context,date:Cycle):Float{
         val values=arrayOf(
             //max value, importance
@@ -82,7 +73,6 @@ object Utils{
 
         return score/max.toFloat()
     }
-
     fun autoAddCycleDayData(context:Context/*,date:String*/){
         cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
         val activeCycles=DBUtils.getActiveCycles(context)
@@ -90,7 +80,6 @@ object Utils{
         val today=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(Calendar.getInstance().time)
 
         activeCycles.forEach{
-            //getLastCycleDay
             val thread=Thread{
                 lastCycle+=cycleDao.getLastCycleDay(it.cycleId)
             }
@@ -98,7 +87,7 @@ object Utils{
             thread.join()
 
             Log.v("data","cycleId: "+it.cycleId.toString()+" cycleName: "+it.cycleName+" lastDate: "+lastCycle[lastCycle.size-1].date+"  lastDay: "+lastCycle[lastCycle.size-1].cycleDay)
-            //todo: fill data from this day till today
+
             var date=lastCycle[lastCycle.size-1].date
             var cycleDay=lastCycle[lastCycle.size-1].cycleDay
             while(TimeUtils.isDate1AfterDate2(today,date)){
@@ -108,10 +97,24 @@ object Utils{
                 cycleDay++
                 date=TimeUtils.iterateDateString(date)
             }
-
         }
-
     }
+    //todo: i started writing it and then forgot why
+    /*fun lastCycleStart(context:Context,cycleName:String):DateCycle{
+        cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
+        var lastCycle=DateCycle("",0,0)
+        var cycleId:Int
+        val thread=Thread{
+            cycleId=cycleDao.getCycleIdByName(cycleName)
+            lastCycle=cycleDao.getLastCycleDay(cycleId)
+        }
+        thread.start()
+        thread.join()
+        Log.v("last cycle start","cycleName: "+cycleName+" lastDate: "+lastCycle.date+"  lastDay: "+lastCycle.cycleDay)
+        return lastCycle
+    }*/
+
+
     fun setStartMetricsOrder(context:Context,gender:Int){
         val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
         val femaleMetrics=listOf(
@@ -158,7 +161,6 @@ object Utils{
         val metrics2Json=gson.toJson(metricPersistence2List)
         sharedPrefs.edit().putString("metricsOrder2", metrics2Json).putBoolean(Constants.metricsSetUp,true).apply()
     }
-
 
     //region general android logic
     fun previousScreenKey(previousScreen:String?):String{
@@ -367,6 +369,20 @@ object Utils{
             NotificationCompat.Builder(context,"testId")
                 .setContentTitle("Powiadomienie")
                 .setContentText("test")
+                .setSmallIcon(R.drawable.alarm_icon)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+        notificationManager.notify(1,notification.build())
+    }
+
+    fun binderNotif(context:Context){
+        val notificationManager=context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationChannel=NotificationChannel("testId","CHANNEL_NAME",NotificationManager.IMPORTANCE_HIGH)
+        notificationManager.createNotificationChannel(notificationChannel)
+
+        val notification:NotificationCompat.Builder=
+            NotificationCompat.Builder(context,"testId")
+                .setContentTitle("Binding")
+                .setContentText("TAKE OFF YOUR BINDER")
                 .setSmallIcon(R.drawable.alarm_icon)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
         notificationManager.notify(1,notification.build())

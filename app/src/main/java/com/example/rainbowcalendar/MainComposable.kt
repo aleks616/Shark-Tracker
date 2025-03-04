@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
 import androidx.compose.material.IconButton
@@ -47,12 +48,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.rainbowcalendar.Constants.key_firstTestosteroneDate
+import com.example.rainbowcalendar.Constants.key_isPeriodRegular
+import com.example.rainbowcalendar.Constants.key_isPlanningToTakeTestosterone
+import com.example.rainbowcalendar.Constants.key_isTakingTestosterone
+import com.example.rainbowcalendar.db.CyclesDateCycle
 import com.example.rainbowcalendar.db.DBUtils
+import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.util.Calendar
+import java.util.Locale
 import kotlin.math.floor
-
-
 @Suppress("UsingMaterialAndMaterial3Libraries")
+
+
+//region navigation
 object Screens{
     const val sWelcome="WelcomeScreen"
     const val sLanguage="LanguageScreen"
@@ -96,7 +106,6 @@ fun MainComposable(){
         Screens.sMain->MainScreen{screen->currentScreen=screen}
     }
 }
-
 
 @Composable
 fun MainScreen(onNavigate:(String)->Unit){
@@ -165,180 +174,6 @@ fun MainScreen(onNavigate:(String)->Unit){
         }
     }
 }
-
-@Composable
-fun HomeScreen(){
-    val context=LocalContext.current
-    Utils.setLanguage(context)
-
-    //todo: if there is no cycleData-CYCLEDAY FOR ALL ACTIVE CYCLES for today, calculate them
-    // check if this works for T and BC too! update: it doesn't lmao
-    Utils.autoAddCycleDayData(context)
-
-
-
-    val cycles=DBUtils.getCyclesDataDate(context,"2025-03-01")
-
-
-    val theme=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE).getString("theme","Black")
-    Column(
-        modifier=
-        if(theme=="Pride") Modifier.paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
-        else Modifier.background(colorPrimary())
-            .fillMaxSize()
-    ){
-        BetterHeader("Home",fontSize="L")
-        cycles.forEach{
-            BetterText("cycleName: "+it.cycleName,fontSize=32.sp)
-            BetterText("today is day of cycle:  "+it.cycleDay.toString(),fontSize=28.sp)
-            BetterText(
-                text="correct length is: "+if(it.correctLength!=0) it.correctLength.toString() else "none",
-                fontSize=29.sp
-            )
-            if(it.cycleDay>it.correctLength-1) BetterText("CYCLE DIDN'T START", fontSize=40.sp)
-            VerticalSpacer()
-        }
-    }
-}
-data class DayColor(
-    val date:LocalDate,
-    val color:Color
-)
-@Composable
-fun CalendarScreen(){
-    val context=LocalContext.current
-    Utils.setLanguage(context)
-    val colors5=Utils.calculateIntermediateColors(colorMin(),colorMax(),5)
-    val colors10=Utils.calculateIntermediateColors(colorMin(),colorMax(),10)
-    val colors4=Utils.calculateIntermediateColors(colorMin(),colorMax(),4)
-    val colors3=Utils.calculateIntermediateColors(colorMin(),colorMax(),3)
-
-
-    val firstDate=DBUtils.getFirstMetricDate(context)
-    val months=if(!firstDate.isNullOrEmpty()) TimeUtils.monthsSinceFirstDate(firstDate) else 12
-
-
-    var expanded by remember{mutableStateOf(false)}
-    var menuText by remember{mutableStateOf("Average")}
-
-    val metrics=mutableListOf("Average","Overall Mood","Headache","Muscle/back pain",
-        "Skin condition", "Digestive issues","Sleep quality","Energy level","Mood swings",
-        "Bleeding","Cramps","Cravings")
-    if(DBUtils.hasDysphoria(context)) metrics.add(1,"Dysphoria")
-
-    val data=DBUtils.getAllMoodData(context)
-    if(data.isNotEmpty()){
-    val dates=mutableListOf<DayColor>()
-    data.forEach{
-        val avg=Utils.avgFeel(context,it)
-        Log.v("avg for date: "+it.date,avg.toString())
-        val color=if(menuText=="Average") if(avg.toInt()==1) colors10[9] else colors10[floor((avg*10)).toInt()]
-        else if(menuText=="Overall Mood")if(it.overallMood!=null&&it.overallMood!=-1) colors5[it.overallMood] else colorPrimary()
-        else if(menuText=="Headache")if(it.headache!=null&&it.headache!=-1) colors5[4-it.headache] else colorPrimary()
-        else if(menuText=="Dysphoria")if(it.dysphoria!=null&&it.dysphoria!=-1) colors5[4-it.dysphoria] else colorPrimary()
-        else if(menuText=="Muscle/back pain")if(it.musclePain!=null&&it.musclePain!=-1) colors3[2-it.musclePain] else colorPrimary()
-
-        else if(menuText=="Skin condition")if(it.skinCondition!=null&&it.skinCondition!=-1) colors3[2-it.skinCondition] else colorPrimary()
-        else if(menuText=="Digestive issues")if(it.digestiveIssues!=null&&it.digestiveIssues!=-1) colors4[3-it.digestiveIssues] else colorPrimary()
-        else if(menuText=="Sleep quality")if(it.sleepQuality!=null&&it.sleepQuality!=-1) colors3[it.sleepQuality] else colorPrimary()
-        else if(menuText=="Energy level")if(it.energyLevel!=null&&it.energyLevel!=-1) colors5[it.energyLevel] else colorPrimary()
-
-        else if(menuText=="Mood swings")if(it.moodSwings!=null&&it.moodSwings!=-1) colors3[2-it.moodSwings] else colorPrimary()
-        else if(menuText=="Bleeding")if(it.bleeding!=null&&it.bleeding!=-1) colors5[4-it.bleeding] else colorPrimary()
-        else if(menuText=="Cramps")if(it.crampLevel!=null&&it.crampLevel!=-1) colors3[2-it.crampLevel] else colorPrimary()
-        else if(menuText=="Cravings")if(it.cravings!=null&&it.cravings!=-1) colors3[2-it.cravings] else colorPrimary()
-        else colorPrimary()
-
-        dates+=DayColor(TimeUtils.localDateString(it.date),color)
-    }
-
-
-    val theme=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE).getString("theme","Black")
-    Column(
-        modifier=if(theme=="Pride")
-            Modifier.paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
-        else Modifier.background(colorPrimary())
-            .fillMaxSize()
-    ){
-        BetterButton(
-            modifier=Modifier.fillMaxWidth().padding(horizontal=10.dp,vertical=15.dp).height(50.dp).border(width=2.dp,color=colorTertiary()),
-            onClick={expanded=true},){
-            BetterText(text=menuText)
-            DropdownMenu(
-                expanded=expanded,
-                onDismissRequest={expanded=false},
-                modifier=Modifier.background(colorPrimary()).fillMaxWidth().padding(horizontal=10.dp).heightIn(max=250.dp)){
-                metrics.forEach{question->
-                    DropdownMenuItem(
-                        text={BetterText(text=question)},
-                        onClick={
-                            expanded=false
-                            menuText=question
-                        }
-                    )
-                    Divider(color=colorTertiary(),thickness=1.dp)
-                }
-            }
-        }
-        BetterHeader(text=menuText,fontSize="L",modifier=Modifier.fillMaxWidth().padding(top=16.dp,bottom=10.dp))
-        VerticalCalendar(
-            dayContent={date->
-                val backgroundColor=dates.find{it.date==date}?.color?:colorPrimary()
-                val dateInFuture=date.isAfter(LocalDate.now())
-                Box(modifier=Modifier.background(backgroundColor,CircleShape).aspectRatio(1f)
-                ){
-                    Column(verticalArrangement=Arrangement.Center,modifier=Modifier.fillMaxSize()){
-                        BetterText(text=date.dayOfMonth.toString(),fontSize=30.sp,modifier=Modifier.fillMaxWidth(),textAlign=TextAlign.Center,color=if(dateInFuture)colorTertiary() else colorSecondary())
-                    }
-                }
-            },
-            monthsQuantity=months
-        )
-    }
-    }
-}
-
-@Composable
-fun AddScreen(){
-    Utils.setLanguage(LocalContext.current)
-    MetricsScreen()
-}
-
-@Composable
-fun SettingsScreen(onButtonClick:(String)->Unit){
-    val context=LocalContext.current
-    Utils.setLanguage(context)
-    Column(modifier=Modifier.background(colorPrimary()).fillMaxSize()){
-        BetterButton(
-            onClick={onButtonClick(Screens.sTheme)},
-            modifier=Modifier.height(100.dp).width(150.dp).align(Alignment.CenterHorizontally).padding(vertical=15.dp)
-        ){
-            BetterText(text="CHANGE THEME",textAlign=TextAlign.Center)
-        }
-        BetterButton(
-            onClick={onButtonClick(Screens.sLanguage)},
-            modifier=Modifier.height(100.dp).width(150.dp) .align(Alignment.CenterHorizontally).padding(vertical=15.dp)
-        ){
-            BetterText(text="CHANGE LANGUAGE",textAlign=TextAlign.Center)
-        }
-        BetterButton(
-            onClick={Utils.toggleStealthMode(context)},
-            modifier=Modifier.height(100.dp).width(150.dp).align(Alignment.CenterHorizontally).padding(vertical=15.dp)
-        ){
-            BetterText(text="TOGGLE STEALTH MODE",textAlign=TextAlign.Center)
-        }
-    }
-
-
-}
-
-
-//TODO:
-// 1 FIX PASSWORD ERRORS NOT SHOWING!
-// 2. ADD RECOVERY WHEN FORGOT PASSWORD
-// 4. SOCIALS/CREDITS TAB
-//: TODO FROM OLD ACTIVITIES: home_fragment/cycles
-
 
 @Composable
 fun WelcomeScreen(onNavigate:(String)->Unit){
@@ -414,3 +249,239 @@ fun WelcomeScreen(onNavigate:(String)->Unit){
         )
     }
 }
+//endregion
+@Composable
+fun HomeScreen(){
+    val context=LocalContext.current
+    val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
+    Utils.setLanguage(context)
+
+    Utils.autoAddCycleDayData(context)
+
+    val cycles=DBUtils.getCyclesDataDate(context,"2025-03-01")
+    var periodCycle=CyclesDateCycle("",false,0,0,0)
+    var testosteroneCycle=CyclesDateCycle("",false,0,0,1)
+    var birthControlCycle=CyclesDateCycle("",false,0,0,2)
+
+    val theme=sharedPrefs.getString("theme","Black")
+    val firstTDate=sharedPrefs.getString(key_firstTestosteroneDate,"")
+    val periodRegular=sharedPrefs.getBoolean(key_isPeriodRegular,false)
+    val isOnT=sharedPrefs.getBoolean(key_isTakingTestosterone,false)
+    val isPlanningT=sharedPrefs.getBoolean(key_isPlanningToTakeTestosterone,false)
+
+    val timeOnT=if(!firstTDate.isNullOrEmpty()) TimeUtils.timeSinceDate(firstTDate) else MilestoneDate(0,0,TIMEUNIT.ERROR)
+
+
+    Column(
+        modifier=
+        if(theme=="Pride") Modifier.paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
+        else Modifier.background(colorPrimary())
+            .fillMaxSize()
+    ){
+        BetterHeader("Home",fontSize="L")
+        cycles.forEach{
+            when(it.cycleType){
+                0->periodCycle=it
+                1->testosteroneCycle=it
+                2->birthControlCycle=it
+            }
+        }
+        if(isOnT){
+            if(timeOnT.timeUnit!=TIMEUNIT.ERROR){
+                val today=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(Calendar.getInstance().time)
+                val daysLeft=testosteroneCycle.correctLength-testosteroneCycle.cycleDay
+                val temp=TimeUtils.longDateFromString(TimeUtils.addDateString(today,daysLeft))
+                BetterHeader("You're on T since: "+timeOnT.amount.toString()+" "+timeOnT.timeUnit,fontSize="M")
+                if(testosteroneCycle.cycleDay-testosteroneCycle.correctLength-1==0)
+                    BetterText("time for your dose", fontSize=28.sp)
+                else if(testosteroneCycle.cycleDay-testosteroneCycle.correctLength-1>0)
+                    BetterText("you forgot your dose!", fontSize=24.sp)
+                else
+                    BetterText("next dose in: "+(testosteroneCycle.correctLength-testosteroneCycle.cycleDay)+" days - "+temp,fontSize=24.sp) //TODO!!!
+                //todo: button to start
+                if(daysLeft<2&&daysLeft<testosteroneCycle.correctLength/10){ //for nebido, 12weeks->8.4days etc
+                    BetterButton(onClick={}){
+                        BetterText("Taking dose")
+                    }
+                }
+            }
+            Log.v("period regular",periodRegular.toString())
+            if(!periodRegular)
+                BetterText("congrats, your last period was: "+periodCycle.cycleDay+" days ago!",fontSize=24.sp)
+            else if(periodCycle.cycleDay-periodCycle.correctLength-1>5)
+                BetterText("time to mark period as irregular already?")
+        }
+
+        else if(isPlanningT){
+            val rnd=(0..9).random()
+            if(rnd==0){
+                BetterText("Starting T soon? Go to settings")
+                //todo: button? idk
+            }
+        }
+        //not on T:
+        else if(periodRegular&&periodCycle.cycleDay-periodCycle.correctLength-1>5)
+            BetterText("your period didn't start...")
+
+        BetterHeader("Binder",fontSize="L")
+        Row(modifier=Modifier.fillMaxSize().padding(top=20.dp),Arrangement.Center){
+            CountdownTimer(8,context)
+        }
+
+    }
+}
+
+
+
+data class DayColor(
+    val date:LocalDate,
+    val color:Color
+)
+@Composable
+fun CalendarScreen(){
+    val context=LocalContext.current
+    Utils.setLanguage(context)
+    val colors5=Utils.calculateIntermediateColors(colorMin(),colorMax(),5)
+    val colors10=Utils.calculateIntermediateColors(colorMin(),colorMax(),10)
+    val colors4=Utils.calculateIntermediateColors(colorMin(),colorMax(),4)
+    val colors3=Utils.calculateIntermediateColors(colorMin(),colorMax(),3)
+
+
+    val firstDate=DBUtils.getFirstMetricDate(context)
+    val months=if(!firstDate.isNullOrEmpty()) TimeUtils.monthsSinceFirstDate(firstDate) else 12
+
+
+    var expanded by remember{mutableStateOf(false)}
+    var menuText by remember{mutableStateOf("Average")}
+
+    val metrics=mutableListOf("Average","Overall Mood","Headache","Muscle/back pain",
+        "Skin condition", "Digestive issues","Sleep quality","Energy level","Mood swings",
+        "Bleeding","Cramps","Cravings")
+    if(DBUtils.hasDysphoria(context)) metrics.add(1,"Dysphoria")
+
+
+    val theme=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE).getString("theme","Black")
+
+    val data=DBUtils.getAllMoodData(context)
+    if(data.isNotEmpty()){
+    val dates=mutableListOf<DayColor>()
+    data.forEach{
+        val avg=Utils.avgFeel(context,it)
+        Log.v("avg for date: "+it.date,avg.toString())
+        val color=if(menuText=="Average") if(avg.toInt()==1) colors10[9] else colors10[floor((avg*10)).toInt()]
+        else if(menuText=="Overall Mood")if(it.overallMood!=null&&it.overallMood!=-1) colors5[it.overallMood] else colorPrimary()
+        else if(menuText=="Headache")if(it.headache!=null&&it.headache!=-1) colors5[4-it.headache] else colorPrimary()
+        else if(menuText=="Dysphoria")if(it.dysphoria!=null&&it.dysphoria!=-1) colors5[4-it.dysphoria] else colorPrimary()
+        else if(menuText=="Muscle/back pain")if(it.musclePain!=null&&it.musclePain!=-1) colors3[2-it.musclePain] else colorPrimary()
+
+        else if(menuText=="Skin condition")if(it.skinCondition!=null&&it.skinCondition!=-1) colors3[2-it.skinCondition] else colorPrimary()
+        else if(menuText=="Digestive issues")if(it.digestiveIssues!=null&&it.digestiveIssues!=-1) colors4[3-it.digestiveIssues] else colorPrimary()
+        else if(menuText=="Sleep quality")if(it.sleepQuality!=null&&it.sleepQuality!=-1) colors3[it.sleepQuality] else colorPrimary()
+        else if(menuText=="Energy level")if(it.energyLevel!=null&&it.energyLevel!=-1) colors5[it.energyLevel] else colorPrimary()
+
+        else if(menuText=="Mood swings")if(it.moodSwings!=null&&it.moodSwings!=-1) colors3[2-it.moodSwings] else colorPrimary()
+        else if(menuText=="Bleeding")if(it.bleeding!=null&&it.bleeding!=-1) colors5[4-it.bleeding] else colorPrimary()
+        else if(menuText=="Cramps")if(it.crampLevel!=null&&it.crampLevel!=-1) colors3[2-it.crampLevel] else colorPrimary()
+        else if(menuText=="Cravings")if(it.cravings!=null&&it.cravings!=-1) colors3[2-it.cravings] else colorPrimary()
+        else colorPrimary()
+
+        dates+=DayColor(TimeUtils.localDateString(it.date),color)
+    }
+
+    Column(
+        modifier=if(theme=="Pride")
+            Modifier.paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
+        else Modifier.background(colorPrimary())
+            .fillMaxSize()
+    ){
+        BetterButton(
+            modifier=Modifier.fillMaxWidth().padding(horizontal=10.dp,vertical=15.dp).height(50.dp).border(width=2.dp,color=colorTertiary()),
+            onClick={expanded=true},){
+            BetterText(text=menuText)
+            DropdownMenu(
+                expanded=expanded,
+                onDismissRequest={expanded=false},
+                modifier=Modifier.background(colorPrimary()).fillMaxWidth().padding(horizontal=10.dp).heightIn(max=250.dp)){
+                metrics.forEach{question->
+                    DropdownMenuItem(
+                        text={BetterText(text=question)},
+                        onClick={
+                            expanded=false
+                            menuText=question
+                        }
+                    )
+                    Divider(color=colorTertiary(),thickness=1.dp)
+                }
+            }
+        }
+        BetterHeader(text=menuText,fontSize="L",modifier=Modifier.fillMaxWidth().padding(top=16.dp,bottom=10.dp))
+        VerticalCalendar(
+            dayContent={date->
+                val backgroundColor=dates.find{it.date==date}?.color?:colorPrimary()
+                val dateInFuture=date.isAfter(LocalDate.now())
+                Box(modifier=Modifier.background(backgroundColor,CircleShape).aspectRatio(1f)
+                ){
+                    Column(verticalArrangement=Arrangement.Center,modifier=Modifier.fillMaxSize()){
+                        BetterText(text=date.dayOfMonth.toString(),fontSize=30.sp,modifier=Modifier.fillMaxWidth(),textAlign=TextAlign.Center,color=if(dateInFuture)colorTertiary() else colorSecondary())
+                    }
+                }
+            },
+            monthsQuantity=months
+        )
+    }
+    }
+    else{
+        LazyColumn(
+            modifier=if(theme=="Pride")
+                Modifier.paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
+            else Modifier.background(colorPrimary())
+                .fillMaxSize()
+            ){
+            item{
+                BetterHeader("No data to display in calendar yet")
+            }
+        }
+    }
+}
+
+@Composable
+fun AddScreen(){
+    Utils.setLanguage(LocalContext.current)
+    MetricsScreen()
+}
+
+@Composable
+fun SettingsScreen(onButtonClick:(String)->Unit){
+    val context=LocalContext.current
+    Utils.setLanguage(context)
+    Column(modifier=Modifier.background(colorPrimary()).fillMaxSize()){
+        BetterButton(
+            onClick={onButtonClick(Screens.sTheme)},
+            modifier=Modifier.height(100.dp).width(150.dp).align(Alignment.CenterHorizontally).padding(vertical=15.dp)
+        ){
+            BetterText(text="CHANGE THEME",textAlign=TextAlign.Center)
+        }
+        BetterButton(
+            onClick={onButtonClick(Screens.sLanguage)},
+            modifier=Modifier.height(100.dp).width(150.dp) .align(Alignment.CenterHorizontally).padding(vertical=15.dp)
+        ){
+            BetterText(text="CHANGE LANGUAGE",textAlign=TextAlign.Center)
+        }
+        BetterButton(
+            onClick={Utils.toggleStealthMode(context)},
+            modifier=Modifier.height(100.dp).width(150.dp).align(Alignment.CenterHorizontally).padding(vertical=15.dp)
+        ){
+            BetterText(text="TOGGLE STEALTH MODE",textAlign=TextAlign.Center)
+        }
+    }
+
+
+}
+
+
+//TODO:
+// 1 FIX PASSWORD ERRORS NOT SHOWING!
+// 2. ADD RECOVERY WHEN FORGOT PASSWORD
+// 4. SOCIALS/CREDITS TAB
+//: TODO FROM OLD ACTIVITIES: home_fragment/cycles
+

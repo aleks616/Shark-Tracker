@@ -32,7 +32,7 @@ object DBUtils{
         return result.get()
     }
 
-    fun addNewCycleType(context:Context,cycleName:String,correctInterval:Int,active:Boolean=true):String{
+    fun addNewCycleType(context:Context,cycleName:String,correctInterval:Int,active:Boolean=true,cycleType:Int=-1):String{
         cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
         var canInsert=true
         Thread{
@@ -43,7 +43,7 @@ object DBUtils{
                 }
             }
             if(canInsert)
-                cycleDao.addNewCycle(Cycles(0,cycleName,correctInterval,active))
+                cycleDao.addNewCycle(Cycles(0,cycleName,correctInterval,active,cycleType))
             else
                 Log.e("cycleData","cycle with name is already there")
 
@@ -90,7 +90,7 @@ object DBUtils{
     }
 
     fun getActiveCycles(context:Context):List<Cycles>{
-        var data=listOf(Cycles(0,"",0,false))
+        var data=listOf(Cycles(0,"",0,false,-1))
         cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
         val thread=Thread{
             data=cycleDao.getActiveCycleTypes()
@@ -105,7 +105,7 @@ object DBUtils{
         var data=listOf<CyclesDateCycle>()
         cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
         val thread=Thread{
-            data=cycleDao.getAllCyclesDataDate(date)
+            data=cycleDao.getAllActiveCyclesDataDate(date)
         }
         thread.start()
         thread.join()

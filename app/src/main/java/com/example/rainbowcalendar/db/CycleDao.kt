@@ -32,8 +32,11 @@ interface CycleDao {
     @Query("SELECT * FROM cycles WHERE isActive=1")
     fun getActiveCycleTypes():List<Cycles>
 
-    @Query("SELECT c.cycleName,c.isActive,d.cycleDay,c.correctLength FROM cycles c JOIN datecycle d ON c.cycleId=d.cycleId WHERE d.date=:date")
+    @Query("SELECT c.cycleName,c.isActive,d.cycleDay,c.correctLength,c.cycleType FROM cycles c JOIN datecycle d ON c.cycleId=d.cycleId WHERE d.date=:date")
     fun getAllCyclesDataDate(date:String):List<CyclesDateCycle>
+
+    @Query("SELECT c.cycleName,c.isActive,d.cycleDay,c.correctLength,c.cycleType FROM cycles c JOIN datecycle d ON c.cycleId=d.cycleId WHERE d.date=:date AND c.isActive=1")
+    fun getAllActiveCyclesDataDate(date:String):List<CyclesDateCycle>
 
     @Query("SELECT cycleId,date,cycleDay FROM datecycle WHERE cycleId=:cycleId ORDER BY date(date) DESC LIMIT 1")
     fun getLastCycleDay(cycleId:Int):DateCycle

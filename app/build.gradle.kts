@@ -110,7 +110,7 @@ dependencies {
     implementation("sh.calvin.reorderable:reorderable:2.4.3")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material:material:1.7.6")
-    implementation("androidx.compose.foundation:foundation:1.7.7")
+    implementation("androidx.compose.foundation:foundation:1.7.8")
     implementation("androidx.compose.animation:animation:1.5.4")
     implementation("com.github.commandiron:WheelPickerCompose:1.1.11")
     implementation("com.github.vsnappy1:ComposeDatePicker:2.2.0")

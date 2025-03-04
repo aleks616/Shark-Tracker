@@ -53,6 +53,8 @@ object Constants{
     const val key_averagePeriodCycleLength="cycleLength"
     /** bleeding days **/
     const val key_averagePeriodLength="periodLength"
+
+    const val key_isPeriodRegular="periodRegular"
     const val key_periodRemindersOn="periodRemindersOn"
     const val key_lastPeriodNotification="lastPeriodNotificationTime"
 

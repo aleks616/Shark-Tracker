@@ -77,7 +77,10 @@ data class Cycles(
     @ColumnInfo(name="correctLength")
     val correctLength:Int,
     @ColumnInfo(name="isActive")
-    val isActive:Boolean
+    val isActive:Boolean,
+    @ColumnInfo(name="cycleType")
+    /**0 period 1 testosterone 2 birth control **/
+    val cycleType:Int
 )
 
 @Entity(
@@ -102,5 +105,6 @@ data class CyclesDateCycle(
     val cycleName:String,
     val isActive:Boolean,
     val cycleDay:Int,
-    val correctLength:Int
+    val correctLength:Int,
+    val cycleType:Int
 )

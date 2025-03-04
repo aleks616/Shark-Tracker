@@ -9,7 +9,6 @@ import androidx.compose.ui.graphics.Color
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -59,7 +58,7 @@ object TimeUtils{
     }
 
 
-    fun isValidDate(date:String):Boolean{
+    private fun isValidDate(date:String):Boolean{
         return try{
             val formatter=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault())
             formatter.isLenient=false
@@ -85,7 +84,7 @@ object TimeUtils{
         return (2000..currentYear).contains(year)
     }
 
-    fun createDateFromIntegers(year:Int,month:Int,day:Int):String{
+    fun createStringDateFromIntegers(year:Int,month:Int,day:Int):String{
         return "%04d-%02d-%02d".format(year, month, day)
     }
 
@@ -117,12 +116,25 @@ object TimeUtils{
     }
 
     /**
+     * converts date in format yyyy-MM-dd to date in long format
+     * @param date this MUST be a string yyyy-MM-dd format
+     * @return long format date as string, eg. March 19, 2025
+     * @see addDateString
+     * **/
+    fun longDateFromString(date:String):String{
+        val dateFormat=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault())
+        val format=java.text.DateFormat.getDateInstance(java.text.DateFormat.LONG, Locale.getDefault())
+        return format.format(dateFormat.parse(date)!!)
+    }
+
+
+    /**
      * @param lastDoseDate yyyy-MM-dd of last testosterone dose
      * @param interval correct interval between T doses, in days
      * @see getDaysTillNextShot
      * @return date, (type Date) of next dose, can be in the past!, check that later when using the result
      */
-    fun getNextDoseDate(lastDoseDate:String,interval:Int):Date {
+    fun getNextDoseDate(lastDoseDate:String,interval:Int):Date{
         val dateFormat=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault())
         val lastDate=dateFormat.parse(lastDoseDate)!!
         return Date(lastDate.time+interval*3600*24*1000) //todo: if returned days is in the past show "overdue" and the old correct day and "today"

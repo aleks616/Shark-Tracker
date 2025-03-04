@@ -744,7 +744,7 @@ fun TOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
                                                 sharedPrefs.edit().putInt(Constants.key_currentTestosteroneInterval,testosteroneInterval.toInt()).apply()
                                                 sharedPrefs.edit().putBoolean(Constants.key_isMicrodosing,isMicrodosing).apply()
                                                 //todo: fix teststerone name not being selected option for dropdown menu (e.g "prol" instead of prolongatum)
-                                                DBUtils.addNewCycleType(context,testosteroneName,testosteroneInterval.toInt(),true)
+                                                DBUtils.addNewCycleType(context,testosteroneName,testosteroneInterval.toInt(),true,1)
 
                                                 if(firstDoseSelectedDate.isNotEmpty()){
                                                     sharedPrefs.edit().putString(Constants.key_firstTestosteroneDate,firstDoseSelectedDate).apply()
@@ -1041,7 +1041,7 @@ fun PeriodOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
                 if(Utils.canBeIntParsed(cycleLengthValue)){
                     errorText=""
                     sharedPrefs.edit().putInt(Constants.key_averagePeriodCycleLength,cycleLengthValue.toInt()).apply()
-                    DBUtils.addNewCycleType(context=context, cycleName="period",correctInterval=cycleLengthValue.toInt(),active=true)
+                    DBUtils.addNewCycleType(context=context, cycleName="period",correctInterval=cycleLengthValue.toInt(),active=true,0)
 
                     cycleDates2.forEachIndexed{index,cycle->
                         Log.i("newDateCycleDebug",cycle[2]+"-"+cycle[1]+"-"+cycle[0])
@@ -1050,8 +1050,8 @@ fun PeriodOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
                                 //Log.i("newDateCycleDebug",index.toString())
                                 if(index>0){
                                     //Log.i("newDateCycleDebug","here3")
-                                    val indexDate=TimeUtils.createDateFromIntegers(cycle[2].toInt(),cycle[1].toInt(),cycle[0].toInt())
-                                    val previousDate=TimeUtils.createDateFromIntegers(cycleDates2[index-1][2].toInt(),cycleDates2[index-1][1].toInt(),cycleDates2[index-1][0].toInt())
+                                    val indexDate=TimeUtils.createStringDateFromIntegers(cycle[2].toInt(),cycle[1].toInt(),cycle[0].toInt())
+                                    val previousDate=TimeUtils.createStringDateFromIntegers(cycleDates2[index-1][2].toInt(),cycleDates2[index-1][1].toInt(),cycleDates2[index-1][0].toInt())
                                     if(TimeUtils.isDate1AfterDate2(indexDate,previousDate)){
                                         errorText=datesNotDescendingError
                                         //Log.i("newDateCycleDebugDates","date: $previousDate previous date: $indexDate")
@@ -1059,7 +1059,7 @@ fun PeriodOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
                                 }
                                 if(errorText!=datesNotDescendingError){
                                     //else{
-                                    val indexDate=TimeUtils.createDateFromIntegers(cycle[2].toInt(),cycle[1].toInt(),cycle[0].toInt())
+                                    val indexDate=TimeUtils.createStringDateFromIntegers(cycle[2].toInt(),cycle[1].toInt(),cycle[0].toInt())
                                     errorText=""
                                     //Log.i("newDateCycleDebug","here4")
                                     //TODO: PUT OTHER DAYS OF CYCLES TO DB (now only 0s gets inserted)
@@ -1075,7 +1075,7 @@ fun PeriodOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
                                                 val isDateError=errorText!=datesNotDescendingError&&errorText!=notNumberDatesError&&errorText!=invalidDatesError
                                                 if(Utils.canBeIntParsed(remindXDaysBeforePeriod)&&!isDateError){
                                                     errorText=""
-                                                    val lastDate=TimeUtils.createDateFromIntegers(cycleDates2[0][2].toInt(),cycleDates2[0][1].toInt(),cycleDates2[0][0].toInt())
+                                                    val lastDate=TimeUtils.createStringDateFromIntegers(cycleDates2[0][2].toInt(),cycleDates2[0][1].toInt(),cycleDates2[0][0].toInt())
                                                     val nextDoseDate=TimeUtils.getNextDoseDate(lastDate,cycleLengthValue.toInt())
                                                     //todo: ADD REMINDERS at [nextDoseDate] !!!
                                                 }
@@ -1093,6 +1093,7 @@ fun PeriodOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
                                             amountOfCyclesToEnter=0
                                             cycleDates2=listOf(arrayOf("","",""))
                                             sharedPrefs.edit().putBoolean(Constants.key_isPeriodMenuComplete,true).apply()
+                                            sharedPrefs.edit().putBoolean(Constants.key_isPeriodRegular,periodRegular).apply()
                                             onNavigate(Screens.sContraceptiveOptions)
                                         }
                                         else{//cycle type not created
@@ -1101,6 +1102,7 @@ fun PeriodOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
                                             amountOfCyclesToEnter=0
                                             cycleDates2=listOf(arrayOf("","",""))
                                             sharedPrefs.edit().putBoolean(Constants.key_isPeriodMenuComplete,true).apply()
+                                            sharedPrefs.edit().putBoolean(Constants.key_isPeriodRegular,periodRegular).apply()
                                             onNavigate(Screens.sContraceptiveOptions)
                                         }
                                     }
@@ -1312,7 +1314,7 @@ fun ContraceptiveOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?=null
                                             errorText=""
                                             errorText=""
                                             sharedPrefs.edit().putInt(Constants.key_bcContraceptiveInterval,contraceptiveInterval.toInt()).apply()
-                                            DBUtils.addNewCycleType(context,contraceptiveName,contraceptiveInterval.toInt(),true)
+                                            DBUtils.addNewCycleType(context,contraceptiveName,contraceptiveInterval.toInt(),true,2)
 
                                             errorText="Wait..."
                                             Thread.sleep(1000)
