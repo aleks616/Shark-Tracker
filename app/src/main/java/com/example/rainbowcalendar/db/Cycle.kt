@@ -12,9 +12,6 @@ data class Cycle(
     @ColumnInfo(name="date")
     val date:String,
 
-/*    @ColumnInfo(name="cycleDay")
-    val cycleDay:Int?=null,*/
-
     @ColumnInfo(name="crampLevel")
     val crampLevel:Int?=null,
 
@@ -80,7 +77,10 @@ data class Cycles(
     @ColumnInfo(name="correctLength")
     val correctLength:Int,
     @ColumnInfo(name="isActive")
-    val isActive:Boolean
+    val isActive:Boolean,
+    @ColumnInfo(name="cycleType")
+    /**0 period 1 testosterone 2 birth control **/
+    val cycleType:Int
 )
 
 @Entity(
@@ -99,4 +99,27 @@ data class DateCycle(
     val date:String,
     val cycleId:Int,
     val cycleDay:Int
+)
+
+data class CyclesDateCycle(
+    val cycleName:String,
+    val isActive:Boolean,
+    val cycleDay:Int,
+    val correctLength:Int,
+    val cycleType:Int
+)
+
+data class CyclesDateCyclePartial(
+    val cycleName:String,
+    val isActive:Boolean,
+    val correctLength:Int,
+    val cycleType:Int
+)
+
+data class OldCycleData(
+    val cycleId:Int,
+    val cycleType:Int,
+    val cycleName:String, //TODO: BREAKS IN TAKING!!! (taking version a, then version b, then version a again and then version c, should treat 2 a's as different)
+    val firstDate:String,
+    val lastDate:String
 )

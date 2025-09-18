@@ -190,9 +190,10 @@ fun ThemesSettings(onNavigate:(String)->Unit,thisScreen:String?){
     val themeRow=themes.chunked(2)
     LazyColumn(modifier=Modifier.fillMaxWidth().background(colorPrimary())
     ){
+        val setupComplete=sharedPrefs.getBoolean(Constants.key_isSetupDone,false)
         val prevScreen=Utils.getPreviousScreen(thisScreen,context)
         val previousKey=Utils.previousScreenKey(prevScreen)
-        if(thisScreen!=null&&previousKey!=""){
+        if(thisScreen!=null&&previousKey!=""&&!setupComplete){
             if(previousKey==Constants.key_gender)
                 item{GoBackButtonRow(onClick={sharedPrefs.edit().putInt(Utils.previousScreenKey(prevScreen),0).apply();onNavigate(prevScreen)})}
             else

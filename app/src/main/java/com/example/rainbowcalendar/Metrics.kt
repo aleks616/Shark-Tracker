@@ -298,11 +298,11 @@ fun MetricsScreen(){
 
     var showDialog by remember{mutableStateOf(false)}
     val datePickerState=rememberDatePickerState(
-        selectableDates=Utils.MetricsSelectableDates,
+        selectableDates=TimeUtils.MetricsSelectableDates,
         initialSelectedDateMillis=System.currentTimeMillis()
     )
     val selectedDate=datePickerState.selectedDateMillis?.let{
-        Utils.convertMillisToDate(it)
+        TimeUtils.convertMillisToDate(it)
     }?:""
 
 
@@ -772,7 +772,7 @@ fun MetricReorderView(metricRows:MutableState<List<MetricRowData>>,onOrderChange
                                 errorMessage="Custom names have to be unique, and can't be empty."
                         }
                     ){
-                        BetterText(text="save")
+                        BetterText(text="save",fontSize=16.sp)
                     }
                 }
             }
