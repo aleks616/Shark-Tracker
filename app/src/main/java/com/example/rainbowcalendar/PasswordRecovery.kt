@@ -666,14 +666,14 @@ fun RecoveryScreen(onNavigate:(String)->Unit){
                     onClick={menuExpanded=menuExpanded.copyOf().apply{this[field]=true}},
                     colors=ButtonDefaults.buttonColors(backgroundColor=colorPrimary()),
                 ){
-                    BetterText(text=menuText[field])
+                    BetterText(text=menuText[field],fontSize=16.sp)
                     DropdownMenu(
                         expanded=menuExpanded[field],
                         onDismissRequest={menuExpanded[field]=false},
                         modifier=Modifier.background(colorPrimary()).fillMaxWidth().padding(horizontal=10.dp),){
                         questionsOptions.forEach{question->
                             DropdownMenuItem(
-                                text={BetterText(text=question)},
+                                text={BetterText(text=question,fontSize=16.sp)},
                                 onClick={
                                     menuExpanded=menuExpanded.copyOf().apply{this[field]=false}
                                     menuText=menuText.copyOf().apply{this[field]=question}
@@ -707,6 +707,7 @@ fun RecoveryScreen(onNavigate:(String)->Unit){
                     BetterText(
                         text=if(recoverySet) enterAnswer else menuText[field],
                         modifier=Modifier.fillMaxWidth(),
+                        fontSize=16.sp
                     )},
                 maxLines=1,
                 keyboardOptions=KeyboardOptions.Default.copy(imeAction=ImeAction.Done)

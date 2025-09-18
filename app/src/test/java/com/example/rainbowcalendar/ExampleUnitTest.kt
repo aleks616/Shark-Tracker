@@ -1,5 +1,7 @@
 package com.example.rainbowcalendar
 
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.core.IsNot.not
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -79,6 +81,17 @@ class UtilsUniTest{
         }
 
         @TestFactory
+        fun musclesStateToImages_works_for_all_correct_values()=(-1..4).map{
+            //for(i in -1..4){
+                DynamicTest.dynamicTest("test for red=$it and yellow=$1 is ${Utils.musclesStateToImages(it,1)}"){
+                    val result=Utils.musclesStateToImages(it,1)
+                    assertThat(result[0],not(-1))
+                    //assertThat(result[1],not(-1))
+                }
+            //}
+        }
+
+        @TestFactory
         fun timeSinceDate_works_for_all_values_that_should_return_days()=(1..35).map{day->
             DynamicTest.dynamicTest("Test for day $day"){
                 val date=LocalDate.of(today.year,today.month,today.dayOfMonth).minusDays(day-0L).toString()
@@ -139,6 +152,8 @@ class UtilsUniTest{
             val expectedResult=MilestoneDate(-1,-1,TIMEUNIT.ERROR)
             Assertions.assertEquals(expectedResult,result)
         }
+
+
 
     }
 }

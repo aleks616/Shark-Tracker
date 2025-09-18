@@ -1,5 +1,4 @@
 package com.example.rainbowcalendar
-
 import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -7,18 +6,24 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.graphics.Path
+import android.graphics.RectF
+import android.graphics.Region
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.core.app.NotificationCompat
+import androidx.core.graphics.PathParser
 import com.example.rainbowcalendar.db.Cycle
-import com.example.rainbowcalendar.db.CycleRoomDatabase
 import com.example.rainbowcalendar.db.DBUtils
-import com.example.rainbowcalendar.db.DateCycle
 import com.google.gson.Gson
+import java.lang.Math.abs
+import java.lang.Math.sqrt
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+
+
 
 object Utils{
     fun avgFeel(context:Context,date:Cycle):Float{
@@ -73,48 +78,6 @@ object Utils{
 
         return score/max.toFloat()
     }
-    fun autoAddCycleDayData(context:Context/*,date:String*/){
-        cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
-        val activeCycles=DBUtils.getActiveCycles(context)
-        val lastCycle=mutableListOf<DateCycle>()
-        val today=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(Calendar.getInstance().time)
-
-        activeCycles.forEach{
-            val thread=Thread{
-                lastCycle+=cycleDao.getLastCycleDay(it.cycleId)
-            }
-            thread.start()
-            thread.join()
-
-            Log.v("data","cycleId: "+it.cycleId.toString()+" cycleName: "+it.cycleName+" lastDate: "+lastCycle[lastCycle.size-1].date+"  lastDay: "+lastCycle[lastCycle.size-1].cycleDay)
-
-            var date=lastCycle[lastCycle.size-1].date
-            var cycleDay=lastCycle[lastCycle.size-1].cycleDay
-            while(TimeUtils.isDate1AfterDate2(today,date)){
-                if(!DBUtils.doesDateExistForCycleId(context,date,it.cycleId))
-                    DBUtils.addNewDateCycle(context,DateCycle(date,it.cycleId,cycleDay))
-
-                cycleDay++
-                date=TimeUtils.iterateDateString(date)
-            }
-        }
-    }
-    //todo: i started writing it and then forgot why
-    /*fun lastCycleStart(context:Context,cycleName:String):DateCycle{
-        cycleDao=CycleRoomDatabase.getDatabase(context).cycleDao()
-        var lastCycle=DateCycle("",0,0)
-        var cycleId:Int
-        val thread=Thread{
-            cycleId=cycleDao.getCycleIdByName(cycleName)
-            lastCycle=cycleDao.getLastCycleDay(cycleId)
-        }
-        thread.start()
-        thread.join()
-        Log.v("last cycle start","cycleName: "+cycleName+" lastDate: "+lastCycle.date+"  lastDay: "+lastCycle.cycleDay)
-        return lastCycle
-    }*/
-
-
     fun setStartMetricsOrder(context:Context,gender:Int){
         val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
         val femaleMetrics=listOf(
@@ -161,6 +124,107 @@ object Utils{
         val metrics2Json=gson.toJson(metricPersistence2List)
         sharedPrefs.edit().putString("metricsOrder2", metrics2Json).putBoolean(Constants.metricsSetUp,true).apply()
     }
+
+    /**
+     * doesn't take into account years 2400 2800 and so on
+     * @param month 1-12
+     * @param year by default 2025
+     * @return how many days month has
+     * **/
+    private fun maxMonthDay(year:Int=2025,month:Int):Int{
+        if(!(1..12).contains(month)) return 0
+
+        val days31=listOf(1,3,5,7,8,10,12)
+        val days30=listOf(4,6,8,11)
+        return if(days31.contains(month)) 31 else if(days30.contains(month)) 30 else if(year%4==0) 29 else 28
+    }
+
+    fun showLogChanges(firstTDate:String):Boolean{
+        val today=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(Calendar.getInstance().time)
+        val todayInt=TimeUtils.intDateFromStringDate(today)
+        val firstTInt=TimeUtils.intDateFromStringDate(firstTDate)
+        val tDay=TimeUtils.dateDiffString(firstTDate,today)
+
+        val fullMonths=(todayInt[2]==firstTInt[2]) /**same month day, eg 2025-02-04 and 2025-03-04**/
+                ||((maxMonthDay(todayInt[0],todayInt[1])<maxMonthDay(firstTInt[0],firstTInt[1]))&&todayInt[2]==maxMonthDay(todayInt[0],todayInt[1]))
+
+        val halfYears=fullMonths&&(kotlin.math.abs(todayInt[1]-firstTInt[1])==6)
+        val fullYears=fullMonths&&(todayInt[1]==firstTInt[1])
+
+
+        return ((tDay<=35&&tDay%7==0) /**every week till day 35/week 5**/
+                ||(tDay<366&&fullMonths) /**every month till year**/
+                ||tDay<1300&&halfYears /**1300 is between 3.5 and 4 years, last half year will be 3.5 **/
+                ||fullYears) /**every year**/
+    }
+
+
+
+    fun calcAverageCycleLength(context:Context,cycleId:Int,storedValue:Int):Int{
+        val data=DBUtils.getCycleLengthData(context,cycleId).reversed()
+        val correctData=mutableListOf<Int?>()
+        data.forEach{
+            if((18..42).contains(it)) correctData+=it
+        }
+        val size=(correctData.size).coerceAtMost(20)
+
+        //Log.v("calculating","size: "+size.toString())
+
+        var result=0
+        correctData.forEachIndexed{i,it->
+            if(it!=null){
+              //Log.v("calculating","data[$i]: "+it.toString())
+                //((2*size)-i)
+              //Log.v("calculating","weight for data[$i]: "+((2*size)-i).toString())
+              result+=it*((2*size)-i)
+              //Log.v("calculating","multipled for [$i]: "+(it*((2*size)-i)).toString())
+            }
+        }
+        //Log.v("calculating","partial result: "+result.toString())
+
+        val dSize=size.toDouble()
+
+        val partialWeightSum:Double=((3*dSize*dSize)+dSize)/2
+        //Log.d("calculating","partial weight sum: "+partialWeightSum.toString())
+        val avgWeight:Double=partialWeightSum/dSize
+        //Log.v("calculating","avg weight: "+avgWeight.toString())
+
+        val storedWeight:Double=avgWeight*(3/kotlin.math.sqrt(dSize))
+        //Log.d("calculating","stored weight: "+storedWeight.toString())
+        val weightSum=partialWeightSum+storedWeight
+        //Log.v("calculating","full weight sum: "+weightSum.toString())
+
+        val storedMultiplied=storedValue.toDouble()*storedWeight
+        //Log.d("calculating","multiplied valuie for stored value: "+storedMultiplied.toString())
+        result+=storedMultiplied.toInt()
+        //Log.v("calculating","final sum: "+result.toString())
+
+        return (result.toDouble()/weightSum).toInt()
+    }
+
+    fun getPeriodPhase(cycleDay:Int,expectedLength:Double,bleedingDays:Int):String{
+        Log.i("phase","bleeding days $bleedingDays cycle day $cycleDay expected length $expectedLength")
+        return if(bleedingDays>cycleDay) "MENstruation" else if(cycleDay-1<expectedLength/2) "Follicular"
+        else if(cycleDay-1<expectedLength*0.6f) "Ovulation" else "Luteal"
+    }
+
+    //region localization logic
+    /**
+     * @param lang language code, e.g. "pl"
+     * @param gender only these options are valid: m,f,n
+     * @return empty if gender wasn't valid
+     * **/
+    fun getStringGender(context:Context,resId:Int,lang:String,gender:String):String{
+        val config=Configuration(context.resources.configuration)
+        return if(listOf("m","n","n").contains(gender)){
+            config.setLocale(Locale(lang,gender))
+            val genderedContext=context.createConfigurationContext(config)
+            genderedContext.getString(resId)
+        }
+        else ""
+    }
+
+    //endregion
 
     //region general android logic
     fun previousScreenKey(previousScreen:String?):String{
@@ -210,21 +274,6 @@ object Utils{
         return previousScreen
     }
 
-    /**
-     * @param lang language code, e.g. "pl"
-     * @param gender only these options are valid: m,f,n
-     * @return empty if gender wasn't valid
-     * **/
-    fun getStringGender(context:Context,resId:Int,lang:String,gender:String):String{
-        val config=Configuration(context.resources.configuration)
-        return if(listOf("m","n","n").contains(gender)){
-            config.setLocale(Locale(lang,gender))
-            val genderedContext=context.createConfigurationContext(config)
-            genderedContext.getString(resId)
-        }
-        else ""
-    }
-
     fun calculateIntermediateColors(colorMin:Color,colorMax:Color,numberOfColors:Int):MutableList<Color>{
         val colors=mutableListOf<Color>()
         for(i in 0 until numberOfColors) {
@@ -236,9 +285,36 @@ object Utils{
         }
         return colors
     }
+
+    fun arePathsTheSame(path:Path,pathData:String):Boolean{
+        val targetPath=PathParser.createPathFromPathData(pathData)
+        val bounds=RectF()
+        path.computeBounds(bounds,true)
+        val targetBounds=RectF()
+        targetPath.computeBounds(targetBounds,true)
+        if(bounds!=targetBounds)return false
+        val region=Region()
+        region.setPath(path,Region(
+            bounds.left.toInt(),
+            bounds.top.toInt(),
+            bounds.right.toInt(),
+            bounds.bottom.toInt()
+        ))
+        val targetRegion=Region()
+        targetRegion.setPath(targetPath,Region(
+            targetBounds.left.toInt(),
+            targetBounds.top.toInt(),
+            targetBounds.right.toInt(),
+            targetBounds.bottom.toInt()
+        ))
+        return region.bounds==targetRegion.bounds
+    }
     //endregion
 
     //region general logic
+    fun capitalize(text:String):String{
+        return text.lowercase().replaceFirstChar{it.uppercase()}
+    }
     fun canBeIntParsed(text:String):Boolean{
         if(text.isNotEmpty()){
             return text.all{it.isDigit()}
@@ -422,6 +498,132 @@ object Utils{
         val notificationManager=context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
     }
+
+    //endregion
+
+    //region shot site management
+
+    /**
+     * @param red, which shot spot is red
+     * @param yellow, which shot spot is yellow
+     * ids: 0-left abdomen 1-right abdomen, 2-left thigh, 3-right thigh, 4-left buttock, 5-right buttock
+     * -1 means none are red/yellow
+     * @return drawable ids of FRONT of body and BACK of body, or -1 if params are incorrect
+     *
+     * red=0, yellow=-1, function returns (R.drawable.body_left_abdomen_red,R.drawable.body_back green)
+     * **/
+    fun musclesStateToImages(red:Int,yellow:Int):Array<Int>{
+        if(!(-1..5).contains(red)||!(-1..5).contains(yellow)) return arrayOf(-1)
+
+        var front:Int=-1
+        var back:Int=-1
+        if((4..5).contains(red)||(4..5).contains(yellow)){
+            if(red==4&&yellow==5)return arrayOf(R.drawable.body_front_green,R.drawable.body_left_butt_red_right_butt_yellow)
+            else if(red==5&&yellow==4)return arrayOf(R.drawable.body_front_green,R.drawable.body_right_butt_red_left_butt_yellow)
+
+            else if(red==4) back=R.drawable.body_left_butt_red /**at least one front part is non-green**/
+            else if(yellow==4) back=R.drawable.body_left_butt_yellow
+            else if(red==5) back=R.drawable.body_right_butt_red
+            else if(yellow==5) back=R.drawable.body_right_butt_yellow
+
+            /**back isn't all green so FRONT HAS ONE non green element**/
+            if(-1==red) front=R.drawable.body_front_green
+            else if(-1==yellow) front=R.drawable.body_front_green
+            if(0==red) front=R.drawable.body_left_abdomen_red
+            else if(0==yellow) front=R.drawable.body_left_abdomen_yellow
+            if(1==red) front=R.drawable.body_right_abdomen_red
+            else if(1==yellow) front=R.drawable.body_right_abdomen_yellow
+            if(2==red) front=R.drawable.body_left_thigh_red
+            else if(2==yellow) front=R.drawable.body_left_thigh_yellow
+            if(3==red) front=R.drawable.body_right_thigh_red
+            else if(3==yellow) front=R.drawable.body_right_thigh_yellow
+
+            if(front!=-1&&back!=-1)return arrayOf(front,back)
+        }
+        else{
+            back=R.drawable.body_back_green
+        }
+        /**2 FRONT ITEMS ARE RED/YELLOW, 0-3**/
+        if(red==0){
+            when(yellow){
+                1->front=R.drawable.body_left_abdomen_red_right_abdomen_yellow
+                2->front=R.drawable.body_left_abdomen_red_left_thigh_yellow
+                3->front=R.drawable.body_left_abdomen_red_right_thigh_yellow
+                -1->front=R.drawable.body_left_abdomen_red
+            }
+        }
+        else if(red==1){
+            when(yellow){
+                0->front=R.drawable.body_right_abdomen_red_left_abdomen_yellow
+                2->front=R.drawable.body_right_abdomen_red_left_thigh_yellow
+                3->front=R.drawable.body_right_abdomen_red_right_thigh_yellow
+                -1->front=R.drawable.body_right_abdomen_red
+            }
+        }
+        else if(red==2){
+            when(yellow){
+                0->front=R.drawable.body_left_thigh_red_left_abdomen_yellow
+                1->front=R.drawable.body_left_thigh_red_right_abdomen_yellow
+                3->front=R.drawable.body_left_thigh_red_right_thigh_yellow
+                -1->front=R.drawable.body_left_thigh_red
+            }
+        }
+        else if(red==3){
+            when(yellow){
+                0->front=R.drawable.body_right_thigh_red_left_abdomen_yellow
+                1->front=R.drawable.body_right_thigh_red_right_abdomen_yellow
+                2->front=R.drawable.body_right_thigh_red_left_thigh_yellow
+                -1->front=R.drawable.body_left_thigh_red
+            }
+        }
+        else if(red==-1){
+            when(yellow){
+                0->front=R.drawable.body_left_abdomen_yellow
+                1->front=R.drawable.body_right_abdomen_yellow
+                2->front=R.drawable.body_left_thigh_yellow
+                3->front=R.drawable.body_right_thigh_yellow
+                -1->front=R.drawable.body_front_green
+            }
+        }
+        /*if(front!=-1)*/ return arrayOf(front,back)
+
+
+
+
+        //return arrayOf(R.drawable.body_front_green,R.drawable.body_back_green)
+    }
+
+    /**
+     * @param shotIn 0 left abdomen 1 right abdomen, 2 left thigh 3 right thigh, 4 left buttock, 5 right buttock
+     * **/
+    fun saveShotOrder(context:Context,shotIn:Int){
+        if((0..5).contains(shotIn)){
+            val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
+            val shotHistory=sharedPrefs.getString("shotOrderHistory","")!!
+            val toSave=if(shotHistory.isNotEmpty()) "$shotHistory;$shotIn" else shotIn.toString()
+            //Log.v("saving muscle",toSave)
+            sharedPrefs.edit().putString("shotOrderHistory",toSave).apply()
+        }
+    }
+
+    fun readShotOrder(context:Context):List<String>{
+        val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
+        val shotHistory=sharedPrefs.getString("shotOrderHistory","")!!
+        //Log.v("muscle shot history",shotHistory)
+        return shotHistory.split(";")
+    }
+
+    /**
+     * @return pair, first is muscle id for red, second is muscle id for yellow
+     * **/
+    fun getMuscleStates(context:Context):Pair<Int,Int>{
+        val shotOrder=readShotOrder(context)
+        //Log.v("muscle",shotOrder)
+        return if(shotOrder.isEmpty()||shotOrder[0]=="") Pair(-1,-1)
+        else if(shotOrder.size==1) Pair(shotOrder[0].toInt(),-1)
+        else Pair(shotOrder[shotOrder.size-1].toInt(),shotOrder[shotOrder.size-2].toInt())
+    }
+
 
     //endregion
 }

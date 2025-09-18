@@ -12,6 +12,8 @@ import java.time.LocalDate
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlin.math.abs
+
 enum class TIMEUNIT{
     ERROR,
     DAYS,
@@ -57,8 +59,18 @@ object TimeUtils{
         return formatter.format(Date(millis))
     }
 
+    /**
+     * converts valid date yyyy-mm-dd to array of ints
+     * @param date has to be yyyy-mm-dd
+     * @return arrayOf(year,month,day) integers
+     *  **/
+    fun intDateFromStringDate(date:String):Array<Int>{
+        val parts=date.split("-")
+        return arrayOf(parts[0].toInt(),parts[1].toInt(),parts[2].toInt())
+    }
 
-    private fun isValidDate(date:String):Boolean{
+
+    fun isValidDate(date:String):Boolean{
         return try{
             val formatter=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault())
             formatter.isLenient=false
@@ -102,17 +114,6 @@ object TimeUtils{
     fun isDate1AfterOrSameAsDate2(date1:String,date2:String):Boolean{
         val format=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault())
         return !format.parse(date1)!!.before(format.parse(date2))
-    }
-
-    fun smartLastPeriodDate(date:String):String{
-        if(!isValidDate(date)) return "1970-01-01"
-
-        val dateFormat=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault())
-        val lastDate=dateFormat.parse(date)!!
-        val beforeDate=lastDate.time-28*24*3600*1000L
-
-        return dateFormat.format(Date(beforeDate))
-        //return "0000-00-00"
     }
 
     /**
@@ -168,6 +169,18 @@ object TimeUtils{
         val resultDate=date.time+days*86400000
 
         return dateFormat.format(Date(resultDate))
+    }
+
+    /**
+     *
+     * **/
+    fun dateDiffString(date1:String,date2:String):Int{
+        val dateFormat=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault())
+        val date1Date=dateFormat.parse(date1)!!
+        val date2Date=dateFormat.parse(date2)!!
+        val result=date2Date.time-date1Date.time
+
+        return abs((result/86400000).toInt())
     }
 
 

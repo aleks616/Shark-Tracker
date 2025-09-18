@@ -6,6 +6,8 @@
         <item name="colorQuaternary">@color/gray2A</item>
         <item name="itemTextColor">@color/gray2A</item>
         <item name="colorOutline">@color/black</item>
+        <!-- colorQuaternary and itemTextColor MUST be the same-->
+        <item name="colorError">@color/red</item>
 
         <!--these are for calendar view!-->
         <item name="colorPrimaryVariant">@color/colorMin</item>
@@ -19,7 +21,10 @@
         <item name="colorQuaternary">@color/white</item>
         <item name="itemTextColor">@color/white</item>
         <item name="colorOutline">@color/black</item>
+        <!-- colorQuaternary and itemTextColor MUST be the same-->
+        <item name="colorError">@color/red</item>
 
+        <!--these are for calendar view!-->
         <item name="colorPrimaryVariant">@color/colorMin</item>
         <item name="colorSecondaryVariant">@color/colorMax</item>
     </style>
@@ -32,7 +37,10 @@
         <item name="colorQuaternary">@color/very_dark_gray</item>
         <item name="itemTextColor">@color/very_dark_gray</item>
         <item name="colorOutline">@color/black</item>
+        <!-- colorQuaternary and itemTextColor MUST be the same-->
+        <item name="colorError">@color/red</item>
 
+        <!--these are for calendar view!-->
         <item name="colorPrimaryVariant">@color/colorMin</item>
         <item name="colorSecondaryVariant">@color/colorMax</item>
     </style>
@@ -45,7 +53,10 @@
         <item name="colorQuaternary">@color/grayE3</item>
         <item name="itemTextColor">@color/grayE3</item>
         <item name="colorOutline">@color/black</item>
+        <!-- colorQuaternary and itemTextColor MUST be the same-->
+        <item name="colorError">@color/red</item>
 
+        <!--these are for calendar view!-->
         <item name="colorPrimaryVariant">@color/colorMin</item>
         <item name="colorSecondaryVariant">@color/colorMax</item>
     </style>
@@ -57,7 +68,10 @@
         <item name="colorQuaternary">@color/dark_eclipse</item>
         <item name="itemTextColor">@color/dark_eclipse</item>
         <item name="colorOutline">@color/black</item>
+        <!-- colorQuaternary and itemTextColor MUST be the same-->
+        <item name="colorError">@color/red</item>
 
+        <!--these are for calendar view!-->
         <item name="colorPrimaryVariant">@color/colorMin</item>
         <item name="colorSecondaryVariant">@color/colorMax</item>
     </style>
@@ -69,7 +83,10 @@
         <item name="colorQuaternary">@color/light_periwinkle</item>
         <item name="itemTextColor">@color/light_periwinkle</item>
         <item name="colorOutline">@color/black</item>
+        <!-- colorQuaternary and itemTextColor MUST be the same-->
+        <item name="colorError">@color/red</item>
 
+        <!--these are for calendar view!-->
         <item name="colorPrimaryVariant">@color/colorMin</item>
         <item name="colorSecondaryVariant">@color/colorMax</item>
     </style>
@@ -81,7 +98,10 @@
         <item name="colorQuaternary">@color/light_periwinkle</item>
         <item name="itemTextColor">@color/light_periwinkle</item>
         <item name="colorOutline">@color/black</item>
+        <!-- colorQuaternary and itemTextColor MUST be the same-->
+        <item name="colorError">@color/red</item>
 
+        <!--these are for calendar view!-->
         <item name="colorPrimaryVariant">@color/colorMin</item>
         <item name="colorSecondaryVariant">@color/colorMax</item>
     </style>
@@ -93,7 +113,10 @@
         <item name="colorQuaternary">@color/black</item>
         <item name="itemTextColor">@color/black</item>
         <item name="colorOutline">@color/black</item>
+        <!-- colorQuaternary and itemTextColor MUST be the same-->
+        <item name="colorError">@color/red</item>
 
+        <!--these are for calendar view!-->
         <item name="colorPrimaryVariant">@color/colorMin</item>
         <item name="colorSecondaryVariant">@color/colorMax</item>
     </style>
@@ -106,7 +129,10 @@
         <item name="colorQuaternary">@color/greenish_white</item>
         <item name="itemTextColor">@color/greenish_white</item>
         <item name="colorOutline">@color/black</item>
+        <!-- colorQuaternary and itemTextColor MUST be the same-->
+        <item name="colorError">@color/red</item>
 
+        <!--these are for calendar view!-->
         <item name="colorPrimaryVariant">@color/colorMin</item>
         <item name="colorSecondaryVariant">@color/colorMax</item>
     </style>
@@ -118,7 +144,10 @@
         <item name="colorQuaternary">@color/greenish_white</item>
         <item name="itemTextColor">@color/greenish_white</item>
         <item name="colorOutline">@color/black</item>
+        <!-- colorQuaternary and itemTextColor MUST be the same-->
+        <item name="colorError">@color/red</item>
 
+        <!--these are for calendar view!-->
         <item name="colorPrimaryVariant">@color/colorMin</item>
         <item name="colorSecondaryVariant">@color/colorMax</item>
     </style>
@@ -131,7 +160,10 @@
         <item name="colorQuaternary">@color/dodger_blue</item>
         <item name="itemTextColor">@color/dodger_blue</item>
         <item name="colorOutline">@color/black</item>
+        <!-- colorQuaternary and itemTextColor MUST be the same-->
+        <item name="colorError">@color/red</item>
 
+        <!--these are for calendar view!-->
         <item name="colorPrimaryVariant">@color/colorMin</item>
         <item name="colorSecondaryVariant">@color/colorMax</item>
     </style>

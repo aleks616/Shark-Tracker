@@ -3,7 +3,6 @@ package com.example.rainbowcalendar
 import android.content.Context
 import android.view.MotionEvent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
@@ -38,9 +37,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
@@ -63,7 +61,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -75,7 +72,6 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
@@ -93,6 +89,8 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.core.text.isDigitsOnly
 import com.vsnappy1.datepicker.data.DefaultDatePickerConfig
 import com.vsnappy1.timepicker.TimePicker
@@ -513,6 +511,7 @@ fun CheckmarkButtonRow(
 /**
  * @param textAlign center by default
  * @param fontSize XL, L, ML, M, MS, S, XS from 40.sp to 16.sp, default - ML(32.sp), you can use lowercase as well
+ * @see [sizeToSp]
  * **/
 @Composable
 fun BetterHeader(
@@ -520,26 +519,41 @@ fun BetterHeader(
     modifier:Modifier=Modifier.fillMaxWidth(),
     textAlign:TextAlign=TextAlign.Center,
     fontSize:String="ML",
+    fontStyle:FontStyle=FontStyle.Normal,
+    color:Color=colorSecondary()
+){
+    BetterText(
+        fontSize=sizeToSp(fontSize),
+        text=text,
+        textAlign=textAlign,
+        modifier=modifier.padding(horizontal=5.dp),
+        fontStyle=fontStyle,
+        color=color
+    )
+}
+
+
+/**
+ * @param textAlign center by default
+ * @param fontSize in sp, default 32
+ * **/
+@Composable
+fun BetterHeader(
+    text:String,
+    modifier:Modifier=Modifier.fillMaxWidth(),
+    textAlign:TextAlign=TextAlign.Center,
+    fontSize:TextUnit=32.sp,
     fontStyle:FontStyle=FontStyle.Normal
 ){
-    val fs=when(fontSize.uppercase()){
-        "XL"->40.sp
-        "L"->36.sp
-        "ML"->32.sp
-        "M"->28.sp
-        "MS"->24.sp
-        "S"->20.sp
-        "XS"->16.sp
-        else->{32.sp}
-    }
     BetterText(
-        fontSize=fs,
+        fontSize=fontSize,
         text=text,
         textAlign=textAlign,
         modifier=modifier.padding(horizontal=5.dp),
         fontStyle=fontStyle
     )
 }
+
 
 @Composable
 fun BetterText(
@@ -560,6 +574,43 @@ fun BetterText(
         fontStyle=fontStyle
     )
 }
+
+/** @see sizeToSp**/
+@Composable
+fun BetterText(
+    text:String,
+    modifier:Modifier=Modifier,
+    textAlign:TextAlign=TextAlign.Start,
+    fontSize:String="XS",
+    fontStyle:FontStyle=FontStyle.Normal,
+    color:Color=colorSecondary()
+){
+    Text(
+        fontSize=sizeToSp(fontSize),
+        text=text,
+        textAlign=textAlign,
+        modifier=modifier,
+        letterSpacing=0.sp,
+        color=color,
+        fontStyle=fontStyle
+    )
+}
+/**
+ * XL-40, L-36, ML-32, M-28, MS-24, S-20, XS-16
+ * **/
+fun sizeToSp(fontSize:String):TextUnit{
+    return when(fontSize.uppercase()){
+        "XL"->40.sp
+        "L"->36.sp
+        "ML"->32.sp
+        "M"->28.sp
+        "MS"->24.sp
+        "S"->20.sp
+        "XS"->16.sp
+        else->{32.sp}
+    }
+}
+
 
 @Composable
 fun ErrorText(
@@ -754,7 +805,7 @@ fun DateInputField(
                 }
             },
             placeholder={
-                BetterText("YYYY")
+                BetterText("YYYY",fontSize="XS")
             },
             keyboardOptions=KeyboardOptions.Default.copy(keyboardType=KeyboardType.Number,imeAction=ImeAction.Next),
             modifier=Modifier
@@ -790,7 +841,7 @@ fun DateInputField(
 
             },
             placeholder={
-                BetterText("MM", textAlign=TextAlign.Center,modifier=Modifier.fillMaxWidth())
+                BetterText("MM", textAlign=TextAlign.Center,modifier=Modifier.fillMaxWidth(),fontSize="XS")
             },
             keyboardOptions=KeyboardOptions.Default.copy(keyboardType=KeyboardType.Number,imeAction=ImeAction.Next),
             modifier=Modifier
@@ -823,7 +874,7 @@ fun DateInputField(
                 }
             },
             placeholder={
-                BetterText("DD",textAlign=TextAlign.Center,modifier=Modifier.fillMaxWidth())
+                BetterText("DD",textAlign=TextAlign.Center,modifier=Modifier.fillMaxWidth(),fontSize="XS")
             },
             keyboardOptions=KeyboardOptions.Default.copy(keyboardType=KeyboardType.Number,imeAction=ImeAction.Done),
             modifier=Modifier
@@ -865,6 +916,11 @@ fun colorMin():Color{
 @Composable
 fun colorMax():Color{
     return getColor(color=com.google.android.material.R.attr.colorSecondaryVariant)
+}
+
+@Composable
+fun colorError():Color{
+    return getColor(color=com.google.android.material.R.attr.colorError)
 }
 
 @Composable
@@ -948,12 +1004,12 @@ fun MonthBlock(
 fun CountdownTimer(hours:Int=1,context:Context){
     val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
 
-    var startTime=sharedPrefs.getLong("binderStartTime",System.currentTimeMillis())
+    val startTime=sharedPrefs.getLong("binderStartTime",System.currentTimeMillis())
 
     /** hours*3600*1000 is programmed time, then it subtracts time passed between now and startTime**/
     //val initialTime=sharedPrefs.getLong("binderSecondsLeft",hours*3600*1000-(System.currentTimeMillis()-startTime))
     val initialTime=hours*3600*1000
-    val isRunning=remember{mutableStateOf(sharedPrefs.getBoolean("wearingBinder",true))}
+    val isRunning=remember{mutableStateOf(sharedPrefs.getBoolean("wearingBinder",false))}
 
     val remainingTime=remember{mutableStateOf(
         if(isRunning.value) initialTime-(System.currentTimeMillis()-startTime).toInt()
@@ -989,16 +1045,18 @@ fun CountdownTimer(hours:Int=1,context:Context){
     val alarm=Alarm(context)
 
     Column(horizontalAlignment=Alignment.CenterHorizontally){
-        Box(modifier=Modifier.size(280.dp),contentAlignment=Alignment.Center){
-            Canvas(modifier=Modifier.fillMaxSize()){
-                drawCircle(color=color2,style=Stroke(16f))
-                val sweep=(remainingTime.value.toFloat()/initialTime)*360
-                drawArc(color3,-90f,sweep,false,style=Stroke(16f))
+        if(sharedPrefs.contains("wearingBinder")){
+            Box(modifier=Modifier.size(280.dp),contentAlignment=Alignment.Center){
+                Canvas(modifier=Modifier.fillMaxSize()) {
+                    drawCircle(color=color2,style=Stroke(16f))
+                    val sweep=(remainingTime.value.toFloat()/initialTime)*360
+                    drawArc(color3,-90f,sweep,false,style=Stroke(16f))
+                }
+                BetterText(text=String.format("%02d:%02d:%02d",h,m,s),fontSize=24.sp)
             }
-            BetterText(text=String.format("%02d:%02d:%02d",h,m,s),fontSize=24.sp)
         }
         Row(
-            modifier=Modifier.fillMaxWidth().padding(top=16.dp).padding(horizontal=20.dp),
+            modifier=Modifier.fillMaxWidth().padding(top=18.dp).padding(horizontal=20.dp),
             horizontalArrangement=Arrangement.SpaceAround
         ){
             BetterButton( /**pause/start button**/
@@ -1022,17 +1080,19 @@ fun CountdownTimer(hours:Int=1,context:Context){
             ){
                 BetterText(if(isRunning.value) "Pause" else "Start",fontSize=22.sp)
             }
-            BetterButton( /**cancel button**/
-                modifier=Modifier.height(40.dp).width(140.dp),
-                onClick={
-                    sharedPrefs.edit().putBoolean("wearingBinder",false).apply()
-                    sharedPrefs.edit().remove("binderStartTime").apply()
-                    sharedPrefs.edit().remove("binderSecondsLeft").apply()
-                    isRunning.value=false
-                    remainingTime.value=initialTime
+            if(sharedPrefs.contains("wearingBinder")){
+                BetterButton( /**cancel button**/
+                    modifier=Modifier.height(40.dp).width(140.dp),
+                    onClick={
+                        sharedPrefs.edit().remove("wearingBinder").apply()
+                        sharedPrefs.edit().remove("binderStartTime").apply()
+                        sharedPrefs.edit().remove("binderSecondsLeft").apply()
+                        isRunning.value=false
+                        remainingTime.value=initialTime
+                    }
+                ){
+                    BetterText("Reset",fontSize=22.sp)
                 }
-            ){
-                BetterText("Reset",fontSize=22.sp)
             }
         }
     }
@@ -1040,4 +1100,19 @@ fun CountdownTimer(hours:Int=1,context:Context){
 }
 
 
+
+@Composable
+fun CustomizableDialog(
+    onDismissRequest:()->Unit,
+    content:@Composable ()->Unit
+){
+    Dialog(onDismissRequest={onDismissRequest()},properties=DialogProperties(usePlatformDefaultWidth=false)){
+        Card(
+            modifier=Modifier.heightIn(max=550.dp,min=250.dp).fillMaxWidth().padding(horizontal=16.dp),
+            shape=RoundedCornerShape(15.dp),
+        ){
+            Box(modifier=Modifier.fillMaxSize().background(color=colorPrimary())){content()}
+        }
+    }
+}
 

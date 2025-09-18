@@ -772,7 +772,7 @@ fun MetricReorderView(metricRows:MutableState<List<MetricRowData>>,onOrderChange
                                 errorMessage="Custom names have to be unique, and can't be empty."
                         }
                     ){
-                        BetterText(text="save")
+                        BetterText(text="save",fontSize=16.sp)
                     }
                 }
             }

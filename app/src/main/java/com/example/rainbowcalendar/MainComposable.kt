@@ -1,6 +1,9 @@
 package com.example.rainbowcalendar
 
 import android.content.Context
+import android.graphics.Path
+import android.graphics.RectF
+import android.graphics.Region
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -10,10 +13,12 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,17 +26,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -59,6 +69,23 @@ import java.time.LocalDate
 import java.util.Calendar
 import java.util.Locale
 import kotlin.math.floor
+import androidx.compose.material.icons.rounded.Info
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.IntSize
+import androidx.core.graphics.PathParser
+import com.example.rainbowcalendar.Constants.key_averagePeriodCycleLength
+import com.example.rainbowcalendar.db.DBUtils.getCycleStartDays
+import com.example.rainbowcalendar.db.DateCycle
+import org.xmlpull.v1.XmlPullParser
+import kotlin.math.abs
+import kotlin.math.min
+
 @Suppress("UsingMaterialAndMaterial3Libraries")
 
 
@@ -253,12 +280,16 @@ fun WelcomeScreen(onNavigate:(String)->Unit){
 @Composable
 fun HomeScreen(){
     val context=LocalContext.current
+    val today=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(Calendar.getInstance().time)
     val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
     Utils.setLanguage(context)
 
-    Utils.autoAddCycleDayData(context)
 
-    val cycles=DBUtils.getCyclesDataDate(context,"2025-03-01")
+    DBUtils.debug(context)
+    DBUtils.autoAddCycleDayData(context)
+    Log.i("today",today)
+    //TODO: CURRENTLY getAllActiveCyclesDataDate DEPENDS ON DATE, EVEN THO ONLY CYCLE DAY DEPENDS ON IT, AND THIS WILL CAUSE BUGS WHEN RUN FIRST TIME IN A DAY!!!
+    val cycles=DBUtils.getCyclesDataDate(context,today)
     var periodCycle=CyclesDateCycle("",false,0,0,0)
     var testosteroneCycle=CyclesDateCycle("",false,0,0,1)
     var birthControlCycle=CyclesDateCycle("",false,0,0,2)
@@ -266,71 +297,406 @@ fun HomeScreen(){
     val theme=sharedPrefs.getString("theme","Black")
     val firstTDate=sharedPrefs.getString(key_firstTestosteroneDate,"")
     val periodRegular=sharedPrefs.getBoolean(key_isPeriodRegular,false)
+    //sharedPrefs.edit().putBoolean(key_isPeriodRegular,true).apply()
     val isOnT=sharedPrefs.getBoolean(key_isTakingTestosterone,false)
     val isPlanningT=sharedPrefs.getBoolean(key_isPlanningToTakeTestosterone,false)
 
     val timeOnT=if(!firstTDate.isNullOrEmpty()) TimeUtils.timeSinceDate(firstTDate) else MilestoneDate(0,0,TIMEUNIT.ERROR)
 
+    var tDetailsDialogVisible by remember{mutableStateOf(false)}
+    var tTakingDialogVisible by remember{mutableStateOf(false)}
+
+    var periodDetailsDialogVisible by remember{mutableStateOf(false)}
+
+    //DBUtils.removeFaultyData(context)
+
+    val inactiveData=DBUtils.getInactiveCyclesOfType(context,1)
+    inactiveData.forEach{
+        //Log.v("archive data",it.cycleName+" "+it.firstDate+" "+it.lastDate)
+    }
+    DBUtils.lastCycleDay(context)
+
+    val musclePartList=listOf(
+        MusclePart(0,"leftAbdomen",stringResource(R.string.leftAbdomen),true,"M86,57v-7L45,50l1,29L86,79v-8a7,7 0,1 1,0 -14Z"),
+        MusclePart(1,"rightAbdomen",stringResource(R.string.rightAbdomen),true,"M86,57v-7h41l-1,29L86,79v-8a7,7 0,1 0,0 -14Z"),
+        MusclePart(2,"leftThigh",stringResource(R.string.leftThigh),true,"M52.9,87.77l-3,11.22 -3,6 -8,7L34,111.99L25,141.04l-1,22 3,16 4,3 11,-2 6,7 6,2 6,-9 2,-18 -0.07,-38L54.68,87.84A0.91,0.91 0,0 0,52.9 87.77Z"),
+        MusclePart(3,"rightThigh",stringResource(R.string.rightThigh),true,"M118,88.78l3,11.22 3,6 8,7h5l9,29 1,22 -3,16 -4,3 -11,-2 -6,7 -6,2 -6,-9 -2,-18v-38L116.23,88.84A0.91,0.91 0,0 1,118 88.78Z"),
+        MusclePart(4,"leftButtock",stringResource(R.string.leftButtock),false,"M66,64l-10,0l-12,8l-2,31l3,7l9,7l14,1l6,0l7,-6l2,-5l0,-30l-5,-7l-12,-6z"),
+        MusclePart(5,"rightButtock",stringResource(R.string.rightButtock),false,"M102,64l10,0l12,8l2,31l-3,7l-9,7l-14,1l-6,0l-7,-6l-2,-5l0,-30l5,-7l12,-6z")
+    )
+
+    var musclePart by remember{mutableStateOf(
+        MusclePart(-1,"None","None",false,"")
+    )}
+    var refresh by remember{mutableStateOf(0)}
+    LaunchedEffect(refresh){}
+    LaunchedEffect(musclePart){}
+
+    val lastShotPlaces=Utils.readShotOrder(context).reversed()
+    var lastShotPlacesText="Last 5 shots in:\n"
+    lastShotPlaces.forEachIndexed{index,s->
+        if(index<5&&Utils.canBeIntParsed(s)) lastShotPlacesText+="- "+musclePartList[s.toInt()].localName+"\n"
+    }
+    //Log.v("lastShotPlacesTex",lastShotPlacesText)
+
+    cycles.forEach{
+        when(it.cycleType){
+            0->periodCycle=it
+            1->testosteroneCycle=it
+            2->birthControlCycle=it
+        }
+    }
+
+    //DBUtils.addNewDateCycle(context,DateCycle("2025-03-13",2,9))
 
     Column(
         modifier=
         if(theme=="Pride") Modifier.paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
         else Modifier.background(colorPrimary())
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ){
-        BetterHeader("Home",fontSize="L")
-        cycles.forEach{
-            when(it.cycleType){
-                0->periodCycle=it
-                1->testosteroneCycle=it
-                2->birthControlCycle=it
-            }
-        }
+        //BetterHeader("Home",fontSize="L")
+
+
         if(isOnT){
+            Spacer(modifier=Modifier.height(10.dp))
+            //region T
+            Row(modifier=Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.Center){
+                BetterHeader("Testosterone",fontSize="L",modifier=Modifier)
+                IconButton(onClick={tDetailsDialogVisible=true},modifier=Modifier.padding(start=4.dp)){
+                    Icon(
+                        imageVector=Icons.Rounded.Info,
+                        tint=colorTertiary(),
+                        contentDescription=null,
+                        modifier=Modifier.scale(1.8f)
+                    )
+                }
+                if(tDetailsDialogVisible)
+                    CustomizableDialog({tDetailsDialogVisible=false},{
+                        Column(modifier=Modifier.fillMaxWidth().padding(horizontal=12.dp,vertical=6.dp)){
+                            BetterText("Currently on: "+testosteroneCycle.cycleName,fontSize="ML",modifier=Modifier.padding(vertical=6.dp))
+                            val text="interval - "+if(testosteroneCycle.correctLength==1) "everyday" else "every "+testosteroneCycle.correctLength+" days."
+                            BetterText(text,fontSize="ML",modifier=Modifier.padding(bottom=8.dp))
+                            if(inactiveData.isNotEmpty()){
+                                BetterText("previous testosterone types: ",fontSize="M",modifier=Modifier.padding(top=10.dp,bottom=4.dp)) //TODO: GET DATA FOR INACTIVE T CYCLES AND FIRST AND LAST DATE!
+                                inactiveData.forEach{
+                                    if(it.firstDate.isNotEmpty())
+                                        BetterText(text="- "+it.cycleName+" from "+it.firstDate+" to "+it.lastDate,fontSize="MS",modifier=Modifier.padding(vertical=6.dp))
+                                }
+                            }
+                        }
+                    })
+            }
+
+            var lateBy=testosteroneCycle.cycleDay-testosteroneCycle.correctLength
+            Log.v("t cycle day",testosteroneCycle.cycleDay.toString())
+            LaunchedEffect(testosteroneCycle.cycleDay){
+                lateBy=testosteroneCycle.cycleDay-testosteroneCycle.correctLength
+            }
+            val daysLeft=-1*lateBy
+
             if(timeOnT.timeUnit!=TIMEUNIT.ERROR){
-                val today=SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(Calendar.getInstance().time)
-                val daysLeft=testosteroneCycle.correctLength-testosteroneCycle.cycleDay
-                val temp=TimeUtils.longDateFromString(TimeUtils.addDateString(today,daysLeft))
-                BetterHeader("You're on T since: "+timeOnT.amount.toString()+" "+timeOnT.timeUnit,fontSize="M")
-                if(testosteroneCycle.cycleDay-testosteroneCycle.correctLength-1==0)
-                    BetterText("time for your dose", fontSize=28.sp)
-                else if(testosteroneCycle.cycleDay-testosteroneCycle.correctLength-1>0)
-                    BetterText("you forgot your dose!", fontSize=24.sp)
-                else
-                    BetterText("next dose in: "+(testosteroneCycle.correctLength-testosteroneCycle.cycleDay)+" days - "+temp,fontSize=24.sp) //TODO!!!
-                //todo: button to start
-                if(daysLeft<2&&daysLeft<testosteroneCycle.correctLength/10){ //for nebido, 12weeks->8.4days etc
-                    BetterButton(onClick={}){
-                        BetterText("Taking dose")
+                BetterHeader("You're on T since: "+timeOnT.amount.toString()+" "+timeOnT.timeUnit.toString().lowercase(),fontSize="M")
+                val showLogChanges=Utils.showLogChanges(firstTDate!!) /**if it's null, timeOnT time unit is error so it'll work**/
+                if(showLogChanges){//todo: SHOW MENU TOO IF IT WASN'T FILLED ON CORRECT DAY}
+                    BetterText(text="menu for logging changes will be here",fontSize="S")
+                    
+                }
+                BetterText(text=firstTDate,fontSize="S")
+            }
+
+            val formattedNextDate=TimeUtils.longDateFromString(TimeUtils.addDateString(today,daysLeft))
+
+            Spacer(modifier=Modifier.height(14.dp))
+            if(lateBy==0)
+                BetterHeader("Time for your dose",fontSize="M")
+            else if(lateBy>0){
+                BetterHeader("You forgot your dose!",fontSize="ML",color=colorError())
+                val lateByText="late by: "+lateBy+if(lateBy==1)" day" else " days"
+                BetterHeader(lateByText,fontSize="M",color=colorError())
+            }
+            else{
+                val nextDoseText="Next dose"+if(daysLeft==1)": tomorrow" else " in: "+(daysLeft)+" days - on "+formattedNextDate
+                BetterText(nextDoseText,fontSize="M",modifier=Modifier.fillMaxWidth().padding(horizontal=12.dp))
+            }
+
+            Spacer(modifier=Modifier.height(14.dp))
+            //BetterHeader(text="testosterone cycle day: "+testosteroneCycle.cycleDay+" length: "+testosteroneCycle.correctLength,fontSize="MS")
+            Row(horizontalArrangement=Arrangement.Center,modifier=Modifier.fillMaxWidth()){
+                val id=DBUtils.getCycleIdByName(context,testosteroneCycle.cycleName)
+                val todayCycleDay=DBUtils.getCycleDayByIdAndDate(context,id,today)
+                //Log.v("test",todayCycleDay.toString())
+                //Log.v("today",today)
+
+                if((daysLeft<=(testosteroneCycle.correctLength/6)+1)&&todayCycleDay!=0){ //sheet 5
+                    BetterButton(modifier=Modifier.padding(start=12.dp).sizeIn(minWidth=80.dp,maxWidth=300.dp, minHeight=50.dp,maxHeight=60.dp),
+                        onClick={
+                            tTakingDialogVisible=true}){
+                        BetterText("Take dose",fontSize="S",modifier=Modifier.padding(vertical=4.dp,horizontal=10.dp))
                     }
                 }
             }
-            Log.v("period regular",periodRegular.toString())
-            if(!periodRegular)
-                BetterText("congrats, your last period was: "+periodCycle.cycleDay+" days ago!",fontSize=24.sp)
-            else if(periodCycle.cycleDay-periodCycle.correctLength-1>5)
-                BetterText("time to mark period as irregular already?")
+            var isOnGel by remember{mutableStateOf(testosteroneCycle.correctLength<3)}
+            if(tTakingDialogVisible){
+                CustomizableDialog({tTakingDialogVisible=false},{
+                    Column(Modifier.verticalScroll(rememberScrollState())){
+                        CheckboxRow(checked=isOnGel, onCheckedChange={isOnGel=!isOnGel},text="Gel (/not a shot)")
+                        if(!isOnGel){
+                            BetterText(text="Shot in: "+if(musclePart.name=="None") "not selected" else musclePart.localName,fontSize="m",modifier=Modifier.padding(start=10.dp,end=10.dp,bottom=14.dp,top=6.dp))
+                            Row(Modifier.fillMaxHeight(0.8f)){
+                                val muscleState=Utils.getMuscleStates(context)
+                                val images=Utils.musclesStateToImages(muscleState.first,muscleState.second)
+                                var (frontImage,backImage)=images
+                                if(frontImage==-1) frontImage=R.drawable.body_front_green
+                                if(backImage==-1) backImage=R.drawable.body_back_green
+
+                                Box(Modifier.weight(1f).padding(6.dp)){
+                                    DetectableColorsImage(backImage,musclePartList){
+                                        val temp=it?:MusclePart(-1,"None","None",false,"")
+                                        Log.v("body part back",temp.localName)
+                                        musclePart=temp
+                                    }
+                                }
+                                Box(Modifier.weight(1f).padding(4.dp)){
+                                    DetectableColorsImage(frontImage,musclePartList){
+                                        val temp=it?:MusclePart(-1,"None","None",true,"")
+                                        Log.v("body part front",temp.localName)
+                                        musclePart=temp
+                                    }
+                                }
+                              }
+                            Row{
+                                BetterText(lastShotPlacesText,fontSize="MS",modifier=Modifier.padding(start=8.dp,end=8.dp,bottom=2.dp,top=14.dp))
+                            }
+                        }
+                        Row{
+                            Box(
+                                contentAlignment=Alignment.BottomCenter,modifier=Modifier.fillMaxSize().padding(vertical=8.dp)
+                            ){
+                                BetterButton(modifier=Modifier.width(120.dp).height(40.dp),onClick={
+                                    val cycleId=DBUtils.getCycleIdByName(context,testosteroneCycle.cycleName)
+                                    DBUtils.addNewDateCycleNew(context,DateCycle(today,cycleId,0))
+                                    refresh++
+
+                                    if((!isOnGel&&musclePart.name!="None")) Utils.saveShotOrder(context,musclePart.id)
+                                    if(musclePart.name!="None"||isOnGel) tTakingDialogVisible=false
+                                }){
+                                  BetterText(text="Save",fontSize="MS")
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+            //endregion
         }
 
-        else if(isPlanningT){
+
+
+        Spacer(modifier=Modifier.height(36.dp))
+        Row(modifier=Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.Center){
+            BetterHeader("Period",fontSize="L",modifier=Modifier)
+            IconButton(onClick={periodDetailsDialogVisible=true},modifier=Modifier.padding(start=4.dp)){
+                Icon(
+                    imageVector=Icons.Rounded.Info,
+                    tint=colorTertiary(),
+                    contentDescription=null,
+                    modifier=Modifier.scale(1.8f)
+                )
+            }
+            if(periodDetailsDialogVisible)
+                CustomizableDialog({periodDetailsDialogVisible=false},{
+                    Column(modifier=Modifier.fillMaxWidth().padding(horizontal=12.dp,vertical=6.dp)){
+                        sharedPrefs.edit().putInt(key_averagePeriodCycleLength,28).apply() //TODO: REMOVE! THIS IS JUST FOR TESTING
+                        val cycleLength=sharedPrefs.getInt(Constants.key_averagePeriodCycleLength,28) //todo FIX! IT SHOULD NOT BE 0 WTF
+                        val bleedingLength=/*sharedPrefs.getInt(Constants.key_averagePeriodLength,*/5//)
+                        val avg=Utils.calcAverageCycleLength(context,DBUtils.getCycleIdByName(context,periodCycle.cycleName),cycleLength)
+                        val phase=Utils.getPeriodPhase(periodCycle.cycleDay,cycleLength.toDouble(),bleedingLength)
+
+                        BetterText(text=if(periodRegular) "Regular period" else "Irregular period",fontSize="M")
+                        BetterText(text="average correct cycle length: "+avg,fontSize="MS",modifier=Modifier.padding(vertical=4.dp))
+                        BetterText(text="current phase: "+phase,fontSize="MS",modifier=Modifier.padding(vertical=4.dp))
+                        BetterText(text="your previous cycle starts:",fontSize=24.sp,modifier=Modifier.padding(top=10.dp,bottom=4.dp))
+                        val cycleId=DBUtils.getCycleIdByName(context,"period")
+                        val cycleStartDates=getCycleStartDays(context,cycleId).reversed()
+
+                        cycleStartDates.forEachIndexed{i,it->
+                            val length=it.second
+
+                            var color=colorSecondary()
+                            val display:String
+                            if(i==0) display=it.first+" this is the current cycle";
+                            else if(length==null||length==0) display=it.first+" unknown length";
+                            else{
+                                val correctL=periodCycle.correctLength
+                                /**difference of length of this cycle and the correct length**/
+                                val diff=abs(correctL-length)
+                                /**e.g correct length 28, length of this cycle is 35, so the difference is greater than 5.6 days and text is red**/
+                                if(diff>(correctL/6)){
+                                    color=colorError()
+                                    //Log.i("period data","length: "+length+" correctLength: "+correctL)
+                                    display=it.first+" length: "+length+if(length<correctL)". Too short by " else {". Too long by "}+diff+" days."
+                                }
+                                else display=it.first+" length: "+length
+
+                            }
+                            BetterText(display,fontSize="S",modifier=Modifier.padding(top=5.dp,bottom=5.dp,start=6.dp),color=color)
+
+                        }
+                        
+                    }
+                })
+        }
+        Log.i("testosterone interval",sharedPrefs.getInt(Constants.key_currentTestosteroneInterval,-1).toString())
+
+        DBUtils.removeFaultyData(context)
+        val lateBy=periodCycle.cycleDay-periodCycle.correctLength
+        //Log.v("dates","cycleday: "+periodCycle.cycleDay+" length: "+periodCycle.correctLength+periodCycle.cycleName)
+        //Log.v("dates","cycleday: "+testosteroneCycle.cycleDay+" length: "+testosteroneCycle.correctLength+" "+testosteroneCycle.cycleName)
+        if(isOnT){
+            if(!periodRegular&&(periodCycle.cycleDay-periodCycle.correctLength>0))
+                BetterHeader("Congrats, your last period was: "+periodCycle.cycleDay+" days ago!",fontSize="S")
+            else if(periodCycle.cycleDay-periodCycle.correctLength-1>5)
+                BetterHeader("Time to mark period as irregular already?",fontSize="MS")
+        }
+        Log.i("period regular",periodRegular.toString()+" "+periodCycle.correctLength+" next "+(-1*lateBy)+" day: "+periodCycle.cycleDay)
+        if(periodRegular){
+            val next=(lateBy*-1)
+            Spacer(Modifier.height(10.dp))
+            if(lateBy>0)
+                BetterHeader("Your period is late by: "+(lateBy)+" days",fontSize="MS",color=colorError())
+            else if(lateBy==0)
+                BetterHeader("It should start today",fontSize="MS")
+            else
+                BetterHeader("Next period in: "+(next+2)+" days",fontSize="MS")
+
+            Spacer(Modifier.height(10.dp))
+            BetterHeader(text="today is day "+(periodCycle.cycleDay+1),fontSize="MS")/**+1 because database counts from 0**/
+
+            Spacer(Modifier.height(14.dp))
+            Row(horizontalArrangement=Arrangement.Center,modifier=Modifier.fillMaxWidth()){
+                if(periodCycle.cycleDay>5){
+                    BetterButton(modifier=Modifier.padding(start=12.dp).sizeIn(minWidth=80.dp,maxWidth=300.dp, minHeight=50.dp,maxHeight=60.dp),
+                        onClick={
+                            val cycleId=DBUtils.getCycleIdByName(context,periodCycle.cycleName)
+                            refresh++
+                            DBUtils.addNewDateCycleNew(context,DateCycle(today,cycleId,0))
+                        }){
+                        BetterText("Period started",fontSize="S",modifier=Modifier.padding(vertical=4.dp,horizontal=10.dp))
+                    }
+                }
+            }
+
+        }
+
+
+
+
+        /*if(isPlanningT){
             val rnd=(0..9).random()
             if(rnd==0){
-                BetterText("Starting T soon? Go to settings")
+                BetterText("Starting T soon? Go to settings",fontSize=16.sp)
                 //todo: button? idk
             }
         }
-        //not on T:
-        else if(periodRegular&&periodCycle.cycleDay-periodCycle.correctLength-1>5)
-            BetterText("your period didn't start...")
 
         BetterHeader("Binder",fontSize="L")
         Row(modifier=Modifier.fillMaxSize().padding(top=20.dp),Arrangement.Center){
             CountdownTimer(8,context)
-        }
+        }*/
 
     }
 }
+@Composable
+fun DetectableColorsImage(drawableId:Int,muscleParts:List<MusclePart>,onPartSelected:(MusclePart?)->Unit){
+    val context=LocalContext.current
+    var imageSize by remember {mutableStateOf(IntSize.Zero)}
 
+    Box(Modifier.fillMaxSize().pointerInput(drawableId){
+            detectTapGestures{offset->
+                val part=getTouchedPartName(offset=offset,context=context,drawableId=drawableId,imageSize=imageSize,muscleParts)
+                onPartSelected(part)
+            }
+        }
+        .onSizeChanged{imageSize=it}){
+        Image(
+            painter=rememberVectorPainter(ImageVector.vectorResource(drawableId)),
+            contentDescription=null,
+            modifier=Modifier.fillMaxSize()
+        )
+    }
+}
+data class MusclePart(
+    val id:Int,
+    val name:String,
+    val localName:String,
+    val front:Boolean,
+    val path:String
+)
+
+
+fun getTouchedPartName(offset:Offset,context:Context,drawableId:Int,imageSize:IntSize,muscleParts:List<MusclePart>):MusclePart?{
+    val xml=context.resources.getXml(drawableId)
+    val paths=mutableListOf<Pair<Path,String>>()
+    var vw=0f
+    var vh=0f
+    val ns="http://schemas.android.com/apk/res/android"
+
+    xml.use{
+        while(xml.next()!=XmlPullParser.END_DOCUMENT){
+            when{
+                xml.eventType==XmlPullParser.START_TAG&&xml.name=="vector"->{
+                    vw=xml.getAttributeValue(ns,"viewportWidth").toFloat()
+                    vh=xml.getAttributeValue(ns,"viewportHeight").toFloat()
+                }
+                xml.eventType==XmlPullParser.START_TAG&&xml.name=="path"->{
+                    val data=xml.getAttributeValue(ns,"pathData")
+                    val color=xml.getAttributeValue(ns,"fillColor")?:""
+                    if(data!=null){
+                        paths.add(PathParser.createPathFromPathData(data) to color)
+                    }
+                }
+            }
+        }
+    }
+
+   /* Log.v("part imageSize.height==0",(imageSize.height==0).toString())
+    Log.v("part imageSize.width==0",(imageSize.width==0).toString())
+    Log.v("part vw==0",(vw==0f).toString())
+    Log.v("part vh==0",(vh==0f).toString())
+    Log.v("part check",(vw==0f||vh==0f||imageSize.width==0||imageSize.height==0).toString())*/
+    if(vw==0f||vh==0f||imageSize.width==0||imageSize.height==0) return null else Log.v("part","all good")
+
+    val scale=min(imageSize.width/vw,imageSize.height/vh)
+    val offsetX=(imageSize.width-vw*scale)/2
+    val offsetY=(imageSize.height-vh*scale)/2
+    val x=(offset.x-offsetX)/scale
+    val y=(offset.y-offsetY)/scale
+
+    for(i in paths.indices.reversed()){
+        Log.w("part in for loop","here")
+        val(path,color)=paths[i]
+        val bounds=RectF()
+        path.computeBounds(bounds,true)
+        val region=Region()
+        region.setPath(path,Region(
+            bounds.left.toInt(),
+            bounds.top.toInt(),
+            bounds.right.toInt(),
+            bounds.bottom.toInt()
+        ))
+        if(region.contains(x.toInt(),y.toInt())){
+            muscleParts.forEachIndexed {i, it ->
+                Log.v("body part",i.toString()+" "+it.name+" "+Utils.arePathsTheSame(path,it.path))
+                if(Utils.arePathsTheSame(path,it.path)) return it
+            }
+        }
+    }
+   // Utils.arePathsTheSame(muscleParts[2].path,"M52.9,87.77l-3,11.22 -3,6 -8,7L34,111.99L25,141.04l-1,22 3,16 4,3 11,-2 6,7 6,2 6,-9 2,-18 -0.07,-38L54.68,87.84A0.91,0.91 0,0 0,52.9 87.77Z")
+
+    return null
+}
 
 
 data class DayColor(
@@ -397,14 +763,14 @@ fun CalendarScreen(){
         BetterButton(
             modifier=Modifier.fillMaxWidth().padding(horizontal=10.dp,vertical=15.dp).height(50.dp).border(width=2.dp,color=colorTertiary()),
             onClick={expanded=true},){
-            BetterText(text=menuText)
+            BetterText(text=menuText,fontSize="XS")
             DropdownMenu(
                 expanded=expanded,
                 onDismissRequest={expanded=false},
                 modifier=Modifier.background(colorPrimary()).fillMaxWidth().padding(horizontal=10.dp).heightIn(max=250.dp)){
                 metrics.forEach{question->
                     DropdownMenuItem(
-                        text={BetterText(text=question)},
+                        text={BetterText(text=question,fontSize="XS")},
                         onClick={
                             expanded=false
                             menuText=question
@@ -438,7 +804,7 @@ fun CalendarScreen(){
                 .fillMaxSize()
             ){
             item{
-                BetterHeader("No data to display in calendar yet")
+                BetterHeader("No data to display in calendar yet",fontSize="ML")
             }
         }
     }
@@ -459,19 +825,19 @@ fun SettingsScreen(onButtonClick:(String)->Unit){
             onClick={onButtonClick(Screens.sTheme)},
             modifier=Modifier.height(100.dp).width(150.dp).align(Alignment.CenterHorizontally).padding(vertical=15.dp)
         ){
-            BetterText(text="CHANGE THEME",textAlign=TextAlign.Center)
+            BetterText(text="CHANGE THEME",textAlign=TextAlign.Center,fontSize=16.sp)
         }
         BetterButton(
             onClick={onButtonClick(Screens.sLanguage)},
             modifier=Modifier.height(100.dp).width(150.dp) .align(Alignment.CenterHorizontally).padding(vertical=15.dp)
         ){
-            BetterText(text="CHANGE LANGUAGE",textAlign=TextAlign.Center)
+            BetterText(text="CHANGE LANGUAGE",textAlign=TextAlign.Center,fontSize=16.sp)
         }
         BetterButton(
             onClick={Utils.toggleStealthMode(context)},
             modifier=Modifier.height(100.dp).width(150.dp).align(Alignment.CenterHorizontally).padding(vertical=15.dp)
         ){
-            BetterText(text="TOGGLE STEALTH MODE",textAlign=TextAlign.Center)
+            BetterText(text="TOGGLE STEALTH MODE",textAlign=TextAlign.Center,fontSize=16.sp)
         }
     }
 
