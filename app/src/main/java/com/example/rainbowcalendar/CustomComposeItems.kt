@@ -1,5 +1,6 @@
 package com.example.rainbowcalendar
 
+import android.content.Context
 import android.view.MotionEvent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
@@ -8,6 +9,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.Canvas
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
@@ -23,6 +25,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -34,9 +37,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
@@ -55,6 +57,7 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -69,6 +72,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -85,11 +89,14 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.core.text.isDigitsOnly
 import com.vsnappy1.datepicker.data.DefaultDatePickerConfig
 import com.vsnappy1.timepicker.TimePicker
 import com.vsnappy1.timepicker.data.model.TimePickerTime
 import com.vsnappy1.timepicker.ui.model.TimePickerConfiguration
+import kotlinx.coroutines.delay
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -101,10 +108,9 @@ fun VerticalSpacer(){
 
 }
 
-
 @Composable
 fun AutoComplete(testosteroneName:String,placeholderText:String,onValueChange:(String)->Unit,bc:Boolean=false){
-    val testosteroneVersions=if(bc) Utils.getBCVersions() else Utils.getTestosteroneVersions()
+    val testosteroneVersions=if(bc) Constants.birthControlVersions else Constants.testosteroneVersions
 
     var category by remember{mutableStateOf(testosteroneName)}
     var textFieldSize by remember{mutableStateOf(Size.Zero)}
@@ -178,13 +184,12 @@ fun AutoComplete(testosteroneName:String,placeholderText:String,onValueChange:(S
                     if(category.isNotEmpty()){
                         items(
                             testosteroneVersions.filter{
-                                it.lowercase()
-                                    .contains(category.lowercase())||it.lowercase()
-                                    .contains("others")
+                                it.lowercase().contains(category.lowercase())
                             }.sorted()
                         ){
                             ItemsCategory(title=it){title->
                                 category=title
+                                onValueChange(title)
                                 expanded=false
                             }
                         }
@@ -206,6 +211,24 @@ fun AutoComplete(testosteroneName:String,placeholderText:String,onValueChange:(S
     }
 }
 @Composable
+fun ItemsCategory(
+    title:String,
+    onSelect:(String)->Unit){
+    Row(
+        modifier=Modifier
+            .fillMaxWidth()
+            .padding(10.dp)
+            .clickable {
+                onSelect(title)
+            }
+    ){
+        Text(text=title,fontSize=18.sp,color=colorSecondary())
+    }
+    androidx.compose.material.Divider(color=colorTertiary())
+}
+
+
+@Composable
 fun StyledTimePicker(
     onTimeSelected:(Int,Int)->Unit,
     time:TimePickerTime
@@ -226,22 +249,7 @@ fun StyledTimePicker(
         onTimeSelected=onTimeSelected
     )
 }
-@Composable
-fun ItemsCategory(
-    title:String,
-    onSelect:(String)->Unit){
-    Row(
-        modifier=Modifier
-            .fillMaxWidth()
-            .clickable {
-                onSelect(title)
-            }
-            .padding(10.dp)
-    ){
-        Text(text=title,fontSize=18.sp,color=colorSecondary())
-    }
-    androidx.compose.material.Divider(color=colorTertiary())
-}
+
 
 
 /**
@@ -503,6 +511,7 @@ fun CheckmarkButtonRow(
 /**
  * @param textAlign center by default
  * @param fontSize XL, L, ML, M, MS, S, XS from 40.sp to 16.sp, default - ML(32.sp), you can use lowercase as well
+ * @see [sizeToSp]
  * **/
 @Composable
 fun BetterHeader(
@@ -510,26 +519,41 @@ fun BetterHeader(
     modifier:Modifier=Modifier.fillMaxWidth(),
     textAlign:TextAlign=TextAlign.Center,
     fontSize:String="ML",
+    fontStyle:FontStyle=FontStyle.Normal,
+    color:Color=colorSecondary()
+){
+    BetterText(
+        fontSize=sizeToSp(fontSize),
+        text=text,
+        textAlign=textAlign,
+        modifier=modifier.padding(horizontal=5.dp),
+        fontStyle=fontStyle,
+        color=color
+    )
+}
+
+
+/**
+ * @param textAlign center by default
+ * @param fontSize in sp, default 32
+ * **/
+@Composable
+fun BetterHeader(
+    text:String,
+    modifier:Modifier=Modifier.fillMaxWidth(),
+    textAlign:TextAlign=TextAlign.Center,
+    fontSize:TextUnit=32.sp,
     fontStyle:FontStyle=FontStyle.Normal
 ){
-    val fs=when(fontSize.uppercase()){
-        "XL"->40.sp
-        "L"->36.sp
-        "ML"->32.sp
-        "M"->28.sp
-        "MS"->24.sp
-        "S"->20.sp
-        "XS"->16.sp
-        else->{32.sp}
-    }
     BetterText(
-        fontSize=fs,
+        fontSize=fontSize,
         text=text,
         textAlign=textAlign,
         modifier=modifier.padding(horizontal=5.dp),
         fontStyle=fontStyle
     )
 }
+
 
 @Composable
 fun BetterText(
@@ -550,6 +574,43 @@ fun BetterText(
         fontStyle=fontStyle
     )
 }
+
+/** @see sizeToSp**/
+@Composable
+fun BetterText(
+    text:String,
+    modifier:Modifier=Modifier,
+    textAlign:TextAlign=TextAlign.Start,
+    fontSize:String="XS",
+    fontStyle:FontStyle=FontStyle.Normal,
+    color:Color=colorSecondary()
+){
+    Text(
+        fontSize=sizeToSp(fontSize),
+        text=text,
+        textAlign=textAlign,
+        modifier=modifier,
+        letterSpacing=0.sp,
+        color=color,
+        fontStyle=fontStyle
+    )
+}
+/**
+ * XL-40, L-36, ML-32, M-28, MS-24, S-20, XS-16
+ * **/
+fun sizeToSp(fontSize:String):TextUnit{
+    return when(fontSize.uppercase()){
+        "XL"->40.sp
+        "L"->36.sp
+        "ML"->32.sp
+        "M"->28.sp
+        "MS"->24.sp
+        "S"->20.sp
+        "XS"->16.sp
+        else->{32.sp}
+    }
+}
+
 
 @Composable
 fun ErrorText(
@@ -644,7 +705,7 @@ fun MyDatePicker(
         headline=null,
         state=state,
         showModeToggle=false,
-        colors=Utils.datePickerColors(),
+        colors=TimeUtils.datePickerColors(),
         modifier=Modifier.padding(all=0.dp)
     )
 }
@@ -663,21 +724,24 @@ fun CustomDatePickerDialog(
             Row(modifier=Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.Center){
                 BetterButton(
                     onClick={onClose()},
-                    modifier=Modifier.padding(bottom=10.dp,start=30.dp,end=30.dp).fillMaxWidth().height(40.dp)
+                    modifier=Modifier
+                        .padding(bottom=10.dp,start=30.dp,end=30.dp)
+                        .fillMaxWidth()
+                        .height(40.dp)
                 ){
                     BetterText(text="Close",fontSize=18.sp)
                 }
             }
             confirmButton()
         },
-        colors=Utils.datePickerColors()
+        colors=TimeUtils.datePickerColors()
     ){
         DatePicker(
             title=null,
             headline=null,
             state=state,
             showModeToggle=false,
-            colors=Utils.datePickerColors(),
+            colors=TimeUtils.datePickerColors(),
             modifier=Modifier.padding(all=0.dp)
         )
     }
@@ -688,7 +752,8 @@ fun CustomDatePickerDialog(
 fun DateInputField(
     onDayValueChange:(String)->Unit,
     onMonthValueChange:(String)->Unit,
-    onYearValueChange:(String)->Unit){
+    onYearValueChange:(String)->Unit
+){
     val year=remember{mutableStateOf("")}
     val month=remember{mutableStateOf("")}
     val day=remember{mutableStateOf("")}
@@ -731,7 +796,7 @@ fun DateInputField(
                 if(newValue.length<=4&&Utils.isStringANumber(newValue)){
                     year.value=newValue
                     if(Utils.canBeIntParsed(newValue)){
-                        if(Utils.isValidPastOrPresentYear(newValue.toInt())){
+                        if(TimeUtils.isValidPastOrPresentYear(newValue.toInt())){
                             monthFocusRequester.requestFocus()
                             yearFocused=false
                             onYearValueChange(newValue)
@@ -740,7 +805,7 @@ fun DateInputField(
                 }
             },
             placeholder={
-                BetterText("YYYY")
+                BetterText("YYYY",fontSize="XS")
             },
             keyboardOptions=KeyboardOptions.Default.copy(keyboardType=KeyboardType.Number,imeAction=ImeAction.Next),
             modifier=Modifier
@@ -776,7 +841,7 @@ fun DateInputField(
 
             },
             placeholder={
-                BetterText("MM", textAlign=TextAlign.Center,modifier=Modifier.fillMaxWidth())
+                BetterText("MM", textAlign=TextAlign.Center,modifier=Modifier.fillMaxWidth(),fontSize="XS")
             },
             keyboardOptions=KeyboardOptions.Default.copy(keyboardType=KeyboardType.Number,imeAction=ImeAction.Next),
             modifier=Modifier
@@ -809,7 +874,7 @@ fun DateInputField(
                 }
             },
             placeholder={
-                BetterText("DD",textAlign=TextAlign.Center,modifier=Modifier.fillMaxWidth())
+                BetterText("DD",textAlign=TextAlign.Center,modifier=Modifier.fillMaxWidth(),fontSize="XS")
             },
             keyboardOptions=KeyboardOptions.Default.copy(keyboardType=KeyboardType.Number,imeAction=ImeAction.Done),
             modifier=Modifier
@@ -854,6 +919,11 @@ fun colorMax():Color{
 }
 
 @Composable
+fun colorError():Color{
+    return getColor(color=com.google.android.material.R.attr.colorError)
+}
+
+@Composable
 fun VerticalCalendar(
     dayContent:@Composable (LocalDate)->Unit,
     modifier:Modifier=Modifier,
@@ -864,8 +934,10 @@ fun VerticalCalendar(
     val startMonth=YearMonth.from(currentDate)
     LazyColumn(
         modifier=if(pride) modifier.paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
-                else modifier.background(color=colorPrimary())
-            .padding(horizontal=8.dp).fillMaxWidth(),
+                else modifier
+            .background(color=colorPrimary())
+            .padding(horizontal=8.dp)
+            .fillMaxWidth(),
         horizontalAlignment=Alignment.CenterHorizontally,
         reverseLayout=true
     ){
@@ -873,7 +945,8 @@ fun VerticalCalendar(
             val month=startMonth.minusMonths(i.toLong())
             MonthBlock(
                 month=month,
-                dayContent=dayContent
+                dayContent=dayContent,
+                pride=pride
             )
         }
     }
@@ -882,7 +955,8 @@ fun VerticalCalendar(
 @Composable
 fun MonthBlock(
     month:YearMonth,
-    dayContent:@Composable (LocalDate)->Unit
+    dayContent:@Composable (LocalDate)->Unit,
+    pride:Boolean=false
 ){
     val firstDayOfMonth=month.atDay(1)
     val offset=firstDayOfMonth.dayOfWeek.value-1
@@ -890,11 +964,26 @@ fun MonthBlock(
     val locale=Locale.getDefault()
     val dayNames=(1..7).map{DayOfWeek.of(it).getDisplayName(java.time.format.TextStyle.NARROW,locale)}
     Column(
-        modifier=Modifier.sizeIn(minHeight=200.dp).padding(vertical=24.dp).fillMaxWidth(),
+        modifier=
+        if(pride) Modifier.paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
+        else Modifier
+            .background(color=colorPrimary())
+            .sizeIn(minHeight=200.dp)
+            .padding(vertical=24.dp)
+            .fillMaxWidth(),
         horizontalAlignment=Alignment.CenterHorizontally
     ){
-        BetterHeader(month.month.getDisplayName(java.time.format.TextStyle.FULL_STANDALONE,Locale.getDefault())+" "+month.year,Modifier.fillMaxWidth().padding(bottom=24.dp),fontSize="L")
-        LazyVerticalGrid(columns=GridCells.Fixed(7),modifier=Modifier.fillMaxWidth().heightIn(max=1000.dp,min=100.dp)){
+        BetterHeader(month.month.getDisplayName(java.time.format.TextStyle.FULL_STANDALONE,Locale.getDefault())+" "+month.year,
+            Modifier
+                .fillMaxWidth()
+                .padding(bottom=24.dp),fontSize="L")
+        LazyVerticalGrid(columns=GridCells.Fixed(7),
+            modifier= if(pride) Modifier.paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
+            else Modifier
+                .background(color=colorPrimary())
+                .fillMaxWidth()
+                .heightIn(max=1000.dp,min=100.dp)
+        ){
             items(7){i->
                 BetterHeader(text=dayNames[i],fontSize="S")
             }
@@ -910,3 +999,120 @@ fun MonthBlock(
         }
     }
 }
+
+@Composable
+fun CountdownTimer(hours:Int=1,context:Context){
+    val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
+
+    val startTime=sharedPrefs.getLong("binderStartTime",System.currentTimeMillis())
+
+    /** hours*3600*1000 is programmed time, then it subtracts time passed between now and startTime**/
+    //val initialTime=sharedPrefs.getLong("binderSecondsLeft",hours*3600*1000-(System.currentTimeMillis()-startTime))
+    val initialTime=hours*3600*1000
+    val isRunning=remember{mutableStateOf(sharedPrefs.getBoolean("wearingBinder",false))}
+
+    val remainingTime=remember{mutableStateOf(
+        if(isRunning.value) initialTime-(System.currentTimeMillis()-startTime).toInt()
+        else sharedPrefs.getInt("binderSecondsLeft",initialTime)
+    )}
+
+
+    //var initialTimeLeft=sharedPrefs.getInt("binderSecondsLeft",initialTime) //read
+
+
+    LaunchedEffect(isRunning.value){
+        while(remainingTime.value>0&&isRunning.value){
+            delay(1000L)
+            remainingTime.value-=1000
+        }
+        if(remainingTime.value<=0){
+            Utils.binderNotif(context)
+            remainingTime.value=initialTime
+            sharedPrefs.edit().putBoolean("wearingBinder",false).apply()
+            sharedPrefs.edit().putInt("binderSecondsLeft",initialTime).apply()
+            /**don't have to reset [startTime] because it resets on button clicks**/
+            //initialTimeLeft=initialTime
+            isRunning.value=false
+        }
+    }
+    val color3=colorTertiary()
+    val color2=colorSecondary()
+
+    val total=remainingTime.value/1000
+    val h=(total/3600).coerceAtLeast(0)
+    val m=((total%3600)/60).coerceAtLeast(0)
+    val s=(total%60).coerceAtLeast(0)
+    val alarm=Alarm(context)
+
+    Column(horizontalAlignment=Alignment.CenterHorizontally){
+        if(sharedPrefs.contains("wearingBinder")){
+            Box(modifier=Modifier.size(280.dp),contentAlignment=Alignment.Center){
+                Canvas(modifier=Modifier.fillMaxSize()) {
+                    drawCircle(color=color2,style=Stroke(16f))
+                    val sweep=(remainingTime.value.toFloat()/initialTime)*360
+                    drawArc(color3,-90f,sweep,false,style=Stroke(16f))
+                }
+                BetterText(text=String.format("%02d:%02d:%02d",h,m,s),fontSize=24.sp)
+            }
+        }
+        Row(
+            modifier=Modifier.fillMaxWidth().padding(top=18.dp).padding(horizontal=20.dp),
+            horizontalArrangement=Arrangement.SpaceAround
+        ){
+            BetterButton( /**pause/start button**/
+                modifier=Modifier.height(40.dp).width(140.dp),
+                onClick={
+                    if(isRunning.value){  /**button Pause**/
+                        sharedPrefs.edit().putInt("binderSecondsLeft",remainingTime.value).apply()
+                        sharedPrefs.edit().remove("binderStartTime").apply()
+                        alarm.scheduleOneTimeNotification(0)
+                        //important: this is PAUSE not cancel!
+                        sharedPrefs.edit().putBoolean("wearingBinder",false).apply()
+                    }
+                    else{ /**button Start**/
+                        //startTime=System.currentTimeMillis() //remove this??? help
+                        alarm.cancelOneTimeNotification()
+                        sharedPrefs.edit().putLong("binderStartTime",System.currentTimeMillis()-(initialTime-remainingTime.value)).apply()
+                        sharedPrefs.edit().putBoolean("wearingBinder",true).apply()
+                    }
+                    isRunning.value=!isRunning.value
+                }
+            ){
+                BetterText(if(isRunning.value) "Pause" else "Start",fontSize=22.sp)
+            }
+            if(sharedPrefs.contains("wearingBinder")){
+                BetterButton( /**cancel button**/
+                    modifier=Modifier.height(40.dp).width(140.dp),
+                    onClick={
+                        sharedPrefs.edit().remove("wearingBinder").apply()
+                        sharedPrefs.edit().remove("binderStartTime").apply()
+                        sharedPrefs.edit().remove("binderSecondsLeft").apply()
+                        isRunning.value=false
+                        remainingTime.value=initialTime
+                    }
+                ){
+                    BetterText("Reset",fontSize=22.sp)
+                }
+            }
+        }
+    }
+
+}
+
+
+
+@Composable
+fun CustomizableDialog(
+    onDismissRequest:()->Unit,
+    content:@Composable ()->Unit
+){
+    Dialog(onDismissRequest={onDismissRequest()},properties=DialogProperties(usePlatformDefaultWidth=false)){
+        Card(
+            modifier=Modifier.heightIn(max=550.dp,min=250.dp).fillMaxWidth().padding(horizontal=16.dp),
+            shape=RoundedCornerShape(15.dp),
+        ){
+            Box(modifier=Modifier.fillMaxSize().background(color=colorPrimary())){content()}
+        }
+    }
+}
+

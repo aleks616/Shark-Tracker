@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
     kotlin("kapt")
 }
 
@@ -85,7 +86,9 @@ dependencies {
     //implementation("com.himanshoe:kalendar-endlos:1.3.2")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
 
-    kapt("androidx.room:room-compiler:2.6.1")
+    //kapt("androidx.room:room-compiler:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
+    //kapt("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.5.0")
     implementation("androidx.room:room-ktx:2.6.1")
     implementation("androidx.room:room-paging:2.6.1")
     implementation("androidx.paging:paging-compose:3.3.5")
@@ -107,7 +110,7 @@ dependencies {
     implementation("sh.calvin.reorderable:reorderable:2.4.3")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material:material:1.7.6")
-    implementation("androidx.compose.foundation:foundation:1.7.7")
+    implementation("androidx.compose.foundation:foundation:1.7.8")
     implementation("androidx.compose.animation:animation:1.5.4")
     implementation("com.github.commandiron:WheelPickerCompose:1.1.11")
     implementation("com.github.vsnappy1:ComposeDatePicker:2.2.0")

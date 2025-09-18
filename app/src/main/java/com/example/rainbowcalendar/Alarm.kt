@@ -114,5 +114,28 @@ class Alarm(private val context: Context){
         //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.time.time,AlarmManager.INTERVAL_DAY*intervalDays,alarmPendingIntent!!)
         //sharedPrefs.edit().putLong(key,calendar.time.time).apply()
     }
+    @SuppressLint("ScheduleExactAlarm")
+    fun scheduleOneTimeNotification(delayHours:Int=8,delayMinutes:Int=0){
+        val triggerTime=System.currentTimeMillis()+(delayHours*3_600_000)+(delayMinutes*60_000)
+        val intent=Intent(context,AlarmReceiver::class.java).apply{
+            action="com.example.ALARM_TRIGGERED"
+            putExtra("title","Binder")
+            putExtra("text","TAKE OF YOUR BINDER!")
+            putExtra("icon",R.drawable.alarm_icon)
+            putExtra("channel","binder")
+        }
+        val pendingIntent=PendingIntent.getBroadcast(context,"binder".hashCode(),intent,PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,triggerTime,pendingIntent)
+    }
+    fun cancelOneTimeNotification(){
+        val intent=Intent(context,AlarmReceiver::class.java).apply{
+            action="com.example.ALARM_TRIGGERED"
+        }
+        val pendingIntent=PendingIntent.getBroadcast(context,"binder".hashCode(),intent,PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_NO_CREATE)
+        pendingIntent?.let{
+            alarmManager.cancel(it)
+            it.cancel()
+        }
+    }
 
 }

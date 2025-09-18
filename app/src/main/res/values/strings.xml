@@ -97,7 +97,7 @@
     <string name="it_started" translatable="false">It started</string>
 
     <string name="home_button_name">Home</string>
-    <string name="account_button_name">Account</string>
+    <string name="account_button_name">Settings</string>
     <string name="add_button_text">Add</string>
     <string name="calendar_button_text">Calendar</string>
 
@@ -352,7 +352,16 @@
     <string name="termsAndConditions1">I confirm that I am over 18, or I am over the age of 13 and have the consent of my parent or guardian to use this app.</string>
     <string name="termsAndConditions2">I acknowledge that this app does not collect, store, or share any of my data externally and that all data remains on my device.</string>
     <string name="termsAndConditions3">I understand that this app is not a medical tool and should not replace professional health advice.</string>
-    <string name="termsAndConditions4">I understand that I am responsible for the security and backup of my own data, and the app developer is not liable for any data loss or misuse.</string>
+    <string name="termsAndConditions4">I understand that I am responsible for the security of my own data, and the app developer is not liable for any data loss or misuse.</string>
     <string name="termsAndConditionsTitle">Terms and conditions</string>
+
+
+
+    <string name="leftAbdomen">Left abdomen (subcutaneous)</string>
+    <string name="rightAbdomen">Right abdomen (subcutaneous)</string>
+    <string name="leftThigh">Left thigh</string>
+    <string name="rightThigh">Right thigh</string>
+    <string name="leftButtock">Left buttock</string>
+    <string name="rightButtock">Right buttock</string>
 
 </resources>

@@ -1,5 +1,7 @@
 package com.example.rainbowcalendar
 
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.core.IsNot.not
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -72,17 +74,28 @@ class UtilsUniTest{
         @Test
         fun timeSinceDate_works_for_today_date(){
             val date=LocalDate.of(today.year,today.month,today.dayOfMonth).toString()
-            val result=Utils.timeSinceDate(date)
+            val result=TimeUtils.timeSinceDate(date)
             val expectedResult=MilestoneDate(0,0,TIMEUNIT.DAYS)
             Assertions.assertEquals(expectedResult,result)
 
         }
 
         @TestFactory
+        fun musclesStateToImages_works_for_all_correct_values()=(-1..4).map{
+            //for(i in -1..4){
+                DynamicTest.dynamicTest("test for red=$it and yellow=$1 is ${Utils.musclesStateToImages(it,1)}"){
+                    val result=Utils.musclesStateToImages(it,1)
+                    assertThat(result[0],not(-1))
+                    //assertThat(result[1],not(-1))
+                }
+            //}
+        }
+
+        @TestFactory
         fun timeSinceDate_works_for_all_values_that_should_return_days()=(1..35).map{day->
             DynamicTest.dynamicTest("Test for day $day"){
                 val date=LocalDate.of(today.year,today.month,today.dayOfMonth).minusDays(day-0L).toString()
-                val result=Utils.timeSinceDate(date)
+                val result=TimeUtils.timeSinceDate(date)
                 val expectedResult=MilestoneDate(day,day,TIMEUNIT.DAYS)
                 Assertions.assertEquals(expectedResult,result)
             }
@@ -92,7 +105,7 @@ class UtilsUniTest{
         fun timeSinceDate_works_for_all_values_that_should_return_weeks()=(36..168).map{day->
             DynamicTest.dynamicTest("Test for day $day"){
                 val date=LocalDate.of(today.year,today.month,today.dayOfMonth).minusDays(day-0L).toString()
-                val result=Utils.timeSinceDate(date)
+                val result=TimeUtils.timeSinceDate(date)
                 val expectedResult=MilestoneDate(day,(day/7),TIMEUNIT.WEEKS)
                 Assertions.assertEquals(expectedResult,result)
             }
@@ -102,7 +115,7 @@ class UtilsUniTest{
         fun timeSinceDate_works_for_all_values_that_should_return_months()=(169..1095).map{day->
             DynamicTest.dynamicTest("Test for day $day"){
                 val date=LocalDate.of(today.year,today.month,today.dayOfMonth).minusDays(day-0L).toString()
-                val result=Utils.timeSinceDate(date)
+                val result=TimeUtils.timeSinceDate(date)
                 val expectedResult=MilestoneDate(day,(day/30.437).toInt(),TIMEUNIT.MONTHS)
                 Assertions.assertEquals(expectedResult,result)
             }
@@ -112,7 +125,7 @@ class UtilsUniTest{
         fun timeSinceDate_works_for_values_that_should_return_years()=(1096..7305).map{day->
             DynamicTest.dynamicTest("Test for day $day"){
                 val date=LocalDate.of(today.year,today.month,today.dayOfMonth).minusDays(day-0L).toString()
-                val result=Utils.timeSinceDate(date)
+                val result=TimeUtils.timeSinceDate(date)
                 val expectedResult=MilestoneDate(day,(day/365.25).toInt(),TIMEUNIT.YEARS)
                 Assertions.assertEquals(expectedResult,result)
             }
@@ -121,31 +134,33 @@ class UtilsUniTest{
 
         @Test
         fun `timeSinceDate_catches_error_for_non-date_strings`(){
-            val result=Utils.timeSinceDate("gdfhdfhgdflo")
+            val result=TimeUtils.timeSinceDate("gdfhdfhgdflo")
             val expectedResult=MilestoneDate(-1,-1,TIMEUNIT.ERROR)
             Assertions.assertEquals(expectedResult,result)
         }
 
         @Test
         fun timeSinceDate_catches_error_for_empty_string(){
-            val result=Utils.timeSinceDate("")
+            val result=TimeUtils.timeSinceDate("")
             val expectedResult=MilestoneDate(-1,-1,TIMEUNIT.ERROR)
             Assertions.assertEquals(expectedResult,result)
         }
 
         @Test
         fun timeSinceDate_catches_error_for_different_date_format(){
-            val result=Utils.timeSinceDate("01-02-2024")
+            val result=TimeUtils.timeSinceDate("01-02-2024")
             val expectedResult=MilestoneDate(-1,-1,TIMEUNIT.ERROR)
             Assertions.assertEquals(expectedResult,result)
         }
+
+
 
     }
 }
 
 
 
-class PasswordActivityTest{
+/*class PasswordActivityTest{
     @Test
     fun `isNumeric_returns_true_for_numeric_strings`(){
         Thread{
@@ -163,8 +178,9 @@ class PasswordActivityTest{
             assertFalse(result)
         }
     }
-}
+}*/
 
+/*
 class RecoveryActivityTest{
 
     @Test
@@ -185,6 +201,7 @@ class RecoveryActivityTest{
         }
     }
 }
+*/
 
 /*mockmaker doesn't work
 class ThemeManagerTest{

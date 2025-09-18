@@ -52,8 +52,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
+import com.example.rainbowcalendar.db.DBUtils
 import com.example.rainbowcalendar.db.DateCycle
 import com.vsnappy1.timepicker.data.model.TimePickerTime
+import java.text.ParseException
 import java.time.LocalDate
 import java.time.ZoneId
 
@@ -62,6 +64,9 @@ fun AgeConsentOptions(onNavigate:(String)->Unit,thisScreen:String?){
     val context=LocalContext.current
     val sharedPrefs=context.getSharedPreferences(Constants.key_package,Context.MODE_PRIVATE)
     val consentDone=sharedPrefs.getBoolean(Constants.key_isConsentDone,false)
+    var errorText by remember{mutableStateOf("")}
+    //LaunchedEffect(errorText){}
+
     if(consentDone){
         onNavigate(Screens.sGenderOptions)
     }
@@ -116,21 +121,27 @@ fun AgeConsentOptions(onNavigate:(String)->Unit,thisScreen:String?){
                     )
                     BetterText(
                         text=consentTexts[index],
-                        modifier=Modifier.fillMaxWidth().align(Alignment.CenterVertically)
+                        modifier=Modifier.fillMaxWidth().align(Alignment.CenterVertically),
+                        fontSize=16.sp
                     )
                 }
             }
         }
         item{
             CheckmarkButtonRow(
-                enabled=(consentChecked.all{it}),
                 onClick={
                     if(consentChecked.all{it}){
+                        errorText=""
                         sharedPrefs.edit().putBoolean(Constants.key_isConsentDone,true).apply()
                         onNavigate(Screens.sGenderOptions)
                     }
+                    else
+                        errorText="Check all boxes" //todo: string
                 }
             )
+        }
+        item{
+            ErrorText(text=errorText,modifier=Modifier.fillMaxWidth())
         }
         item{
             VerticalSpacer()
@@ -286,10 +297,10 @@ fun NameBirthDayOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
     var name by remember{mutableStateOf("")}
     val birthdayDatePickerState=rememberDatePickerState(
         initialSelectedDateMillis=LocalDate.now().minusYears(21).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli(),
-        selectableDates=Utils.OldEnoughSelectableDates
+        selectableDates=TimeUtils.OldEnoughSelectableDates
     )
     val birthdaySelectedDate=birthdayDatePickerState.selectedDateMillis?.let{
-        Utils.convertMillisToDate(it)
+        TimeUtils.convertMillisToDate(it)
     }?:""
     var errorText by remember{mutableStateOf("")}
     var skipBirthday by remember{mutableStateOf(false)}
@@ -397,11 +408,10 @@ fun StealthOptionsScreen(onNavigate:(String) -> Unit,thisScreen:String?){
     LazyColumn(
         modifier=if(theme=="Pride")
             Modifier
-                .fillMaxSize()
                 .paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
         else Modifier
-            .fillMaxSize()
             .background(colorPrimary())
+        .fillMaxSize()
     ){
         val prevScreen=Utils.getPreviousScreen(thisScreen,context)
         val previousKey=Utils.previousScreenKey(prevScreen)
@@ -511,20 +521,20 @@ fun TOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
     var isMicrodosing:Boolean by remember{mutableStateOf(false)}
 
     val lastDoseDatePickerState=rememberDatePickerState(
-        selectableDates=Utils.PastOrPresentSelectableDates
+        selectableDates=TimeUtils.PastOrPresentSelectableDates
     )
     val lastDoseSelectedDate=lastDoseDatePickerState.selectedDateMillis?.let{
-        Utils.convertMillisToDate(it)
+        TimeUtils.convertMillisToDate(it)
     }?:""
 
     val firstDoseDatePickerState=rememberDatePickerState(
-        selectableDates=Utils.PastOrPresentSelectableDates
+        selectableDates=TimeUtils.PastOrPresentSelectableDates
     )
     val firstDoseSelectedDate=firstDoseDatePickerState.selectedDateMillis?.let{
-        Utils.convertMillisToDate(it)
+        TimeUtils.convertMillisToDate(it)
     }?:""
 
-    val datePickerColors=Utils.datePickerColors()
+    val datePickerColors=TimeUtils.datePickerColors()
 
 
     sharedPrefs.edit().putString(Constants.key_firstTestosteroneDate,firstDoseSelectedDate).apply()
@@ -546,13 +556,10 @@ fun TOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
 
     val theme=sharedPrefs.getString("theme","Black")
     LazyColumn(
-        modifier=if(theme=="Pride")
-            Modifier
-                .fillMaxSize()
-                .paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
-        else Modifier
+        modifier=
+        if(theme=="Pride") Modifier.paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
+        else Modifier.background(colorPrimary())
             .fillMaxSize()
-            .background(colorPrimary())
     ){
         if(isOnT==null){
             val prevScreen=Utils.getPreviousScreen(thisScreen,context)
@@ -584,11 +591,7 @@ fun TOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
         if(isOnT==true){
             item{GoBackButtonRow(onClick={isOnT=null})}
             item{
-                BetterHeader(
-                    text=stringResource(id=R.string.enterTestosteroneName),
-                    fontSize="ML",
-                    modifier=Modifier.fillMaxWidth().padding(vertical=12.dp,horizontal=20.dp)
-                )
+                BetterHeader(text=stringResource(id=R.string.enterTestosteroneName),fontSize="ML",modifier=Modifier.fillMaxWidth().padding(vertical=12.dp,horizontal=20.dp))
             }
             item{
                 AutoComplete(
@@ -601,11 +604,7 @@ fun TOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
                 VerticalSpacer()
             }
             item{
-                BetterHeader(
-                    text=stringResource(id=R.string.howOftenDoYouTakeIt),
-                    fontSize="M",
-                    modifier=Modifier.fillMaxWidth().padding(bottom=5.dp)
-                )
+                BetterHeader(text=stringResource(id=R.string.howOftenDoYouTakeIt),fontSize="M",modifier=Modifier.fillMaxWidth().padding(bottom=5.dp))
             }
             item{
                 Row(
@@ -624,16 +623,10 @@ fun TOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
                 VerticalSpacer()
             }
             item{
-                BetterHeader(
-                    text=stringResource(id=R.string.lastDoseQuestion),
-                    fontSize="M",
-                )
+                BetterHeader(text=stringResource(id=R.string.lastDoseQuestion),fontSize="M",)
             }
             item{
-                BetterHeader(
-                    text=lastDoseSelectedDate,
-                    fontSize="MS"
-                )
+                BetterHeader(text=lastDoseSelectedDate,fontSize="MS")
             }
             item{
                 Box(modifier=Modifier.padding(horizontal=10.dp)){
@@ -670,10 +663,7 @@ fun TOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
                 VerticalSpacer()
             }
             item{
-                BetterHeader(
-                    text=stringResource(id=R.string.firstTestosteroneQuestion),
-                    fontSize="M"
-                )
+                BetterHeader(text=stringResource(id=R.string.firstTestosteroneQuestion),fontSize="M")
             }
             item{
                 CheckboxRow(
@@ -743,11 +733,12 @@ fun TOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
                                             errorText=""
                                             if(firstDoseSelectedDate.isNotEmpty()||skipFirstDoseDateChecked){ //both are ok, but there's no start date if it's skipped (duh)
                                                 errorText=""
+                                                Log.i("testoserone interval",testosteroneInterval)
                                                 sharedPrefs.edit().putInt(Constants.key_currentTestosteroneInterval,testosteroneInterval.toInt()).apply()
                                                 sharedPrefs.edit().putBoolean(Constants.key_isMicrodosing,isMicrodosing).apply()
-                                                Utils.addNewCycleType(context,testosteroneName,testosteroneInterval.toInt(),true)
-                                                onNavigate(Screens.sPeriodOptions)
-                                                sharedPrefs.edit().putBoolean(Constants.key_testosteroneMenuComplete,true).apply()
+                                                //todo: fix teststerone name not being selected option for dropdown menu (e.g "prol" instead of prolongatum)
+                                                DBUtils.addNewCycleType(context,testosteroneName,testosteroneInterval.toInt(),true,1)
+
                                                 if(firstDoseSelectedDate.isNotEmpty()){
                                                     sharedPrefs.edit().putString(Constants.key_firstTestosteroneDate,firstDoseSelectedDate).apply()
                                                 }
@@ -758,11 +749,20 @@ fun TOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
                                                     sharedPrefs.edit().putBoolean(Constants.key_tRemindersOn,true).apply()
 
                                                     Utils.createTestosteroneNotificationChannel(context)
-                                                    val daysTillNextT=Utils.getDaysTillNextShot(lastDoseSelectedDate,testosteroneInterval.toInt())
+                                                    val daysTillNextT=TimeUtils.getDaysTillNextShot(lastDoseSelectedDate,testosteroneInterval.toInt())
                                                     Utils.scheduleNotifications(context=context, interval=testosteroneInterval.toInt(),
                                                         daysTillNext=daysTillNextT, notificationHour=notificationHour, notificationMinute=notificationMinute,type=Constants.key_lastTNotification)
                                                     //todo: NOTIFICATION SYSTEM
                                                 }
+
+                                                errorText="Wait..."
+                                                Thread.sleep(1000)
+                                                val cycleId=DBUtils.getCycleIdByName(context,testosteroneName)
+                                                Thread.sleep(2000)
+                                                DBUtils.addNewDateCycleNew(context,DateCycle(lastDoseSelectedDate,cycleId,0))
+                                                sharedPrefs.edit().putBoolean(Constants.key_testosteroneMenuComplete,true).apply()
+                                                onNavigate(Screens.sPeriodOptions)
+
                                             }
                                             else
                                                 skipFirstDoseDateChecked=true
@@ -851,12 +851,9 @@ fun PeriodOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
     val theme=sharedPrefs.getString("theme","Black")
     LazyColumn(
         modifier=if(theme=="Pride")
-            Modifier
-                .fillMaxSize()
-                .paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
-        else Modifier
+            Modifier.paint(painterResource(id=R.drawable.pride50),contentScale=ContentScale.FillBounds)
+        else Modifier.background(colorPrimary())
             .fillMaxSize()
-            .background(colorPrimary())
     ){
         val prevScreen=Utils.getPreviousScreen(thisScreen,context)
         val previousKey=Utils.previousScreenKey(prevScreen)
@@ -1034,29 +1031,36 @@ fun PeriodOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
                 if(Utils.canBeIntParsed(cycleLengthValue)){
                     errorText=""
                     sharedPrefs.edit().putInt(Constants.key_averagePeriodCycleLength,cycleLengthValue.toInt()).apply()
-                    Utils.addNewCycleType(context=context, cycleName="period",correctInterval=cycleLengthValue.toInt(),active=true)
+                    DBUtils.addNewCycleType(context=context, cycleName="period",correctInterval=cycleLengthValue.toInt(),active=true,0)
 
                     cycleDates2.forEachIndexed{index,cycle->
                         Log.i("newDateCycleDebug",cycle[2]+"-"+cycle[1]+"-"+cycle[0])
                         if(Utils.canBeIntParsed(cycle[2])&&Utils.canBeIntParsed(cycle[1])&&Utils.canBeIntParsed(cycle[0])){
-                            if(Utils.isValidPastDate(cycle[2].toInt(),cycle[1].toInt(),cycle[0].toInt())){
+                            if(TimeUtils.isValidPastDate(cycle[2].toInt(),cycle[1].toInt(),cycle[0].toInt())){
                                 //Log.i("newDateCycleDebug",index.toString())
                                 if(index>0){
                                     //Log.i("newDateCycleDebug","here3")
-                                    val indexDate=Utils.createDateFromIntegers(cycle[2].toInt(),cycle[1].toInt(),cycle[0].toInt())
-                                    val previousDate=Utils.createDateFromIntegers(cycleDates2[index-1][2].toInt(),cycleDates2[index-1][1].toInt(),cycleDates2[index-1][0].toInt())
-                                    if(Utils.isDate1AfterDate2(indexDate,previousDate)){
-                                        errorText=datesNotDescendingError
-                                        //Log.i("newDateCycleDebugDates","date: $previousDate previous date: $indexDate")
+                                    //if(Utils.canBeIntParsed(cycleDates2[index-1][0])/*&&Utils.canBeIntParsed(cycleDates2[index-1][1])&&Utils.canBeIntParsed(cycleDates2[index-1][2])*/)
+                                    try{
+                                        Log.v("dates",cycle[2]+" "+cycle[1]+" "+cycle[0])
+                                        val indexDate=TimeUtils.createStringDateFromIntegers(cycle[2].toInt(),cycle[1].toInt(),cycle[0].toInt())
+                                        val previousDate=TimeUtils.createStringDateFromIntegers(cycleDates2[index-1][2].toInt(),cycleDates2[index-1][1].toInt(),cycleDates2[index-1][0].toInt())
+                                        if(TimeUtils.isDate1AfterDate2(indexDate,previousDate)){
+                                            errorText=datesNotDescendingError
+                                            Log.i("newDateCycleDebugDates","date: $previousDate previous date: $indexDate")
+                                        }
+                                    } //TODO: THIS IS TEMPORARY! JUST FOR TESTING!
+                                    catch(e:Exception){
+                                        Log.v("exception",e.toString())
+                                        Log.i("dates",cycle[2]+" "+cycle[1]+" "+cycle[0])
                                     }
                                 }
                                 if(errorText!=datesNotDescendingError){
                                     //else{
-                                    val indexDate=Utils.createDateFromIntegers(cycle[2].toInt(),cycle[1].toInt(),cycle[0].toInt())
+                                    val indexDate=TimeUtils.createStringDateFromIntegers(cycle[2].toInt(),cycle[1].toInt(),cycle[0].toInt())
                                     errorText=""
                                     //Log.i("newDateCycleDebug","here4")
-                                    //TODO: PUT OTHER DAYS OF CYCLES TO DB (now only 0s gets inserted)
-                                    val cycleId=Utils.getCycleIdByName(context,"period")
+                                    val cycleId=DBUtils.getCycleIdByName(context,"period")
                                     if(periodRegular){
                                         if(Utils.canBeIntParsed(periodLengthValue)){
                                             errorText=""
@@ -1068,8 +1072,8 @@ fun PeriodOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
                                                 val isDateError=errorText!=datesNotDescendingError&&errorText!=notNumberDatesError&&errorText!=invalidDatesError
                                                 if(Utils.canBeIntParsed(remindXDaysBeforePeriod)&&!isDateError){
                                                     errorText=""
-                                                    val lastDate=Utils.createDateFromIntegers(cycleDates2[0][2].toInt(),cycleDates2[0][1].toInt(),cycleDates2[0][0].toInt())
-                                                    val nextDoseDate=Utils.getNextDoseDate(lastDate,cycleLengthValue.toInt())
+                                                    val lastDate=TimeUtils.createStringDateFromIntegers(cycleDates2[0][2].toInt(),cycleDates2[0][1].toInt(),cycleDates2[0][0].toInt())
+                                                    val nextDoseDate=TimeUtils.getNextDoseDate(lastDate,cycleLengthValue.toInt())
                                                     //todo: ADD REMINDERS at [nextDoseDate] !!!
                                                 }
                                                 else{
@@ -1082,19 +1086,23 @@ fun PeriodOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?){
                                             errorText=periodLengthNotANumberError
                                     }
                                     if(errorText.isEmpty()){
-                                        if(Utils.addNewDateCycle(context,
-                                                DateCycle(indexDate,cycleId,0)
-                                            )){
+                                        if(DBUtils.addNewDateCycleNew(context,DateCycle(indexDate,cycleId,0))){
                                             amountOfCyclesToEnter=0
                                             cycleDates2=listOf(arrayOf("","",""))
                                             sharedPrefs.edit().putBoolean(Constants.key_isPeriodMenuComplete,true).apply()
+                                            sharedPrefs.edit().putBoolean(Constants.key_isPeriodRegular,periodRegular).apply()
                                             onNavigate(Screens.sContraceptiveOptions)
                                         }
-                                        else //cycle type not created
+                                        else{//cycle type not created
                                             errorText="Can't add cycle data yet, try again in 5 seconds."
+                                            Thread.sleep(2000)
+                                            amountOfCyclesToEnter=0
+                                            cycleDates2=listOf(arrayOf("","",""))
+                                            sharedPrefs.edit().putBoolean(Constants.key_isPeriodMenuComplete,true).apply()
+                                            sharedPrefs.edit().putBoolean(Constants.key_isPeriodRegular,periodRegular).apply()
+                                            onNavigate(Screens.sContraceptiveOptions)
+                                        }
                                     }
-
-
                                 }
                                 //}
                             }
@@ -1137,14 +1145,14 @@ fun ContraceptiveOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?=null
     var contraceptiveInterval by remember{mutableStateOf("")}
     ///region datePickers setup
     val lastDoseDatePickerState=rememberDatePickerState(
-        selectableDates=Utils.PastOrPresentSelectableDates
+        selectableDates=TimeUtils.PastOrPresentSelectableDates
     )
     val lastDoseSelectedDate=lastDoseDatePickerState.selectedDateMillis?.let{
-        Utils.convertMillisToDate(it)
+        TimeUtils.convertMillisToDate(it)
     } ?: ""
 
 
-    val datePickerColors=Utils.datePickerColors()
+    val datePickerColors=TimeUtils.datePickerColors()
     //endregion
 
     //val theme=sharedPrefs.getString("theme","Black")
@@ -1195,7 +1203,8 @@ fun ContraceptiveOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?=null
                         isOnBC=false
                         sharedPrefs.edit().putBoolean(Constants.key_BCMenuComplete,true).apply()
                         sharedPrefs.edit().putBoolean(Constants.key_isTakingBirthControlContraceptive,false).apply()
-                        onNavigate(Screens.sMain)
+                        sharedPrefs.edit().putBoolean(Constants.key_isSetupDone,true).apply()
+                        onNavigate(Screens.sPassword)
                     },
                     question=stringResource(id=R.string.birthControlQuestion),
                     questionFontSize="ML"
@@ -1302,9 +1311,18 @@ fun ContraceptiveOptionsScreen(onNavigate:(String)->Unit,thisScreen:String?=null
                                             errorText=""
                                             errorText=""
                                             sharedPrefs.edit().putInt(Constants.key_bcContraceptiveInterval,contraceptiveInterval.toInt()).apply()
-                                            Utils.addNewCycleType(context,contraceptiveName,contraceptiveInterval.toInt(),true)
+                                            DBUtils.addNewCycleType(context,contraceptiveName,contraceptiveInterval.toInt(),true,2)
+
+                                            errorText="Wait..."
+                                            Thread.sleep(1000)
+                                            val cycleId=
+                                                DBUtils.getCycleIdByName(context,contraceptiveName)
+                                            Thread.sleep(2000)
+                                            DBUtils.addNewDateCycleNew(context,DateCycle(lastDoseSelectedDate,cycleId,0))
+
                                             sharedPrefs.edit().putBoolean(Constants.key_BCMenuComplete,true).apply()
                                             sharedPrefs.edit().putBoolean(Constants.key_isSetupDone,true).apply()
+
                                             if(bcReminders){
                                                 sharedPrefs.edit().putBoolean(Constants.key_bcRemindersOn,true).apply()
                                                 Utils.createContraceptiveNotificationChannel(context)
